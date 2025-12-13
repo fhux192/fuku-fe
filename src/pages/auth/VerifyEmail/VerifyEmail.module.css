@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;900&display=swap');
+
+.verifyContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #111;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Noto Sans Japanese', sans-serif;
+}
+
+.verifyWrapper {
+    position: relative;
+    overflow: hidden;
+    padding: 48px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+}
+
+.verifyBackground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.2);
+    background-image: url('../../../assets/images/auth-form-bg.gif');
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.verifyOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    z-index: 2;
+}
+
+.verifyContent {
+    position: relative;
+    z-index: 3;
+}
+
+/* --- Typography --- */
+.verifyTitle {
+    font-size: 28px;
+    font-weight: 900;
+    color: #f5f5f5;
+    margin-bottom: 32px;
+}
+
+.verifyText {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.verifyBox {
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: pre-line;
+}
+
+.verifyLoading {
+    color: #f5f5f5;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px dashed #666;
+}
+
+.verifySuccess {
+    color: #4dff88;
+    background-color: rgba(27, 47, 29, 0.9);
+    border: 1px solid rgba(138, 255, 138, 0.3);
+    box-shadow: 0 0 15px rgba(77, 255, 136, 0.2);
+}
+
+.verifyError {
+    color: #ff4d4d;
+    background-color: rgba(47, 27, 29, 0.9);
+    border: 1px solid rgba(255, 138, 138, 0.3);
+    box-shadow: 0 0 15px rgba(255, 77, 77, 0.2);
+}
+
+.verifyButton {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    background-color: #95D600;
+    color: #111;
+    border: none;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 700;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.verifyButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(149, 214, 0, 0.4);
+}
+
+.spinner {
+    display: inline-block;
+    animation: spin 2s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+@media (min-width: 1024px) {
+    .verifyContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        padding: 0;
+
+        background: linear-gradient(
+                90deg,
+                #050505 0%,
+                #050505 50%,
+                #111 50%,
+                #111 100%
+        );
+    }
+
+    .verifyWrapper {
+        grid-column: 2;
+        justify-self: center;
+        width: 80%;
+        max-width: 450px;
+    }
+}
+
+@media (max-width: 480px) {
+    .verifyWrapper {
+        padding: 24px;
+        border-radius: 30px;
+    }
+    .verifyTitle {
+        font-size: 24px;
+    }
+}

@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Register from './pages/auth/Register/Register';
-import VerifyEmail from './pages/auth/VerifyEmail';
+import VerifyEmail from './pages/auth/VerifyEmail/VerifyEmail';
 import Login from './pages/auth/Login/Login';
 import ForgotPassword from "./pages/auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword/ResetPassword";
 import Profile from './pages/auth/Profile';
 
 import './App.css';
+import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('authToken');
@@ -19,10 +20,12 @@ function App() {
         <Router>
             <div className="App">
                 <Routes>
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route element={<AuthLayout />}>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                    </Route>
                     <Route path="/verify-email" element={<VerifyEmail />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route
                         path="/profile"

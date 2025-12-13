@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import styles from '../Login/Login.module.css';
+import styles from './ResetPassword.module.css';
 
 const EyeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -79,10 +79,10 @@ const ResetPassword = () => {
 
     if (!token) {
         return (
-            <div className={styles.loginContainer}>
-                <div className={styles.loginFormWrapper}>
-                    <div className={styles.loginFormContent}>
-                        <p className={styles.loginError}>無効なトークン (Invalid or missing token)</p>
+            <div className={styles.resetPasswordContainer}>
+                <div className={styles.resetPasswordFormWrapper}>
+                    <div className={styles.resetPasswordFormContent}>
+                        <p className={styles.resetPasswordError}>無効なトークン (Invalid or missing token)</p>
                     </div>
                 </div>
             </div>
@@ -90,26 +90,26 @@ const ResetPassword = () => {
     }
 
     return (
-        <div className={styles.loginContainer}>
-            <div className={styles.loginFormWrapper}>
-                <div className={styles.loginFormBackground}></div>
-                <div className={styles.loginFormOverlay}></div>
-                <div className={styles.loginFormContent}>
-                    <h2 className={styles.loginTitle}>パスワード再設定 <br/> (Reset Password)</h2>
-                    <form onSubmit={handleSubmit} className={styles.loginForm}>
+        <div className={styles.resetPasswordContainer}>
+            <div className={styles.resetPasswordFormWrapper}>
+                <div className={styles.resetPasswordFormBackground}></div>
+                <div className={styles.resetPasswordFormOverlay}></div>
+                <div className={styles.resetPasswordFormContent}>
+                    <h2 className={styles.resetPasswordTitle}>パスワード再設定 <br/> (Reset Password)</h2>
+                    <form onSubmit={handleSubmit} className={styles.resetPasswordForm}>
 
-                        {message && <div className={styles.loginSuccess}>{message}</div>}
-                        {error && <div className={styles.loginError}>{error}</div>}
+                        {message && <div className={styles.resetPasswordSuccess}>{message}</div>}
+                        {error && <div className={styles.resetPasswordError}>{error}</div>}
 
-                        <div className={styles.loginInputGroup}>
-                            <label className={styles.loginLabel}>新しいパスワード (New Password)</label>
+                        <div className={styles.resetPasswordInputGroup}>
+                            <label className={styles.resetPasswordLabel}>新しいパスワード (New Password)</label>
                             <div className={styles.passwordWrapper}>
                                 <input
                                     type={showNewPass ? 'text' : 'password'}
                                     name="newPassword"
                                     value={formData.newPassword}
                                     onChange={handleChange}
-                                    className={styles.loginInput}
+                                    className={styles.resetPasswordInput}
                                     required
                                 />
                                 <button
@@ -122,15 +122,15 @@ const ResetPassword = () => {
                             </div>
                         </div>
 
-                        <div className={styles.loginInputGroup}>
-                            <label className={styles.loginLabel}>パスワードの確認 (Confirm Password)</label>
+                        <div className={styles.resetPasswordInputGroup}>
+                            <label className={styles.resetPasswordLabel}>パスワードの確認 (Confirm Password)</label>
                             <div className={styles.passwordWrapper}>
                                 <input
                                     type={showConfirmPass ? 'text' : 'password'}
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleChange}
-                                    className={styles.loginInput}
+                                    className={styles.resetPasswordInput}
                                     required
                                 />
                                 <button
@@ -143,7 +143,7 @@ const ResetPassword = () => {
                             </div>
                         </div>
 
-                        <button type="submit" className={styles.loginButton}>
+                        <button type="submit" className={styles.resetPasswordButton}>
                             パスワードを変更 (Change Password)
                         </button>
                     </form>

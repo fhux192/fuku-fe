@@ -1,7 +1,6 @@
-// src/ForgotPassword.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../Login/Login.module.css'; // Tái sử dụng CSS của Login
+import styles from './ForgotPassword.module.css';
 
 function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -14,6 +13,15 @@ function ForgotPassword() {
         setMessage('');
         setError('');
         setIsLoading(true);
+
+        if (!email) {
+            setError([
+                'メールアドレスを入力してください。',
+                <br key="req1" />,
+                '(Please enter your email.)'
+            ]);
+            return;
+        }
 
         try {
             const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
@@ -40,37 +48,36 @@ function ForgotPassword() {
     };
 
     return (
-        <div className={styles.loginContainer}>
-            <div className={styles.loginFormWrapper}>
-                <div className={styles.loginFormBackground}></div>
-                <div className={styles.loginFormOverlay}></div>
+        <div className={styles.forgotPasswordContainer}>
+            <div className={styles.forgotPasswordFormWrapper}>
+                <div className={styles.forgotPasswordFormBackground}></div>
+                <div className={styles.forgotPasswordFormOverlay}></div>
+                <div className={styles.forgotPasswordFormContent}>
+                    <h2 className={styles.forgotPasswordTitle}>パスワード再設定 <br/> (Reset Password)</h2>
 
-                <div className={styles.loginFormContent}>
-                    <h2 className={styles.loginTitle}>パスワード再設定 <br/> (Reset Password)</h2>
+                    <form onSubmit={handleSubmit} className={styles.forgotPasswordForm}>
+                        {message && <p className={styles.forgotPasswordSuccess}>{message}</p>}
+                        {error && <p className={styles.forgotPasswordError}>{error}</p>}
 
-                    <form onSubmit={handleSubmit} className={styles.loginForm}>
-                        {message && <p className={styles.loginSuccess}>{message}</p>}
-                        {error && <p className={styles.loginError}>{error}</p>}
-
-                        <div className={styles.loginInputGroup}>
-                            <label htmlFor="email" className={styles.loginLabel}>メールアドレス (Email)</label>
+                        <div className={styles.forgotPasswordInputGroup}>
+                            <label htmlFor="email" className={styles.forgotPasswordLabel}>メールアドレス (Email)</label>
                             <input
                                 type="email"
                                 id="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className={styles.loginInput}
+                                className={styles.forgotPasswordInput}
                                 required
                                 placeholder="Enter your email"
                             />
                         </div>
 
-                        <button type="submit" className={styles.loginButton} disabled={isLoading}>
+                        <button type="submit" className={styles.forgotPasswordButton} disabled={isLoading}>
                             {isLoading ? '送信中... (Sending...)' : '送信 (Send)'}
                         </button>
 
-                        <p className={styles.loginLinkText} style={{ marginTop: '20px' }}>
-                            <Link to="/login" className={styles.loginLink}>
+                        <p className={styles.forgotPasswordLinkText} style={{ marginTop: '20px' }}>
+                            <Link to="/login" className={styles.forgotPasswordLink}>
                                 ← ログインに戻る (Back to Login)
                             </Link>
                         </p>
