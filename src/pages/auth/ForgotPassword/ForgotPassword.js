@@ -24,7 +24,8 @@ function ForgotPassword() {
         }
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/forgot-password', {
+            const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
+            const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
