@@ -42,7 +42,7 @@ const ResetPassword = () => {
         setError('');
 
         if (formData.newPassword !== formData.confirmPassword) {
-            setError("パスワードが一致しません。(Passwords do not match.)");
+            setError("パスワードが一致しません。(Mật khẩu không khớp.)");
             return;
         }
 
@@ -57,7 +57,7 @@ const ResetPassword = () => {
             setMessage([
                 'パスワードが正常にリセットされました。',
                 <br key="break" />,
-                '(Password reset successful.)'
+                '(Đặt lại mật khẩu thành công.)'
             ]);
 
             setTimeout(() => {
@@ -71,10 +71,10 @@ const ResetPassword = () => {
                 setError([
                     '新しいパスワードは現在のパスワードと同じにすることはできません。',
                     <br key="break" />,
-                    '(New password cannot be the same as the current password.)'
+                    '(Mật khẩu mới không được trùng với mật khẩu hiện tại.)'
                 ]);
             } else {
-                setError(errorMsg || "エラーが発生しました。(An error occurred.)");
+                setError(errorMsg || "エラーが発生しました。(Đã xảy ra lỗi.)");
             }
         }
     };
@@ -84,7 +84,7 @@ const ResetPassword = () => {
             <div className={styles.resetPasswordContainer}>
                 <div className={styles.resetPasswordFormWrapper}>
                     <div className={styles.resetPasswordFormContent}>
-                        <p className={styles.resetPasswordError}>無効なトークン (Invalid or missing token)</p>
+                        <p className={styles.resetPasswordError}>無効なトークン (Token không hợp lệ hoặc bị thiếu)</p>
                     </div>
                 </div>
             </div>
@@ -97,14 +97,14 @@ const ResetPassword = () => {
                 <div className={styles.resetPasswordFormBackground}></div>
                 <div className={styles.resetPasswordFormOverlay}></div>
                 <div className={styles.resetPasswordFormContent}>
-                    <h2 className={styles.resetPasswordTitle}>パスワード再設定 <br/> (Reset Password)</h2>
+                    <h2 className={styles.resetPasswordTitle}>パスワード再設定 <br/> (Đặt lại mật khẩu)</h2>
                     <form onSubmit={handleSubmit} className={styles.resetPasswordForm}>
 
                         {message && <div className={styles.resetPasswordSuccess}>{message}</div>}
                         {error && <div className={styles.resetPasswordError}>{error}</div>}
 
                         <div className={styles.resetPasswordInputGroup}>
-                            <label className={styles.resetPasswordLabel}>新しいパスワード (New Password)</label>
+                            <label className={styles.resetPasswordLabel}>新しいパスワード (Mật khẩu mới)</label>
                             <div className={styles.passwordWrapper}>
                                 <input
                                     type={showNewPass ? 'text' : 'password'}
@@ -125,7 +125,7 @@ const ResetPassword = () => {
                         </div>
 
                         <div className={styles.resetPasswordInputGroup}>
-                            <label className={styles.resetPasswordLabel}>パスワードの確認 (Confirm Password)</label>
+                            <label className={styles.resetPasswordLabel}>パスワードの確認 (Xác nhận mật khẩu)</label>
                             <div className={styles.passwordWrapper}>
                                 <input
                                     type={showConfirmPass ? 'text' : 'password'}
@@ -146,7 +146,7 @@ const ResetPassword = () => {
                         </div>
 
                         <button type="submit" className={styles.resetPasswordButton}>
-                            パスワードを変更 (Change Password)
+                            パスワードを変更 (Đổi mật khẩu)
                         </button>
                     </form>
                 </div>

@@ -26,17 +26,19 @@ function Register() {
         setMessage(''); setError('');
 
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('すべての項目を入力してください。(Please enter all fields.)'); return;
+            setError('すべての項目を入力してください。(Vui lòng nhập tất cả các trường.)'); return;
         }
         if (formData.password.length < 6) {
-            setError('パスワードは6文字以上である必要があります。(Password must be at least 6 characters.)'); return;
+            setError('パスワードは6文字以上である必要があります。(Mật khẩu phải có ít nhất 6 ký tự.)'); return;
         }
         if (formData.password !== formData.confirmPassword) {
-            setError('パスワードと確認用パスワードが一致しません。(Passwords do not match.)'); return;
+            setError('パスワードと確認用パスワードが一致しません。(Mật khẩu không khớp.)'); return;
         }
 
         try {
-            const response = await fetch('/api/auth/register', {  // Changed to relative URL
+            const API_URL = 'http://localhost:8080';
+
+            const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
@@ -44,15 +46,15 @@ function Register() {
             const responseText = await response.text();
 
             if (response.ok) {
-                setMessage('確認メールを送信しました。メールを確認してアカウントを有効化してください。(A confirmation email has been sent. Please check your email to activate your account.)');
+                setMessage('確認メールを送信しました。メールを確認してアカウントを有効化してください。(Email xác nhận đã được gửi. Vui lòng kiểm tra email để kích hoạt tài khoản.)');
                 setTimeout(() => { navigate('/login'); }, 3000);
             } else if (responseText.includes("Passwords do not match")) {
-                setError('パスワードが一致しません。(Passwords do not match.)');
+                setError('パスワードが一致しません。(Mật khẩu không khớp.)');
             } else {
-                setError(responseText || '登録に失敗しました。(Registration failed.)');
+                setError(responseText || '登録に失敗しました。(Đăng ký thất bại.)');
             }
         } catch (err) {
-            setError('エラーが発生しました。後でもう一度お試しください。(An error occurred. Please try again later.)');
+            setError('エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)');
         }
     };
 
@@ -65,13 +67,13 @@ function Register() {
             <div className={styles.registerFormOverlay}></div>
             <div className={styles.registerFormContent}>
 
-                <h2 className={styles.registerTitle}>アカウント作成 <br/> (Create Account)</h2>
+                <h2 className={styles.registerTitle}>アカウント作成 <br/> (Tạo tài khoản)</h2>
                 <form onSubmit={handleSubmit} className={styles.registerForm} autoComplete="off">
                     {message && <p className={styles.registerMessage}>{message}</p>}
                     {error && <p className={styles.registerError}>{error}</p>}
 
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="name" className={styles.registerLabel}>名前 (Name)</label>
+                        <label htmlFor="name" className={styles.registerLabel}>名前 (Tên)</label>
                         <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className={styles.registerInput} autoComplete="off" required />
                     </div>
 
@@ -81,7 +83,7 @@ function Register() {
                     </div>
 
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="password" className={styles.registerLabel}>パスワード (Password)</label>
+                        <label htmlFor="password" className={styles.registerLabel}>パスワード (Mật khẩu)</label>
                         <div className={styles.passwordWrapper}>
                             <input type={showPassword ? 'text' : 'password'} id="password" name="password" value={formData.password} onChange={handleChange} className={styles.registerInput} autoComplete="new-password" required />
                             <button type="button" tabIndex={-1} onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
@@ -91,7 +93,7 @@ function Register() {
                     </div>
 
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="confirmPassword" className={styles.registerLabel}>パスワードの確認 (Confirm Password)</label>
+                        <label htmlFor="confirmPassword" className={styles.registerLabel}>パスワードの確認 (Xác nhận mật khẩu)</label>
                         <div className={styles.passwordWrapper}>
                             <input type={showConfirmPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className={styles.registerInput} autoComplete="new-password" required />
                             <button type="button" tabIndex={-1} onClick={toggleConfirmPasswordVisibility} className={styles.togglePasswordBtn}>
@@ -100,12 +102,12 @@ function Register() {
                         </div>
                     </div>
 
-                    <button type="submit" className={styles.registerButton}>登録 (Register)</button>
+                    <button type="submit" className={styles.registerButton}>登録 (Đăng ký)</button>
                     <p className={styles.registerLinkText}>
-                        すでにアカウントをお持ちですか？ (Already have an account?){' '}
+                        すでにアカウントをお持ちですか？ (Đã có tài khoản?){' '}
                         <br/>
                         <Link to="/login" style={{ marginLeft: '5px' }} className={styles.registerLink}>
-                            ログイン (Login)
+                            ログイン (Đăng nhập)
                         </Link>
                     </p>
                 </form>

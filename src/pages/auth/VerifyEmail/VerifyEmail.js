@@ -19,7 +19,6 @@ function VerifyEmail() {
             }
 
             try {
-                // Giả lập độ trễ nhẹ để tránh nhấp nháy màn hình
                 await new Promise(r => setTimeout(r, 800));
 
                 const response = await fetch(`http://localhost:8080/api/auth/verify-email?token=${token}`);

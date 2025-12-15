@@ -1,28 +1,69 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
 import styles from './AuthLayout.module.css';
+import logo from '../../assets/images/logo192.png';
 
 const AuthLayout = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const handleMobileNav = (path) => {
+        navigate(path);
+        setIsModalOpen(true);
+    };
+
     return (
         <div className={styles.authContainer}>
-            <div className={styles.leftSideOverlay}>
-            <div className={styles.leftSide}>
-                <div className={styles.leftSideContent}>
-                    <h1 className={styles.leftSideTitle}>日本語を<br/>学びましょう</h1>
-                    <p className={styles.leftSideSubtitle}>Fuku Japanese Learning Platform</p>
+            <div className={styles.leftSideWrapper}>
+                <div className={styles.leftSide}>
+                    <img
+                        src={logo}
+                        alt="Logo Desktop"
+                        className={styles.desktopLogo}
+                        onClick={() => navigate('/')}
+                    />
+
+                    <div className={styles.mobileHeader}>
+                        <div className={styles.logoContainerMobile}>
+                            <img src={logo} alt="Logo" className={styles.logoImage} />
+                        </div>
+                    </div>
+
+                    <div className={styles.decorativeElements}>
+                        <span className={`${styles.floatingKanji} ${styles.kanji1}`}>夢</span>
+                        <span className={`${styles.floatingKanji} ${styles.kanji2}`}>学</span>
+                        <span className={`${styles.floatingKanji} ${styles.kanji3}`}>旅</span>
+                    </div>
+
+                    <div className={styles.leftSideContent}>
+                        <div className={styles.glassCard}>
+                            <h1 className={styles.leftSideTitle}>
+                                日本語を<br />
+                                <span className={styles.highlightText}>楽しみましょう</span>
+                            </h1>
+                            <p className={styles.leftSideSubtitle}>
+                                <strong>Hệ thống hóa kiến thức - Tối ưu hóa tư duy</strong>
+                            </p>
+
+                            <button className={styles.ctaButton} onClick={() => handleMobileNav('/register')}>
+                                <span>今すぐ始める (Bắt đầu ngay)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className={styles.overlayGradient}></div>
                 </div>
-                <div style={{
-                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                    background: 'radial-gradient(circle at center, rgba(149, 214, 0, 0.1) 0%, rgba(3, 3, 3, 1) 70%)',
-                    zIndex: 1
-                }}></div>
-            </div>
             </div>
 
-            <div className={styles.rightSide}>
-                <Outlet />
-            </div>
+            <div className={`${styles.rightSide} ${isModalOpen ? styles.showModal : ''}`}>
+                <button className={styles.closeModalBtn} onClick={() => setIsModalOpen(false)}>
+                    ✕
+                </button>
 
+                <div className={styles.rightSideContent}>
+                    <Outlet />
+                </div>
+            </div>
         </div>
     );
 };

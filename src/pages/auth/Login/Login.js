@@ -34,22 +34,21 @@ function Login() {
                 navigate('/profile');
             } else {
                 const errorText = await response.text();
-                setError(errorText || 'ログインに失敗しました。(Login failed.)');
+                setError(errorText || 'ログインに失敗しました。(Đăng nhập thất bại.)');
             }
         } catch (err) {
-            setError('エラーが発生しました。後でもう一度お試しください。(An error occurred. Please try again later.)');
+            setError('エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)');
         }
     };
 
     const togglePasswordVisibility = () => { setShowPassword(!showPassword); };
 
-    // LƯU Ý: Không còn div bao ngoài container nữa, chỉ trả về Wrapper
     return (
         <div className={styles.loginFormWrapper}>
             <div className={styles.loginFormBackground}></div>
             <div className={styles.loginFormOverlay}></div>
             <div className={styles.loginFormContent}>
-                <h2 className={styles.loginTitle}>ログイン (Login)</h2>
+                <h2 className={styles.loginTitle}>ログイン (Đăng nhập)</h2>
                 <form onSubmit={handleSubmit} className={styles.loginForm} autoComplete="off">
                     {error && <p className={styles.loginError}>{error}</p>}
                     <div className={styles.loginInputGroup}>
@@ -61,7 +60,7 @@ function Login() {
                         />
                     </div>
                     <div className={styles.loginInputGroup}>
-                        <label htmlFor="password" className={styles.loginLabel}>パスワード (Password)</label>
+                        <label htmlFor="password" className={styles.loginLabel}>パスワード (Mật khẩu)</label>
                         <div className={styles.passwordWrapper}>
                             <input
                                 type={showPassword ? 'text' : 'password'}
@@ -77,16 +76,16 @@ function Login() {
 
                     <div className={styles.forgotPasswordWrapper}>
                         <Link to="/forgot-password" className={styles.forgotPasswordLink}>
-                            パスワードをお忘れですか？ (Forgot Password?)
+                            パスワードをお忘れですか？ (Quên mật khẩu?)
                         </Link>
                     </div>
 
-                    <button type="submit" className={styles.loginButton}>サインイン (Login)</button>
+                    <button type="submit" className={styles.loginButton}>サインイン (Đăng nhập)</button>
                     <p className={styles.loginLinkText}>
-                        アカウントをお持ちでないですか？ (Don't have an account?){'  '}
+                        アカウントをお持ちでないですか？ (Chưa có tài khoản?){'  '}
                         <br/>
                         <Link to="/register" className={styles.loginLink}>
-                            新規登録 (Register)
+                            新規登録 (Đăng ký)
                         </Link>
                     </p>
                 </form>

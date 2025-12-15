@@ -4,8 +4,6 @@
     overflow: hidden;
     padding: 38px;
     border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 400px;
     text-align: center;
@@ -92,7 +90,7 @@
     font-size: 16px; font-weight: 700; margin-top: 10px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.loginButton:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(149, 214, 0, 0.4); }
+.loginButton:hover {  box-shadow: 0 4px 20px rgba(149, 214, 0, 0.4); }
 
 .loginLinkText { margin-top: 24px; font-size: 14px; color: #aaa; }
 .loginLink { color: #95D600; font-weight: 900; text-decoration: none; }
