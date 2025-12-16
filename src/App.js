@@ -5,8 +5,8 @@ import VerifyEmail from './pages/auth/VerifyEmail/VerifyEmail';
 import Login from './pages/auth/Login/Login';
 import ForgotPassword from "./pages/auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword/ResetPassword";
+import RoadmapScreen from "./pages/RoadMap/RoadmapKanjiN5";
 import Profile from './pages/auth/Profile';
-
 import './App.css';
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
 
@@ -27,6 +27,7 @@ function App() {
                     </Route>
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/roadmap" element={<RoadmapScreen />} />
                     <Route
                         path="/profile"
                         element={

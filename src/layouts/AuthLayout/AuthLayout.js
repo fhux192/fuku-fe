@@ -45,7 +45,7 @@ const AuthLayout = () => {
                                 <strong>Hệ thống hóa kiến thức - Tối ưu hóa tư duy</strong>
                             </p>
 
-                            <button className={styles.ctaButton} onClick={() => handleMobileNav('/register')}>
+                            <button className={styles.ctaButton} onClick={() => handleMobileNav('/roadmap')}>
                                 <span>今すぐ始める (Bắt đầu ngay)</span>
                             </button>
                         </div>
