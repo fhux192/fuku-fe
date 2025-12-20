@@ -5,6 +5,7 @@
     border-radius: 50px;
     width: 100%;
     max-width: 420px;
+    margin: auto;
     text-align: center;
     z-index: 10;
 }
@@ -46,7 +47,7 @@
     font-family: 'Noto Sans Japanese', sans-serif;
     box-sizing: border-box; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
 }
-.registerInput:focus { border-color: #95c632; box-shadow: 0 0 10px rgba(149, 214, 0, 0.3); }
+.registerInput:focus { border-color: #90bb3c; box-shadow: 0 0 10px rgba(149, 214, 0, 0.3); }
 
 .togglePasswordBtn {
     position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
@@ -56,7 +57,7 @@
 .togglePasswordBtn:hover { color: #f5f5f5; }
 
 .registerButton {
-    width: 100%; padding: 14px; background-color: #95c632; color: #111;
+    width: 100%; padding: 14px; background-color: #90bb3c; color: #111;
     border: none; border-radius: 30px; cursor: pointer;
     font-size: 16px; font-weight: 700; margin-top: 10px;
     transition: transform 0.2s, box-shadow 0.2s;
@@ -64,7 +65,7 @@
 .registerButton:hover {  box-shadow: 0 4px 20px rgba(149, 214, 0, 0.4); }
 
 .registerLinkText { margin-top: 24px; font-size: 14px; color: #aaa; }
-.registerLink { color: #95c632; font-weight: 900; text-decoration: none; }
+.registerLink { color: #90bb3c; font-weight: 900; text-decoration: none; }
 .registerLink:hover { text-shadow: 0 0 5px rgba(149, 214, 0, 0.7); }
 
 @media (max-width: 480px) {
