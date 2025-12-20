@@ -1,51 +1,71 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play, Pause, Grid, Database } from 'lucide-react';
+import { X, Play, Grid, Database } from 'lucide-react';
 import styles from './KanaReference.module.css';
+
+import hira_a_img from '../../assets/images/hiragana/a.png';
+import hira_a_audio from '../../assets/voices/a.mp3';
+
+import hira_i_img from '../../assets/images/hiragana/i.png';
+import hira_i_audio from '../../assets/voices/i.mp3';
+
+import hira_u_img from '../../assets/images/hiragana/u.png';
+import hira_u_audio from '../../assets/voices/u.mp3';
+
+import hira_e_img from '../../assets/images/hiragana/e.png';
+import hira_e_audio from '../../assets/voices/e.mp3';
+
+import hira_o_img from '../../assets/images/hiragana/o.png';
+import hira_o_audio from '../../assets/voices/o.mp3';
 
 const KANA_DATA = {
     hiragana: {
         basic: [
-            { char: 'あ', romaji: 'a' }, { char: 'い', romaji: 'i' }, { char: 'う', romaji: 'u' }, { char: 'え', romaji: 'e' }, { char: 'お', romaji: 'o' },
-            { char: 'か', romaji: 'ka' }, { char: 'き', romaji: 'ki' }, { char: 'く', romaji: 'ku' }, { char: 'け', romaji: 'ke' }, { char: 'こ', romaji: 'ko' },
-            { char: 'さ', romaji: 'sa' }, { char: 'し', romaji: 'shi' }, { char: 'す', romaji: 'su' }, { char: 'せ', romaji: 'se' }, { char: 'そ', romaji: 'so' },
-            { char: 'た', romaji: 'ta' }, { char: 'ち', romaji: 'chi' }, { char: 'つ', romaji: 'tsu' }, { char: 'て', romaji: 'te' }, { char: 'と', romaji: 'to' },
-            { char: 'な', romaji: 'na' }, { char: 'に', romaji: 'ni' }, { char: 'ぬ', romaji: 'nu' }, { char: 'ね', romaji: 'ne' }, { char: 'の', romaji: 'no' },
-            { char: 'は', romaji: 'ha' }, { char: 'ひ', romaji: 'hi' }, { char: 'ふ', romaji: 'fu' }, { char: 'へ', romaji: 'he' }, { char: 'ほ', romaji: 'ho' },
-            { char: 'ま', romaji: 'ma' }, { char: 'み', romaji: 'mi' }, { char: 'む', romaji: 'mu' }, { char: 'め', romaji: 'me' }, { char: 'も', romaji: 'mo' },
-            { char: 'や', romaji: 'ya' }, { char: null, romaji: '' }, { char: 'ゆ', romaji: 'yu' }, { char: null, romaji: '' }, { char: 'よ', romaji: 'yo' },
-            { char: 'ら', romaji: 'ra' }, { char: 'り', romaji: 'ri' }, { char: 'る', romaji: 'ru' }, { char: 'れ', romaji: 're' }, { char: 'ろ', romaji: 'ro' },
-            { char: 'わ', romaji: 'wa' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: 'を', romaji: 'wo' },
-            { char: 'ん', romaji: 'n' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' },
+            { char: 'あ', romaji: 'a', image: hira_a_img, audio: hira_a_audio },
+            { char: 'い', romaji: 'i', image: hira_i_img, audio: hira_i_audio },
+            { char: 'う', romaji: 'u', image: hira_u_img, audio: hira_u_audio },
+            { char: 'え', romaji: 'e', image: hira_e_img, audio: hira_e_audio },
+            { char: 'お', romaji: 'o', image: hira_o_img, audio: hira_o_audio },
+
+            { char: 'か', romaji: 'ka', image: null, audio: null }, { char: 'き', romaji: 'ki', image: null, audio: null }, { char: 'く', romaji: 'ku', image: null, audio: null }, { char: 'け', romaji: 'ke', image: null, audio: null }, { char: 'こ', romaji: 'ko', image: null, audio: null },
+            { char: 'さ', romaji: 'sa', image: null, audio: null }, { char: 'し', romaji: 'shi', image: null, audio: null }, { char: 'す', romaji: 'su', image: null, audio: null }, { char: 'せ', romaji: 'se', image: null, audio: null }, { char: 'そ', romaji: 'so', image: null, audio: null },
+            { char: 'た', romaji: 'ta', image: null, audio: null }, { char: 'ち', romaji: 'chi', image: null, audio: null }, { char: 'つ', romaji: 'tsu', image: null, audio: null }, { char: 'て', romaji: 'te', image: null, audio: null }, { char: 'と', romaji: 'to', image: null, audio: null },
+            { char: 'な', romaji: 'na', image: null, audio: null }, { char: 'に', romaji: 'ni', image: null, audio: null }, { char: 'ぬ', romaji: 'nu', image: null, audio: null }, { char: 'ね', romaji: 'ne', image: null, audio: null }, { char: 'の', romaji: 'no', image: null, audio: null },
+            { char: 'は', romaji: 'ha', image: null, audio: null }, { char: 'ひ', romaji: 'hi', image: null, audio: null }, { char: 'ふ', romaji: 'fu', image: null, audio: null }, { char: 'へ', romaji: 'he', image: null, audio: null }, { char: 'ほ', romaji: 'ho', image: null, audio: null },
+            { char: 'ま', romaji: 'ma', image: null, audio: null }, { char: 'み', romaji: 'mi', image: null, audio: null }, { char: 'む', romaji: 'mu', image: null, audio: null }, { char: 'め', romaji: 'me', image: null, audio: null }, { char: 'も', romaji: 'mo', image: null, audio: null },
+            { char: 'や', romaji: 'ya', image: null, audio: null }, { char: null, romaji: '' }, { char: 'ゆ', romaji: 'yu', image: null, audio: null }, { char: null, romaji: '' }, { char: 'よ', romaji: 'yo', image: null, audio: null },
+            { char: 'ら', romaji: 'ra', image: null, audio: null }, { char: 'り', romaji: 'ri', image: null, audio: null }, { char: 'る', romaji: 'ru', image: null, audio: null }, { char: 'れ', romaji: 're', image: null, audio: null }, { char: 'ろ', romaji: 'ro', image: null, audio: null },
+            { char: 'わ', romaji: 'wa', image: null, audio: null }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: 'を', romaji: 'wo', image: null, audio: null },
+            { char: 'ん', romaji: 'n', image: null, audio: null }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' },
         ],
         dakuten: [
-            { char: 'が', romaji: 'ga' }, { char: 'ぎ', romaji: 'gi' }, { char: 'ぐ', romaji: 'gu' }, { char: 'げ', romaji: 'ge' }, { char: 'ご', romaji: 'go' },
-            { char: 'ざ', romaji: 'za' }, { char: 'じ', romaji: 'ji' }, { char: 'ず', romaji: 'zu' }, { char: 'ぜ', romaji: 'ze' }, { char: 'ぞ', romaji: 'zo' },
-            { char: 'だ', romaji: 'da' }, { char: 'ぢ', romaji: 'ji' }, { char: 'づ', romaji: 'zu' }, { char: 'で', romaji: 'de' }, { char: 'ど', romaji: 'do' },
-            { char: 'ば', romaji: 'ba' }, { char: 'び', romaji: 'bi' }, { char: 'ぶ', romaji: 'bu' }, { char: 'べ', romaji: 'be' }, { char: 'ぼ', romaji: 'bo' },
-            { char: 'ぱ', romaji: 'pa' }, { char: 'ぴ', romaji: 'pi' }, { char: 'ぷ', romaji: 'pu' }, { char: 'ぺ', romaji: 'pe' }, { char: 'ぽ', romaji: 'po' },
+            { char: 'が', romaji: 'ga', image: null, audio: null }, { char: 'ぎ', romaji: 'gi', image: null, audio: null }, { char: 'ぐ', romaji: 'gu', image: null, audio: null }, { char: 'げ', romaji: 'ge', image: null, audio: null }, { char: 'ご', romaji: 'go', image: null, audio: null },
+            { char: 'ざ', romaji: 'za', image: null, audio: null }, { char: 'じ', romaji: 'ji', image: null, audio: null }, { char: 'ず', romaji: 'zu', image: null, audio: null }, { char: 'ぜ', romaji: 'ze', image: null, audio: null }, { char: 'ぞ', romaji: 'zo', image: null, audio: null },
+            { char: 'だ', romaji: 'da', image: null, audio: null }, { char: 'ぢ', romaji: 'ji', image: null, audio: null }, { char: 'づ', romaji: 'zu', image: null, audio: null }, { char: 'đ', romaji: 'de', image: null, audio: null }, { char: 'ど', romaji: 'do', image: null, audio: null },
+            { char: 'ば', romaji: 'ba', image: null, audio: null }, { char: 'び', romaji: 'bi', image: null, audio: null }, { char: 'ぶ', romaji: 'bu', image: null, audio: null }, { char: 'べ', romaji: 'be', image: null, audio: null }, { char: 'ぼ', romaji: 'bo', image: null, audio: null },
+            { char: 'ぱ', romaji: 'pa', image: null, audio: null }, { char: 'ぴ', romaji: 'pi', image: null, audio: null }, { char: 'ぷ', romaji: 'pu', image: null, audio: null }, { char: 'ぺ', romaji: 'pe', image: null, audio: null }, { char: 'ぽ', romaji: 'po', image: null, audio: null },
         ]
     },
     katakana: {
         basic: [
-            { char: 'ア', romaji: 'a' }, { char: 'イ', romaji: 'i' }, { char: 'ウ', romaji: 'u' }, { char: 'エ', romaji: 'e' }, { char: 'オ', romaji: 'o' },
-            { char: 'カ', romaji: 'ka' }, { char: 'キ', romaji: 'ki' }, { char: 'ク', romaji: 'ku' }, { char: 'ケ', romaji: 'ke' }, { char: 'コ', romaji: 'ko' },
-            { char: 'サ', romaji: 'sa' }, { char: 'シ', romaji: 'shi' }, { char: 'ス', romaji: 'su' }, { char: 'セ', romaji: 'se' }, { char: 'ソ', romaji: 'so' },
-            { char: 'タ', romaji: 'ta' }, { char: 'チ', romaji: 'chi' }, { char: 'ツ', romaji: 'tsu' }, { char: 'テ', romaji: 'te' }, { char: 'ト', romaji: 'to' },
-            { char: 'ナ', romaji: 'na' }, { char: 'ニ', romaji: 'ni' }, { char: 'ヌ', romaji: 'nu' }, { char: 'ネ', romaji: 'no' }, { char: 'ノ', romaji: 'no' },
-            { char: 'ハ', romaji: 'ha' }, { char: 'ヒ', romaji: 'hi' }, { char: 'フ', romaji: 'fu' }, { char: 'ヘ', romaji: 'he' }, { char: 'ホ', romaji: 'ho' },
-            { char: 'マ', romaji: 'ma' }, { char: 'ミ', romaji: 'mi' }, { char: 'ム', romaji: 'mu' }, { char: 'メ', romaji: 'me' }, { char: 'モ', romaji: 'mo' },
-            { char: 'ヤ', romaji: 'ya' }, { char: null, romaji: '' }, { char: 'ユ', romaji: 'yu' }, { char: null, romaji: '' }, { char: 'ヨ', romaji: 'yo' },
-            { char: 'ラ', romaji: 'ra' }, { char: 'リ', romaji: 'ri' }, { char: 'ル', romaji: 'ru' }, { char: 'レ', romaji: 're' }, { char: 'ロ', romaji: 'ro' },
-            { char: 'ワ', romaji: 'wa' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: 'ヲ', romaji: 'wo' },
-            { char: 'ン', romaji: 'n' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' },
+            { char: 'ア', romaji: 'a', image: null, audio: null }, { char: 'イ', romaji: 'i', image: null, audio: null }, { char: 'ウ', romaji: 'u', image: null, audio: null }, { char: 'エ', romaji: 'e', image: null, audio: null }, { char: 'オ', romaji: 'o', image: null, audio: null },
+            { char: 'カ', romaji: 'ka', image: null, audio: null }, { char: 'キ', romaji: 'ki', image: null, audio: null }, { char: 'ク', romaji: 'ku', image: null, audio: null }, { char: 'ケ', romaji: 'ke', image: null, audio: null }, { char: 'コ', romaji: 'ko', image: null, audio: null },
+            { char: 'サ', romaji: 'sa', image: null, audio: null }, { char: 'シ', romaji: 'shi', image: null, audio: null }, { char: 'ス', romaji: 'su', image: null, audio: null }, { char: 'セ', romaji: 'se', image: null, audio: null }, { char: 'ソ', romaji: 'so', image: null, audio: null },
+            { char: 'タ', romaji: 'ta', image: null, audio: null }, { char: 'チ', romaji: 'chi', image: null, audio: null }, { char: 'ツ', romaji: 'tsu', image: null, audio: null }, { char: 'テ', romaji: 'te', image: null, audio: null }, { char: 'ト', romaji: 'to', image: null, audio: null },
+            { char: 'ナ', romaji: 'na', image: null, audio: null }, { char: 'ニ', romaji: 'ni', image: null, audio: null }, { char: 'ヌ', romaji: 'nu', image: null, audio: null }, { char: 'ネ', romaji: 'no', image: null, audio: null }, { char: 'ノ', romaji: 'no', image: null, audio: null },
+            { char: 'ハ', romaji: 'ha', image: null, audio: null }, { char: 'ヒ', romaji: 'hi', image: null, audio: null }, { char: 'フ', romaji: 'fu', image: null, audio: null }, { char: 'ヘ', romaji: 'he', image: null, audio: null }, { char: 'ホ', romaji: 'ho', image: null, audio: null },
+            { char: 'マ', romaji: 'ma', image: null, audio: null }, { char: 'ミ', romaji: 'mi', image: null, audio: null }, { char: 'ム', romaji: 'mu', image: null, audio: null }, { char: 'メ', romaji: 'me', image: null, audio: null }, { char: 'モ', romaji: 'mo', image: null, audio: null },
+            { char: 'ヤ', romaji: 'ya', image: null, audio: null }, { char: null, romaji: '' }, { char: 'ユ', romaji: 'yu', image: null, audio: null }, { char: null, romaji: '' }, { char: 'ヨ', romaji: 'yo', image: null, audio: null },
+            { char: 'ラ', romaji: 'ra', image: null, audio: null }, { char: 'リ', romaji: 'ri', image: null, audio: null }, { char: 'ル', romaji: 'ru', image: null, audio: null }, { char: 'レ', romaji: 're', image: null, audio: null }, { char: 'ロ', romaji: 'ro', image: null, audio: null },
+            { char: 'ワ', romaji: 'wa', image: null, audio: null }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: 'ヲ', romaji: 'wo', image: null, audio: null },
+            { char: 'ン', romaji: 'n', image: null, audio: null }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' }, { char: null, romaji: '' },
         ],
         dakuten: [
-            { char: 'ガ', romaji: 'ga' }, { char: 'ギ', romaji: 'gi' }, { char: 'グ', romaji: 'gu' }, { char: 'ゲ', romaji: 'ge' }, { char: 'ゴ', romaji: 'go' },
-            { char: 'ザ', romaji: 'za' }, { char: 'ジ', romaji: 'ji' }, { char: 'ズ', romaji: 'zu' }, { char: 'ぜ', romaji: 'ze' }, { char: 'ぞ', romaji: 'zo' },
-            { char: 'だ', romaji: 'da' }, { char: 'ヂ', romaji: 'ji' }, { char: 'ヅ', romaji: 'zu' }, { char: 'デ', romaji: 'de' }, { char: 'ド', romaji: 'do' },
-            { char: 'バ', romaji: 'ba' }, { char: 'ビ', romaji: 'bi' }, { char: 'ブ', romaji: 'bu' }, { char: 'べ', romaji: 'be' }, { char: 'ボ', romaji: 'bo' },
-            { char: 'パ', romaji: 'pa' }, { char: 'ピ', romaji: 'pi' }, { char: 'プ', romaji: 'pu' }, { char: 'ペ', romaji: 'pe' }, { char: 'ポ', romaji: 'po' },
+            { char: 'ガ', romaji: 'ga', image: null, audio: null }, { char: 'ギ', romaji: 'gi', image: null, audio: null }, { char: 'グ', romaji: 'gu', image: null, audio: null }, { char: 'ゲ', romaji: 'ge', image: null, audio: null }, { char: 'ゴ', romaji: 'go', image: null, audio: null },
+            { char: 'ザ', romaji: 'za', image: null, audio: null }, { char: 'ジ', romaji: 'ji', image: null, audio: null }, { char: 'ズ', romaji: 'zu', image: null, audio: null }, { char: 'ぜ', romaji: 'ze', image: null, audio: null }, { char: 'ぞ', romaji: 'zo', image: null, audio: null },
+            { char: 'だ', romaji: 'da', image: null, audio: null }, { char: 'ヂ', romaji: 'ji', image: null, audio: null }, { char: 'ヅ', romaji: 'zu', image: null, audio: null }, { char: 'デ', romaji: 'de', image: null, audio: null }, { char: 'ド', romaji: 'do', image: null, audio: null },
+            { char: 'バ', romaji: 'ba', image: null, audio: null }, { char: 'ビ', romaji: 'bi', image: null, audio: null }, { char: 'ブ', romaji: 'bu', image: null, audio: null }, { char: 'べ', romaji: 'be', image: null, audio: null }, { char: 'ボ', romaji: 'bo', image: null, audio: null },
+            { char: 'パ', romaji: 'pa', image: null, audio: null }, { char: 'pi', romaji: 'pi', image: null, audio: null }, { char: 'プ', romaji: 'pu', image: null, audio: null }, { char: 'ペ', romaji: 'pe', image: null, audio: null }, { char: 'ポ', romaji: 'po', image: null, audio: null },
         ]
     }
 };
@@ -55,14 +75,14 @@ const KanaDetailModal = ({ item, onClose }) => {
 
     const handlePlayAudio = (e) => {
         e.stopPropagation();
-        if (isPlaying) return;
+        if (isPlaying || !item.audio) return;
 
-        const audioPath = `/${item.romaji}.mp3`;
-        const audio = new Audio(audioPath);
+        // Sử dụng biến audio đã được import từ dữ liệu
+        const audio = new Audio(item.audio);
 
         setIsPlaying(true);
         audio.play().catch(error => {
-            console.error("Audio missing:", audioPath);
+            console.error("Lỗi âm thanh:", error);
             setIsPlaying(false);
         });
 
@@ -96,12 +116,17 @@ const KanaDetailModal = ({ item, onClose }) => {
 
                 <div className={styles.modalBody}>
                     <div className={styles.largeDisplay}>
-                        <div className={styles.displayChar}>{item.char}</div>
-                        <div className={styles.displayRomaji}>{item.romaji}</div>
+                        <div className={styles.imgContainer}>
+                            {item.image ? (
+                                <img src={item.image} alt={item.char}  />
+                            ) : (
+                                <div className={styles.displayChar}>{item.char}</div>
+                            )}
+                        </div>
                     </div>
 
                     <div
-                        className={styles.playerControl}
+                        className={`${styles.playerControl} ${!item.audio ? styles.disabled : ''}`}
                         onClick={handlePlayAudio}
                     >
                         {isPlaying ? (
@@ -112,11 +137,11 @@ const KanaDetailModal = ({ item, onClose }) => {
                                 <motion.div className={styles.bar} animate={{ height: [16, 8, 12] }} transition={{ repeat: Infinity, duration: 0.35 }} />
                             </div>
                         ) : (
-                            <Play size={20} className={styles.playIcon} fill="#95D600" />
+                            <Play size={20} className={styles.playIcon} fill={item.audio ? "#95D600" : "#ccc"} />
                         )}
 
                         <span className={styles.playText}>
-                            {isPlaying ? "Đang phát..." : "Nghe phát âm"}
+                            {!item.audio ? "Chưa có phát âm" : isPlaying ? "Đang phát..." : "Nghe phát âm"}
                         </span>
                     </div>
                 </div>
@@ -186,13 +211,6 @@ const KanaReference = () => {
 
             <div className={styles.contentWrapper}>
                 <div className={styles.headerContainer}>
-                    <div className={styles.headerLeft}>
-                        <h1 className={styles.mainTitle}>
-                            Bảng chữ cái <br/> <span className={styles.accent}>
-                             tiếng Nhật</span>
-                        </h1>
-                    </div>
-
                     <div className={styles.tabContainer}>
                         {['hiragana', 'katakana'].map((tab) => (
                             <button
