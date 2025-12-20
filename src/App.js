@@ -9,6 +9,7 @@ import RoadmapScreen from "./pages/RoadMap/RoadmapKanjiN5";
 import Profile from './pages/auth/Profile';
 import './App.css';
 import AuthLayout from "./layouts/AuthLayout/AuthLayout";
+import KanaReference from "./pages/KanaReference/KanaReference";
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('authToken');
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
                     <Route path="/roadmap" element={<RoadmapScreen />} />
+                    <Route path="/kana-reference" element={<KanaReference />} />
                     <Route
                         path="/profile"
                         element={

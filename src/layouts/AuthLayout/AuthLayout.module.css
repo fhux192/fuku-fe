@@ -114,13 +114,13 @@
 .leftSideTitle {
     font-size: 2.2rem;
     font-weight: 900;
-    color: #fff;
+    color: #ccc;
     margin: 0 0 15px 0;
     line-height: 1.2;
     letter-spacing: -1px;
 }
 
-.highlightText { color: #95D600; display: inline-block; }
+.highlightText { color: #95c632; display: inline-block; }
 
 .leftSideSubtitle {
     font-size: 1rem;
@@ -141,12 +141,12 @@
 .ctaButton {
     position: relative;
     background: transparent;
-    color: #95D600;
+    color: #95c632;
     font-family: 'Noto Sans JP', sans-serif;
     font-size: 0.9rem;
     font-weight: 700;
     padding: 12px 30px;
-    border: 2px solid #95D600;
+    border: 2px solid #95c632;
     border-radius: 50px;
     cursor: pointer !important;
     overflow: hidden;
@@ -159,7 +159,7 @@
 .ctaButton span { position: relative; z-index: 2; }
 .ctaButton::before {
     content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
-    background-color: #95D600; transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1;
+    background-color: #95c632; transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1;
 }
 .ctaButton:hover { color: #030303; transform: scale(1.05); }
 .ctaButton:hover::before { width: 100%; }
