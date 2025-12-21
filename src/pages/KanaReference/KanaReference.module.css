@@ -177,7 +177,6 @@
 }
 
 @media (min-width: 768px) {
-
     .gridContainer{margin-top: 20px}
     .gridContainer:not(.youonGrid) {
     }
@@ -252,7 +251,8 @@
     backdrop-filter: blur(5px);
     border: 1px solid #27272a;
     border-radius: 28px;
-    padding: 0;
+    padding-top: 8px;
+    margin:0 10px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
@@ -277,7 +277,7 @@
 .closeBtn {
     background: rgba(255,255,255,0.05);
     border: none;
-    width: 40px; height: 40px;
+    width: 50px; height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -288,24 +288,23 @@
 }
 
 .closeBtn:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.3);
     color: #fff;
     transform: rotate(90deg);
 }
 
 .modalBody {
-    padding: 10px 24px 32px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 10px;
 }
 
 .heroContainer {
     background-color: #fff;
-    padding-left: 4px;
     width: 100%;
-    aspect-ratio: 5/3;
+    height: 50vh;
     border-radius: 20px;
     display: flex;
     align-items: center;
@@ -314,21 +313,30 @@
     overflow: hidden;
 }
 
+.heroInner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .heroImageWrapper {
     width: 100%;
     height: 100%;
-    padding: 30px;
+    padding: 20px;
+    margin-left: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .heroImage {
-    max-width: 100%;
-    max-height: 100%;
+    max-width: 80%;
+    max-height: 80%;
     object-fit: contain;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .heroCharDisplay {
@@ -337,6 +345,7 @@
     color: var(--text-primary);
     line-height: 1;
     text-shadow: 0 0 40px rgba(255,255,255,0.1);
+    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .romajiBadge {
@@ -344,6 +353,7 @@
     flex-direction: column;
     align-items: center;
     gap: 4px;
+    animation: fadeIn 0.3s ease;
 }
 
 .romajiText {
@@ -361,7 +371,7 @@
 }
 
 .playerBtn {
-    width: 100%;
+    width: 90%;
     height: 64px;
     background: #27272a;
     border-radius: 30px;
@@ -455,20 +465,38 @@
     animation: barAnim4 0.45s infinite 0.05s;
 }
 
-.mobileHandle {
-    display: none;
+.navBtn {
+    position: absolute;
+    top: 0;
     width: 40px;
-    height: 4px;
-    background: #3f3f46;
-    border-radius: 2px;
-    margin: 12px auto 0;
+    height: 100%;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
 }
 
+.navBtn:hover:not(.disabled) {
+    background: rgba(0,0,0,0.09);
+}
+
+.navBtn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.navBtnLeft {
+    left: 0;
+}
+
+.navBtnRight {
+    right: 0;
+}
 
 @media (max-width: 768px) {
     .kanaCard{gap: 0;}
     .contentWrapper { padding: 15px; }
-    .tabContainer {padding: 0}
+    .tabContainer {padding: 2px}
     .tabBtn { padding: 8px 24px; }
     .accordionHeader { padding: 16px; }
     .accordionContent { padding: 0 12px 16px 12px; }
@@ -496,7 +524,6 @@
         animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .mobileHandle { display: block; }
 
     .modalHeader {
         padding-top: 10px;
@@ -517,9 +544,11 @@
     to { opacity: 1; }
 }
 
-@keyframes scaleIn {
+@keyframes bounceIn {
     from { transform: scale(0.01); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    60% { transform: scale(1.1); opacity: 1; }
+    80% { transform: scale(0.9); }
+    to { transform: scale(1); }
 }
 
 @keyframes cardEntry {
