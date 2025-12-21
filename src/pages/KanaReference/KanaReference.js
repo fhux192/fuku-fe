@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Play, Grid, Database, Layers, ChevronDown, Volume2 } from 'lucide-react';
 import styles from './KanaReference.module.css';
@@ -19,8 +19,8 @@ const gridContainerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.04,
-            delayChildren: 0.1
+            staggerChildren: 0.03,
+            delayChildren: 0.05
         }
     },
     exit: {
@@ -31,9 +31,9 @@ const gridContainerVariants = {
 
 const cardVariants = {
     hidden: {
-        y: 50,
+        y: 30,
         opacity: 0,
-        scale: 0.5
+        scale: 0.6
     },
     visible: {
         y: 0,
@@ -41,25 +41,25 @@ const cardVariants = {
         scale: 1,
         transition: {
             type: "spring",
-            stiffness: 400,
-            damping: 12,
+            stiffness: 320,
+            damping: 14,
             mass: 0.8
         }
     }
 };
 
 const tabContentVariants = {
-    hidden: { opacity: 0, x: -30 },
+    hidden: { opacity: 0, x: -20 },
     visible: {
         opacity: 1,
         x: 0,
         transition: {
             type: "spring",
-            stiffness: 300,
+            stiffness: 400,
             damping: 25
         }
     },
-    exit: { opacity: 0, x: 30, transition: { duration: 0.2 } }
+    exit: { opacity: 0, x: 20, transition: { duration: 0.15 } }
 };
 
 const KANA_DATA = {
@@ -139,12 +139,39 @@ const KANA_DATA = {
     }
 };
 
+const KanaCard = memo(({ item, onClick }) => {
+    return (
+        <motion.div
+            className={styles.kanaCard}
+            onClick={onClick}
+            variants={cardVariants}
+
+            whileTap={{
+                scale: 0.9,
+                transition: { type: "spring", stiffness: 400, damping: 20 }
+            }}
+            style={{ cursor: 'pointer' }}
+        >
+            <span className={styles.cardChar}>{item.char}</span>
+            <span className={styles.cardRomaji}>{item.romaji}</span>
+        </motion.div>
+    );
+});
+
 const KanaDetailModal = ({ item, onClose }) => {
     const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     const handlePlayAudio = (e) => {
         e.stopPropagation();
         if (isPlaying || !item.audio) return;
+
         const audio = new Audio(item.audio);
         setIsPlaying(true);
         audio.play().catch(() => setIsPlaying(false));
@@ -161,23 +188,17 @@ const KanaDetailModal = ({ item, onClose }) => {
             exit={{ opacity: 0 }}
             onClick={onClose}
         >
-            <motion.div
+            <div
                 className={styles.modalPanel}
                 onClick={(e) => e.stopPropagation()}
-                initial={{ scale: 0.8, opacity: 0, y: 50 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.8, opacity: 0, y: 50 }}
-                transition={{
-                    type: 'spring',
-                    damping: 15,
-                    stiffness: 400
-                }}
             >
                 <div className={styles.mobileHandle} />
 
                 <div className={styles.modalHeader}>
                     <span className={styles.modalTitle}>Chi tiết ký tự</span>
-                    <button className={styles.closeBtn} onClick={onClose}><X size={20} /></button>
+                    <button className={styles.closeBtn} onClick={onClose}>
+                        <X size={20} />
+                    </button>
                 </div>
 
                 <div className={styles.modalBody}>
@@ -188,9 +209,9 @@ const KanaDetailModal = ({ item, onClose }) => {
                                     src={item.image}
                                     alt={item.char}
                                     className={styles.heroImage}
-                                    initial={{ scale: 0.8 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 10, delay: 0.1 }}
+                                    initial={{ scale: 0.1, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
                                 />
                             </div>
                         ) : (
@@ -203,16 +224,18 @@ const KanaDetailModal = ({ item, onClose }) => {
                         <span className={styles.romajiLabel}>Romaji</span>
                     </div>
 
-                    <div
+                    <motion.div
                         className={`${styles.playerBtn} ${!item.audio ? styles.disabled : ''} ${isPlaying ? styles.playing : ''}`}
                         onClick={handlePlayAudio}
+                        whileTap={{ scale: 0.95 }}
+                        whileHover={item.audio ? { scale: 1.05 } : {}}
                     >
                         <div className={styles.playIconWrapper}>
                             {isPlaying ? <Volume2 size={16} /> : <Play size={16} fill="currentColor" style={{ marginLeft: 2 }} />}
                         </div>
 
                         <span className={styles.playLabel}>
-                            {!item.audio ? "Không có âm thanh" : "Phát âm mẫu"}
+                            {!item.audio ? "Không có âm thanh" : (isPlaying ? "Đang phát..." : "Phát âm mẫu")}
                         </span>
 
                         {isPlaying && (
@@ -223,14 +246,14 @@ const KanaDetailModal = ({ item, onClose }) => {
                                 <motion.div className={styles.bar} animate={{ height: [10, 18, 10] }} transition={{ repeat: Infinity, duration: 0.45, delay: 0.05 }} />
                             </div>
                         )}
-                    </div>
+                    </motion.div>
                 </div>
-            </motion.div>
+            </div>
         </motion.div>
     );
 };
 
-const KanaSection = ({ type, items, onSelect, isOpen, onToggle }) => {
+const KanaSection = memo(({ type, items, onSelect, isOpen, onToggle }) => {
     const labels = { basic: "Âm cơ bản", dakuten: "Âm đục & Bán đục", youon: "Âm ghép" };
     const icons = { basic: <Grid size={18} />, dakuten: <Database size={18} />, youon: <Layers size={18} /> };
 
@@ -255,7 +278,7 @@ const KanaSection = ({ type, items, onSelect, isOpen, onToggle }) => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "circOut" }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
                         className={styles.accordionContent}
                     >
                         <motion.div
@@ -267,21 +290,11 @@ const KanaSection = ({ type, items, onSelect, isOpen, onToggle }) => {
                         >
                             {items.map((item, idx) => (
                                 item && item.char ? (
-                                    <motion.div
+                                    <KanaCard
                                         key={`${type}-${idx}-${item.char}`}
-                                        className={styles.kanaCard}
+                                        item={item}
                                         onClick={() => onSelect(item)}
-                                        variants={cardVariants}
-                                        whileHover={{
-                                            scale: 1.1,
-                                            y: -5,
-                                            transition: { type: "spring", stiffness: 400, damping: 10 }
-                                        }}
-                                        whileTap={{ scale: 0.9 }}
-                                    >
-                                        <span className={styles.cardChar}>{item.char}</span>
-                                        <span className={styles.cardRomaji}>{item.romaji}</span>
-                                    </motion.div>
+                                    />
                                 ) : <div key={idx} className={styles.emptySlot} />
                             ))}
                         </motion.div>
@@ -290,7 +303,7 @@ const KanaSection = ({ type, items, onSelect, isOpen, onToggle }) => {
             </AnimatePresence>
         </div>
     );
-};
+});
 
 const KanaReference = () => {
     const [activeTab, setActiveTab] = useState('hiragana');
@@ -309,7 +322,11 @@ const KanaReference = () => {
                 <div className={styles.headerContainer}>
                     <div className={styles.tabContainer}>
                         {['hiragana', 'katakana'].map((tab) => (
-                            <button key={tab} className={`${styles.tabBtn} ${activeTab === tab ? styles.activeTab : ''}`} onClick={() => setActiveTab(tab)}>
+                            <button
+                                key={tab}
+                                className={`${styles.tabBtn} ${activeTab === tab ? styles.activeTab : ''}`}
+                                onClick={() => setActiveTab(tab)}
+                            >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
                                 {activeTab === tab && (
                                     <motion.div
@@ -345,7 +362,12 @@ const KanaReference = () => {
             </div>
 
             <AnimatePresence>
-                {selectedKana && <KanaDetailModal item={selectedKana} onClose={() => setSelectedKana(null)} />}
+                {selectedKana && (
+                    <KanaDetailModal
+                        item={selectedKana}
+                        onClose={() => setSelectedKana(null)}
+                    />
+                )}
             </AnimatePresence>
         </div>
     );
