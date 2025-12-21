@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect, memo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { X, Play, Grid, Database, Layers, ChevronDown, Volume2 } from 'lucide-react';
 import styles from './KanaReference.module.css';
 
@@ -13,54 +12,6 @@ import hira_e_img from '../../assets/images/hiragana/e.png';
 import hira_e_audio from '../../assets/voices/e.mp3';
 import hira_o_img from '../../assets/images/hiragana/o.png';
 import hira_o_audio from '../../assets/voices/o.mp3';
-
-const gridContainerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-        opacity: 1,
-        transition: {
-            staggerChildren: 0.01,
-            delayChildren: 0.03
-        }
-    },
-    exit: {
-        opacity: 0,
-        transition: { staggerChildren: 0.02, staggerDirection: -1 }
-    }
-};
-
-const cardVariants = {
-    hidden: {
-        y: 30,
-        opacity: 0,
-        scale: 0.6
-    },
-    visible: {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        transition: {
-            type: "spring",
-            stiffness: 320,
-            damping: 14,
-            mass: 0.8
-        }
-    }
-};
-
-const tabContentVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-        opacity: 1,
-        x: 0,
-        transition: {
-            type: "spring",
-            stiffness: 400,
-            damping: 25
-        }
-    },
-    exit: { opacity: 0, x: 20, transition: { duration: 0.15 } }
-};
 
 const KANA_DATA = {
     hiragana: {
@@ -88,19 +39,19 @@ const KANA_DATA = {
             { char: 'ば', romaji: 'ba' }, { char: 'び', romaji: 'bi' }, { char: 'ぶ', romaji: 'bu' }, { char: 'べ', romaji: 'be' }, { char: 'ぼ', romaji: 'bo' },
             { char: 'ぱ', romaji: 'pa' }, { char: 'ぴ', romaji: 'pi' }, { char: 'ぷ', romaji: 'pu' }, { char: 'ぺ', romaji: 'pe' }, { char: 'ぽ', romaji: 'po' },
         ],
-        // youon: [
-        //     { char: 'きゃ', romaji: 'kya' }, { char: 'きゅ', romaji: 'kyu' }, { char: 'きょ', romaji: 'kyo' },
-        //     { char: 'しゃ', romaji: 'sha' }, { char: 'しゅ', romaji: 'shu' }, { char: 'しょ', romaji: 'sho' },
-        //     { char: 'ちゃ', romaji: 'cha' }, { char: 'ちゅ', romaji: 'chu' }, { char: 'ちょ', romaji: 'cho' },
-        //     { char: 'にゃ', romaji: 'nya' }, { char: 'にゅ', romaji: 'nyu' }, { char: 'にょ', romaji: 'nyo' },
-        //     { char: 'ひゃ', romaji: 'hya' }, { char: 'ひゅ', romaji: 'hyu' }, { char: 'ひょ', romaji: 'hyo' },
-        //     { char: 'みゃ', romaji: 'mya' }, { char: 'みゅ', romaji: 'myu' }, { char: 'みょ', romaji: 'myo' },
-        //     { char: 'りゃ', romaji: 'rya' }, { char: 'りゅ', romaji: 'ryu' }, { char: 'りょ', romaji: 'ryo' },
-        //     { char: 'ぎゃ', romaji: 'gya' }, { char: 'ぎゅ', romaji: 'gyu' }, { char: 'ぎょ', romaji: 'gyo' },
-        //     { char: 'じゃ', romaji: 'ja' }, { char: 'じゅ', romaji: 'ju' }, { char: 'じょ', romaji: 'jo' },
-        //     { char: 'びゃ', romaji: 'bya' }, { char: 'びゅ', romaji: 'byu' }, { char: 'びょ', romaji: 'byo' },
-        //     { char: 'ぴゃ', romaji: 'pya' }, { char: 'ぴゅ', romaji: 'pyu' }, { char: 'ぴょ', romaji: 'pyo' }
-        // ]
+        youon: [
+            { char: 'きゃ', romaji: 'kya' }, { char: 'きゅ', romaji: 'kyu' }, { char: 'きょ', romaji: 'kyo' },
+            { char: 'しゃ', romaji: 'sha' }, { char: 'しゅ', romaji: 'shu' }, { char: 'しょ', romaji: 'sho' },
+            { char: 'ちゃ', romaji: 'cha' }, { char: 'ちゅ', romaji: 'chu' }, { char: 'ちょ', romaji: 'cho' },
+            { char: 'にゃ', romaji: 'nya' }, { char: 'にゅ', romaji: 'nyu' }, { char: 'にょ', romaji: 'nyo' },
+            { char: 'ひゃ', romaji: 'hya' }, { char: 'ひゅ', romaji: 'hyu' }, { char: 'ひょ', romaji: 'hyo' },
+            { char: 'みゃ', romaji: 'mya' }, { char: 'みゅ', romaji: 'myu' }, { char: 'みょ', romaji: 'myo' },
+            { char: 'りゃ', romaji: 'rya' }, { char: 'りゅ', romaji: 'ryu' }, { char: 'りょ', romaji: 'ryo' },
+            { char: 'ぎゃ', romaji: 'gya' }, { char: 'ぎゅ', romaji: 'gyu' }, { char: 'ぎょ', romaji: 'gyo' },
+            { char: 'じゃ', romaji: 'ja' }, { char: 'じゅ', romaji: 'ju' }, { char: 'じょ', romaji: 'jo' },
+            { char: 'びゃ', romaji: 'bya' }, { char: 'びゅ', romaji: 'byu' }, { char: 'びょ', romaji: 'byo' },
+            { char: 'ぴゃ', romaji: 'pya' }, { char: 'ぴゅ', romaji: 'pyu' }, { char: 'ぴょ', romaji: 'pyo' }
+        ]
     },
     katakana: {
         basic: [
@@ -123,38 +74,32 @@ const KANA_DATA = {
             { char: 'バ', romaji: 'ba' }, { char: 'ビ', romaji: 'bi' }, { char: 'ブ', romaji: 'bu' }, { char: 'ベ', romaji: 'be' }, { char: 'ボ', romaji: 'bo' },
             { char: 'パ', romaji: 'pa' }, { char: 'ピ', romaji: 'pi' }, { char: 'プ', romaji: 'pu' }, { char: 'ペ', romaji: 'pe' }, { char: 'ポ', romaji: 'po' },
         ],
-        // youon: [
-        //     { char: 'キャ', romaji: 'kya' }, { char: 'キュ', romaji: 'kyu' }, { char: 'キョ', romaji: 'kyo' },
-        //     { char: 'シャ', romaji: 'sha' }, { char: 'シュ', romaji: 'shu' }, { char: 'ショ', romaji: 'sho' },
-        //     { char: 'チャ', romaji: 'cha' }, { char: 'チュ', romaji: 'chu' }, { char: 'チョ', romaji: 'cho' },
-        //     { char: 'ニャ', romaji: 'nya' }, { char: 'ニュ', romaji: 'nyu' }, { char: 'ニョ', romaji: 'nyo' },
-        //     { char: 'ヒャ', romaji: 'hya' }, { char: 'ヒュ', romaji: 'hyu' }, { char: 'ヒョ', romaji: 'hyo' },
-        //     { char: 'ミャ', romaji: 'mya' }, { char: 'ミュ', romaji: 'myu' }, { char: 'ミョ', romaji: 'myo' },
-        //     { char: 'リャ', romaji: 'rya' }, { char: 'リュ', romaji: 'ryu' }, { char: 'リョ', romaji: 'ryo' },
-        //     { char: 'ギャ', romaji: 'gya' }, { char: 'ギュ', romaji: 'gyu' }, { char: 'ギョ', romaji: 'gyo' },
-        //     { char: 'ジャ', romaji: 'ja' }, { char: 'ジュ', romaji: 'ju' }, { char: 'ジョ', romaji: 'jo' },
-        //     { char: 'ビャ', romaji: 'bya' }, { char: 'ビュ', romaji: 'byu' }, { char: 'ビョ', romaji: 'byo' },
-        //     { char: 'ピャ', romaji: 'pya' }, { char: 'ピュ', romaji: 'pyu' }, { char: 'ピョ', romaji: 'pyo' }
-        // ]
+        youon: [
+            { char: 'キャ', romaji: 'kya' }, { char: 'キュ', romaji: 'kyu' }, { char: 'キョ', romaji: 'kyo' },
+            { char: 'シャ', romaji: 'sha' }, { char: 'シュ', romaji: 'shu' }, { char: 'ショ', romaji: 'sho' },
+            { char: 'チャ', romaji: 'cha' }, { char: 'チュ', romaji: 'chu' }, { char: 'チョ', romaji: 'cho' },
+            { char: 'ニャ', romaji: 'nya' }, { char: 'ニュ', romaji: 'nyu' }, { char: 'ニョ', romaji: 'nyo' },
+            { char: 'ヒャ', romaji: 'hya' }, { char: 'ヒュ', romaji: 'hyu' }, { char: 'ヒョ', romaji: 'hyo' },
+            { char: 'ミャ', romaji: 'mya' }, { char: 'ミュ', romaji: 'myu' }, { char: 'ミョ', romaji: 'myo' },
+            { char: 'リャ', romaji: 'rya' }, { char: 'リュ', romaji: 'ryu' }, { char: 'リョ', romaji: 'ryo' },
+            { char: 'ギャ', romaji: 'gya' }, { char: 'ギュ', romaji: 'gyu' }, { char: 'ギョ', romaji: 'gyo' },
+            { char: 'ジャ', romaji: 'ja' }, { char: 'ジュ', romaji: 'ju' }, { char: 'ジョ', romaji: 'jo' },
+            { char: 'ビャ', romaji: 'bya' }, { char: 'ビュ', romaji: 'byu' }, { char: 'ビョ', romaji: 'byo' },
+            { char: 'ピャ', romaji: 'pya' }, { char: 'ピュ', romaji: 'pyu' }, { char: 'ピョ', romaji: 'pyo' }
+        ]
     }
 };
 
 const KanaCard = memo(({ item, onClick }) => {
     return (
-        <motion.div
+        <div
             className={styles.kanaCard}
             onClick={onClick}
-            variants={cardVariants}
-
-            whileTap={{
-                scale: 0.9,
-                transition: { type: "spring", stiffness: 400, damping: 20 }
-            }}
             style={{ cursor: 'pointer' }}
         >
             <span className={styles.cardChar}>{item.char}</span>
             <span className={styles.cardRomaji}>{item.romaji}</span>
-        </motion.div>
+        </div>
     );
 });
 
@@ -181,11 +126,8 @@ const KanaDetailModal = ({ item, onClose }) => {
     if (!item) return null;
 
     return (
-        <motion.div
+        <div
             className={styles.modalBackdrop}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             onClick={onClose}
         >
             <div
@@ -205,13 +147,10 @@ const KanaDetailModal = ({ item, onClose }) => {
                     <div className={styles.heroContainer}>
                         {item.image ? (
                             <div className={styles.heroImageWrapper}>
-                                <motion.img
+                                <img
                                     src={item.image}
                                     alt={item.char}
                                     className={styles.heroImage}
-                                    initial={{ scale: 0.1, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
                                 />
                             </div>
                         ) : (
@@ -224,11 +163,9 @@ const KanaDetailModal = ({ item, onClose }) => {
                         <span className={styles.romajiLabel}>Romaji</span>
                     </div>
 
-                    <motion.div
+                    <div
                         className={`${styles.playerBtn} ${!item.audio ? styles.disabled : ''} ${isPlaying ? styles.playing : ''}`}
                         onClick={handlePlayAudio}
-                        whileTap={{ scale: 0.95 }}
-                        whileHover={item.audio ? { scale: 1.05 } : {}}
                     >
                         <div className={styles.playIconWrapper}>
                             {isPlaying ? <Volume2 size={16} /> : <Play size={16} fill="currentColor" style={{ marginLeft: 2 }} />}
@@ -240,22 +177,22 @@ const KanaDetailModal = ({ item, onClose }) => {
 
                         {isPlaying && (
                             <div className={styles.soundWave}>
-                                <motion.div className={styles.bar} animate={{ height: [8, 16, 8] }} transition={{ repeat: Infinity, duration: 0.3 }} />
-                                <motion.div className={styles.bar} animate={{ height: [12, 6, 12] }} transition={{ repeat: Infinity, duration: 0.4, delay: 0.1 }} />
-                                <motion.div className={styles.bar} animate={{ height: [16, 8, 16] }} transition={{ repeat: Infinity, duration: 0.35, delay: 0.2 }} />
-                                <motion.div className={styles.bar} animate={{ height: [10, 18, 10] }} transition={{ repeat: Infinity, duration: 0.45, delay: 0.05 }} />
+                                <div className={styles.bar} />
+                                <div className={styles.bar} />
+                                <div className={styles.bar} />
+                                <div className={styles.bar} />
                             </div>
                         )}
-                    </motion.div>
+                    </div>
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 };
 
 const KanaSection = memo(({ type, items, onSelect, isOpen, onToggle }) => {
-    // const labels = { basic: "Âm cơ bản", dakuten: "Âm đục & Bán đục", youon: "Âm ghép" };
-    const labels = { basic: "Âm cơ bản", dakuten: "Âm đục & Bán đục" };
+    const labels = { basic: "Âm cơ bản", dakuten: "Âm đục & Bán đục", youon: "Âm ghép" };
+    // const labels = { basic: "Âm cơ bản", dakuten: "Âm đục & Bán đục" };
     const icons = { basic: <Grid size={18} />, dakuten: <Database size={18} />, youon: <Layers size={18} /> };
 
     return (
@@ -265,43 +202,31 @@ const KanaSection = memo(({ type, items, onSelect, isOpen, onToggle }) => {
                     <span className={`${styles.iconBox} ${isOpen ? styles.iconActive : ''}`}>{icons[type]}</span>
                     <span className={styles.sectionLabel}>{labels[type]}</span>
                 </div>
-                <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                <div
+                    className={styles.chevronWrapper}
                 >
                     <ChevronDown size={20} color="#666" />
-                </motion.div>
+                </div>
             </button>
 
-            <AnimatePresence initial={false}>
-                {isOpen && (
-                    <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={styles.accordionContent}
+            {isOpen && (
+                <div className={styles.accordionContent}>
+                    <div
+                        className={`${styles.gridContainer} ${type === 'youon' ? styles.youonGrid : ''}`}
                     >
-                        <motion.div
-                            className={`${styles.gridContainer} ${type === 'youon' ? styles.youonGrid : ''}`}
-                            variants={gridContainerVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                        >
-                            {items.map((item, idx) => (
-                                item && item.char ? (
-                                    <KanaCard
-                                        key={`${type}-${idx}-${item.char}`}
-                                        item={item}
-                                        onClick={() => onSelect(item)}
-                                    />
-                                ) : <div key={idx} className={styles.emptySlot} />
-                            ))}
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        {items.map((item, idx) => (
+                            item && item.char ? (
+                                <KanaCard
+                                    key={`${type}-${idx}-${item.char}`}
+                                    item={item}
+                                    onClick={() => onSelect(item)}
+                                    style={{ '--idx': idx }}
+                                />
+                            ) : <div key={idx} className={styles.emptySlot} />
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 });
@@ -329,28 +254,23 @@ const KanaReference = () => {
                                 onClick={() => setActiveTab(tab)}
                             >
                                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                                {activeTab === tab && (
-                                    <motion.div
-                                        className={styles.activeIndicator}
-                                        layoutId="tabUnderline"
-                                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                    />
-                                )}
                             </button>
                         ))}
+                        <div
+                            className={styles.activeIndicator}
+                            style={{
+                                transform: activeTab === 'hiragana' ? 'translateX(0)' : 'translateX(100%)'
+                            }}
+                        />
                     </div>
                 </div>
 
-                <motion.div
+                <div
                     key={activeTab}
-                    variants={tabContentVariants}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
                     className={styles.accordionList}
                 >
-                    {/*{['basic', 'dakuten', 'youon'].map((section) => (*/}
-                    {['basic', 'dakuten'].map((section) => (
+                    {['basic', 'dakuten', 'youon'].map((section) => (
+                    // {['basic', 'dakuten'].map((section) => (
                         <KanaSection
                             key={section}
                             type={section}
@@ -360,17 +280,15 @@ const KanaReference = () => {
                             onToggle={() => toggleSection(section)}
                         />
                     ))}
-                </motion.div>
+                </div>
             </div>
 
-            <AnimatePresence>
-                {selectedKana && (
-                    <KanaDetailModal
-                        item={selectedKana}
-                        onClose={() => setSelectedKana(null)}
-                    />
-                )}
-            </AnimatePresence>
+            {selectedKana && (
+                <KanaDetailModal
+                    item={selectedKana}
+                    onClose={() => setSelectedKana(null)}
+                />
+            )}
         </div>
     );
 };

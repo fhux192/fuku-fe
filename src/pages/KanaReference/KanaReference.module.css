@@ -1,11 +1,10 @@
-
 :root {
     --bg-dark: #09090b;
     --bg-card: #18181b;
     --bg-card-hover: #27272a;
     --border-color: #27272a;
     --accent-color: #95D600;
-    --accent-glow: rgba(149, 214, 0, 0.2);
+    --accent-glow: rgba(162, 213, 34, 0.2);
     --text-primary: #f4f4f5;
     --text-secondary: #a1a1aa;
 }
@@ -30,7 +29,7 @@
 .contentWrapper {
     position: relative;
     z-index: 10;
-    max-width: 800px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -48,10 +47,10 @@
 
 .tabContainer {
     display: flex;
-    background: rgba(39, 39, 42, 0.5);
-    padding: 6px;
+    padding: 4px;
     border-radius: 99px;
     border: 1px solid var(--border-color);
+    position: relative;
 }
 
 .tabBtn {
@@ -68,21 +67,25 @@
     z-index: 1;
 }
 
-.activeTab { color: #000; font-weight: 700; }
+.activeTab { color: #222; font-weight: 700; }
 
 .activeIndicator {
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0; left: 0;
+    width: 50%;
+    height: 100%;
     background-color: var(--accent-color);
     border-radius: 99px;
     z-index: -1;
     box-shadow: 0 4px 12px var(--accent-glow);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .accordionList {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    animation: tabEnter 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .sectionWrapper {
@@ -142,9 +145,25 @@
     font-weight: 600;
 }
 
+.chevronWrapper {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.isOpen .chevronWrapper {
+    transform: rotate(180deg);
+}
+
 .accordionContent {
     padding: 0 24px 24px 24px;
     overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.sectionWrapper.isOpen .accordionContent {
+    max-height: 2000px;
+    opacity: 1;
 }
 
 .gridContainer {
@@ -179,12 +198,17 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    transition: border-color 0.2s, background-color 0.2s;
+    transition: border-color 0.2s, background-color 0.2s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     gap: 6px;
+    animation: cardEntry 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .kanaCard:hover {
     border-color: var(--accent-color);
+}
+
+.kanaCard:active {
+    transform: scale(0.9);
 }
 
 .cardChar {
@@ -218,18 +242,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    animation: fadeIn 0.3s ease-in;
 }
 
 .modalPanel {
     width: 100%;
-    max-width: 380px;
+    max-width: 600px;
     background: rgba(0, 0, 0, 0.01);
     backdrop-filter: blur(5px);
     border: 1px solid #27272a;
     border-radius: 28px;
     padding: 0;
-    margin: 0 10px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     position: relative;
     overflow: hidden;
@@ -254,7 +277,7 @@
 .closeBtn {
     background: rgba(255,255,255,0.05);
     border: none;
-    width: 36px; height: 36px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -305,6 +328,7 @@
     max-height: 100%;
     object-fit: contain;
     filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+    animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .heroCharDisplay {
@@ -355,6 +379,11 @@
     background: #323236;
     border-color: rgba(149, 214, 0, 0.3);
     box-shadow: 0 10px 20px -5px rgba(0,0,0,0.3);
+    transform: scale(1.0);
+}
+
+.playerBtn:active:not(.disabled) {
+    transform: scale(1);
 }
 
 .playerBtn.playing {
@@ -410,6 +439,22 @@
     border-radius: 2px;
 }
 
+.bar:nth-child(1) {
+    animation: barAnim1 0.3s infinite;
+}
+
+.bar:nth-child(2) {
+    animation: barAnim2 0.4s infinite 0.1s;
+}
+
+.bar:nth-child(3) {
+    animation: barAnim3 0.35s infinite 0.2s;
+}
+
+.bar:nth-child(4) {
+    animation: barAnim4 0.45s infinite 0.05s;
+}
+
 .mobileHandle {
     display: none;
     width: 40px;
@@ -423,6 +468,7 @@
 @media (max-width: 768px) {
     .kanaCard{gap: 0;}
     .contentWrapper { padding: 15px; }
+    .tabContainer {padding: 0}
     .tabBtn { padding: 8px 24px; }
     .accordionHeader { padding: 16px; }
     .accordionContent { padding: 0 12px 16px 12px; }
@@ -457,11 +503,63 @@
     }
 
     .heroContainer {
-        aspect-ratio: 16/9; /* Thấp hơn một chút trên mobile */
+        aspect-ratio: 16/9;
     }
 }
 
 @keyframes slideUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.01); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes cardEntry {
+    from {
+        transform: translateY(30px) scale(0.6);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes tabEnter {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes barAnim1 {
+    0%, 100% { height: 8px; }
+    50% { height: 16px; }
+}
+
+@keyframes barAnim2 {
+    0%, 100% { height: 12px; }
+    50% { height: 6px; }
+}
+
+@keyframes barAnim3 {
+    0%, 100% { height: 16px; }
+    50% { height: 8px; }
+}
+
+@keyframes barAnim4 {
+    0%, 100% { height: 10px; }
+    50% { height: 18px; }
 }
