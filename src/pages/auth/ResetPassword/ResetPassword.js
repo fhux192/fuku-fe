@@ -4,31 +4,20 @@ import axios from 'axios';
 import styles from './ResetPassword.module.css';
 
 const EyeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-        <circle cx="12" cy="12" r="3"></circle>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 );
-
 const EyeOffIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-        <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-        <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-        <line x1="2" x2="22" y1="2" y2="22"></line>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>
 );
 
 const ResetPassword = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-
     const token = searchParams.get('token');
 
     const [formData, setFormData] = useState({ newPassword: '', confirmPassword: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-
     const [showNewPass, setShowNewPass] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
 
@@ -38,53 +27,41 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage('');
-        setError('');
+        setMessage(''); setError('');
 
         if (formData.newPassword !== formData.confirmPassword) {
-            setError("パスワードが一致しません。(Mật khẩu không khớp.)");
+            setError("Mật khẩu xác nhận không khớp.");
             return;
         }
 
         try {
             const API_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8080';
-
             await axios.post(`${API_URL}/api/auth/reset-password`, {
                 token: token,
                 newPassword: formData.newPassword
             });
 
-            setMessage([
-                'パスワードが正常にリセットされました。',
-                <br key="break" />,
-                '(Đặt lại mật khẩu thành công.)'
-            ]);
-
-            setTimeout(() => {
-                navigate('/login');
-            }, 3000);
-
+            setMessage('Đặt lại mật khẩu thành công! Đang chuyển hướng...');
+            setTimeout(() => { navigate('/login'); }, 3000);
         } catch (err) {
             const errorMsg = err.response?.data || "";
-
             if (errorMsg.includes('same') || errorMsg.includes('current')) {
-                setError([
-                    '新しいパスワードは現在のパスワードと同じにすることはできません。',
-                    <br key="break" />,
-                    '(Mật khẩu mới không được trùng với mật khẩu hiện tại.)'
-                ]);
+                setError('Mật khẩu mới không được trùng với mật khẩu cũ.');
             } else {
-                setError(errorMsg || "エラーが発生しました。(Đã xảy ra lỗi.)");
+                setError('Đã xảy ra lỗi. Vui lòng thử lại.');
             }
         }
     };
 
     if (!token) {
         return (
-            <div className={styles.resetPasswordContainer}>
+            <div className={styles.pageContainer}>
                 <div className={styles.resetPasswordFormWrapper}>
+                    <div className={styles.resetPasswordFormBackground}></div>
+                    <div className={styles.resetPasswordFormOverlay}></div>
                     <div className={styles.resetPasswordFormContent}>
-                        <p className={styles.resetPasswordError}>無効なトークン (Token không hợp lệ hoặc bị thiếu)</p>
+                        <h2 className={styles.resetPasswordTitle} style={{color: '#ff4d4d'}}>Lỗi Token</h2>
+                        <p className={styles.resetPasswordSubtitle}>Link không hợp lệ hoặc đã hết hạn.</p>
                     </div>
                 </div>
             </div>
@@ -92,21 +69,23 @@ const ResetPassword = () => {
     }
 
     return (
-        <div className={styles.resetPasswordContainer}>
+        <div className={styles.pageContainer}>
             <div className={styles.resetPasswordFormWrapper}>
                 <div className={styles.resetPasswordFormBackground}></div>
                 <div className={styles.resetPasswordFormOverlay}></div>
-                <div className={styles.resetPasswordFormContent}>
-                    <h2 className={styles.resetPasswordTitle}>パスワード再設定 <br/> (Đặt lại mật khẩu)</h2>
-                    <form onSubmit={handleSubmit} className={styles.resetPasswordForm}>
 
+                <div className={styles.resetPasswordFormContent}>
+                    <h1 className={styles.resetPasswordTitle}>Đặt lại mật khẩu</h1>
+
+                    <form onSubmit={handleSubmit} className={styles.resetPasswordForm}>
                         {message && <div className={styles.resetPasswordSuccess}>{message}</div>}
                         {error && <div className={styles.resetPasswordError}>{error}</div>}
 
                         <div className={styles.resetPasswordInputGroup}>
-                            <label className={styles.resetPasswordLabel}>新しいパスワード (Mật khẩu mới)</label>
+                            <label className={styles.resetPasswordLabel}></label>
                             <div className={styles.passwordWrapper}>
                                 <input
+                                    placeholder="Mật khẩu mới"
                                     type={showNewPass ? 'text' : 'password'}
                                     name="newPassword"
                                     value={formData.newPassword}
@@ -114,20 +93,17 @@ const ResetPassword = () => {
                                     className={styles.resetPasswordInput}
                                     required
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowNewPass(!showNewPass)}
-                                    className={styles.togglePasswordBtn}
-                                >
+                                <button tabIndex={-1} type="button" onClick={() => setShowNewPass(!showNewPass)} className={styles.togglePasswordBtn}>
                                     {showNewPass ? <EyeOffIcon /> : <EyeIcon />}
                                 </button>
                             </div>
                         </div>
 
                         <div className={styles.resetPasswordInputGroup}>
-                            <label className={styles.resetPasswordLabel}>パスワードの確認 (Xác nhận mật khẩu)</label>
+                            <label className={styles.resetPasswordLabel}></label>
                             <div className={styles.passwordWrapper}>
                                 <input
+                                    placeholder="Xác nhận mật khẩu"
                                     type={showConfirmPass ? 'text' : 'password'}
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
@@ -135,18 +111,14 @@ const ResetPassword = () => {
                                     className={styles.resetPasswordInput}
                                     required
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPass(!showConfirmPass)}
-                                    className={styles.togglePasswordBtn}
-                                >
+                                <button tabIndex={-1} type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} className={styles.togglePasswordBtn}>
                                     {showConfirmPass ? <EyeOffIcon /> : <EyeIcon />}
                                 </button>
                             </div>
                         </div>
 
                         <button type="submit" className={styles.resetPasswordButton}>
-                            パスワードを変更 (Đổi mật khẩu)
+                            Đổi mật khẩu
                         </button>
                     </form>
                 </div>

@@ -48,12 +48,13 @@ function Login() {
             <div className={styles.loginFormBackground}></div>
             <div className={styles.loginFormOverlay}></div>
             <div className={styles.loginFormContent}>
-                <h2 className={styles.loginTitle}>ログイン (Đăng nhập)</h2>
+                <h1 className={styles.loginTitle}>Đăng nhập</h1>
                 <form onSubmit={handleSubmit} className={styles.loginForm} autoComplete="off">
                     {error && <p className={styles.loginError}>{error}</p>}
                     <div className={styles.loginInputGroup}>
-                        <label htmlFor="email" className={styles.loginLabel}>メールアドレス (Email)</label>
+                        <label htmlFor="email" className={styles.loginLabel}></label>
                         <input
+                            placeholder={'Email'}
                             type="email" id="email" name="email"
                             value={formData.email} onChange={handleChange}
                             className={styles.loginInput} autoComplete="off" required
@@ -61,9 +62,9 @@ function Login() {
                     </div>
 
                     <div className={styles.loginInputGroup}>
-                        <label htmlFor="password" className={styles.loginLabel}>パスワード (Mật khẩu)</label>
+                        <label htmlFor="password" className={styles.loginLabel}></label>
                         <div className={styles.passwordWrapper}>
-                            <input
+                            <input placeholder={'Mật khẩu'}
                                 type={showPassword ? 'text' : 'password'}
                                 id="password" name="password"
                                 value={formData.password} onChange={handleChange}
@@ -77,16 +78,15 @@ function Login() {
 
                     <div className={styles.forgotPasswordWrapper}>
                         <Link to="/forgot-password" className={styles.forgotPasswordLink}>
-                            パスワードをお忘れですか？ (Quên mật khẩu?)
+                            Quên mật khẩu?
                         </Link>
                     </div>
 
-                    <button type="submit" className={styles.loginButton}>サインイン (Đăng nhập)</button>
+                    <button type="submit" className={styles.loginButton}>Đăng nhập</button>
                     <p className={styles.loginLinkText}>
-                        アカウントをお持ちでないですか？ (Chưa có tài khoản?){'  '}
-                        <br/>
+                       Chưa có tài khoản?{'  '}
                         <Link to="/register" className={styles.loginLink}>
-                            新規登録 (Đăng ký)
+                            Đăng ký
                         </Link>
                     </p>
                 </form>

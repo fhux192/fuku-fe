@@ -15,11 +15,7 @@ function ForgotPassword() {
         setIsLoading(true);
 
         if (!email) {
-            setError([
-                'メールアドレスを入力してください。',
-                <br key="req1" />,
-                '(Vui lòng nhập email của bạn.)'
-            ]);
+            setError('Vui lòng nhập email của bạn.');
             setIsLoading(false);
             return;
         }
@@ -33,17 +29,13 @@ function ForgotPassword() {
             });
 
             if (response.ok) {
-                setMessage([
-                    'パスワードリセットのリンクをメールに送信しました。',
-                    <br key="break" />,
-                    '(Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.)'
-                ]);
+                setMessage('Link đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư.');
             } else {
                 const text = await response.text();
-                setError(text || 'エラーが発生しました。(Đã xảy ra lỗi.)');
+                setError(text || 'Đã xảy ra lỗi. Vui lòng thử lại.');
             }
         } catch (err) {
-            setError('サーバーに接続できません。(Không thể kết nối đến máy chủ.)');
+            setError('Không thể kết nối đến máy chủ.');
         } finally {
             setIsLoading(false);
         }
@@ -51,17 +43,23 @@ function ForgotPassword() {
 
     return (
         <div className={styles.forgotPasswordFormWrapper}>
+            {/* Background & Overlay giống Login/Register */}
             <div className={styles.forgotPasswordFormBackground}></div>
             <div className={styles.forgotPasswordFormOverlay}></div>
+
             <div className={styles.forgotPasswordFormContent}>
-                <h2 className={styles.forgotPasswordTitle}>パスワード再設定 <br/> (Đặt lại mật khẩu)</h2>
+                <h1 className={styles.forgotPasswordTitle}>Quên mật khẩu</h1>
+                <p className={styles.forgotPasswordSubtitle}>
+                    Nhập email của bạn để lấy lại mật khẩu <br/>
+                    (メールアドレスを入力してください)
+                </p>
 
                 <form onSubmit={handleSubmit} className={styles.forgotPasswordForm}>
                     {message && <p className={styles.forgotPasswordSuccess}>{message}</p>}
                     {error && <p className={styles.forgotPasswordError}>{error}</p>}
 
                     <div className={styles.forgotPasswordInputGroup}>
-                        <label htmlFor="email" className={styles.forgotPasswordLabel}>メールアドレス (Email)</label>
+                        <label htmlFor="email" className={styles.forgotPasswordLabel}></label>
                         <input
                             type="email"
                             id="email"
@@ -69,19 +67,20 @@ function ForgotPassword() {
                             onChange={(e) => setEmail(e.target.value)}
                             className={styles.forgotPasswordInput}
                             required
-                            placeholder="Nhập email của bạn"
+                            placeholder="Email / メールアドレス"
+                            autoComplete="email"
                         />
                     </div>
 
                     <button type="submit" className={styles.forgotPasswordButton} disabled={isLoading}>
-                        {isLoading ? '送信中... (Đang gửi...)' : '送信 (Gửi)'}
+                        {isLoading ? 'Đang gửi... (送信中)' : 'Gửi xác nhận (送信)'}
                     </button>
 
-                    <p className={styles.forgotPasswordLinkText} style={{ marginTop: '20px' }}>
+                    <div className={styles.backToLoginWrapper}>
                         <Link to="/login" className={styles.forgotPasswordLink}>
-                            ← ログインに戻る (Quay lại đăng nhập)
+                            ← Quay lại đăng nhập
                         </Link>
-                    </p>
+                    </div>
                 </form>
             </div>
         </div>

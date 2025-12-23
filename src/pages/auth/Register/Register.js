@@ -25,19 +25,19 @@ function Register() {
         e.preventDefault();
         setMessage(''); setError('');
 
+        // Basic validation
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('すべての項目を入力してください。(Vui lòng nhập tất cả các trường.)'); return;
+            setError('Vui lòng nhập tất cả các trường.'); return;
         }
         if (formData.password.length < 6) {
-            setError('パスワードは6文字以上である必要があります。(Mật khẩu phải có ít nhất 6 ký tự.)'); return;
+            setError('Mật khẩu phải có ít nhất 6 ký tự.'); return;
         }
         if (formData.password !== formData.confirmPassword) {
-            setError('パスワードと確認用パスワードが一致しません。(Mật khẩu không khớp.)'); return;
+            setError('Mật khẩu xác nhận không khớp.'); return;
         }
 
         try {
             const API_URL = 'http://localhost:8080';
-
             const response = await fetch(`${API_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -46,15 +46,15 @@ function Register() {
             const responseText = await response.text();
 
             if (response.ok) {
-                setMessage('確認メールを送信しました。メールを確認してアカウントを有効化してください。(Email xác nhận đã được gửi. Vui lòng kiểm tra email để kích hoạt tài khoản.)');
+                setMessage('Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt.');
                 setTimeout(() => { navigate('/login'); }, 3000);
             } else if (responseText.includes("Passwords do not match")) {
-                setError('パスワードが一致しません。(Mật khẩu không khớp.)');
+                setError('Mật khẩu không khớp.');
             } else {
-                setError(responseText || '登録に失敗しました。(Đăng ký thất bại.)');
+                setError(responseText || 'Đăng ký thất bại.');
             }
         } catch (err) {
-            setError('エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)');
+            setError('Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.');
         }
     };
 
@@ -65,49 +65,74 @@ function Register() {
         <div className={styles.registerFormWrapper}>
             <div className={styles.registerFormBackground}></div>
             <div className={styles.registerFormOverlay}></div>
-            <div className={styles.registerFormContent}>
 
-                <h2 className={styles.registerTitle}>アカウント作成 <br/> (Tạo tài khoản)</h2>
+            <div className={styles.registerFormContent}>
+                <h1 className={styles.registerTitle}>Đăng ký</h1>
+
                 <form onSubmit={handleSubmit} className={styles.registerForm} autoComplete="off">
                     {message && <p className={styles.registerMessage}>{message}</p>}
                     {error && <p className={styles.registerError}>{error}</p>}
 
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="name" className={styles.registerLabel}>名前 (Tên)</label>
-                        <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className={styles.registerInput} autoComplete="off" required />
+                        <label htmlFor="name" className={styles.registerLabel}></label>
+                        <input
+                            placeholder="Họ và tên"
+                            type="text" id="name" name="name"
+                            value={formData.name} onChange={handleChange}
+                            className={styles.registerInput} autoComplete="off" required
+                        />
+                    </div>
+
+                    {/* Input Email */}
+                    <div className={styles.registerInputGroup}>
+                        <label htmlFor="email" className={styles.registerLabel}></label>
+                        <input
+                            placeholder="Email"
+                            type="email" id="email" name="email"
+                            value={formData.email} onChange={handleChange}
+                            className={styles.registerInput} autoComplete="off" required
+                        />
                     </div>
 
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="email" className={styles.registerLabel}>メールアドレス (Email)</label>
-                        <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} className={styles.registerInput} autoComplete="off" required />
-                    </div>
-
-                    <div className={styles.registerInputGroup}>
-                        <label htmlFor="password" className={styles.registerLabel}>パスワード (Mật khẩu)</label>
+                        <label htmlFor="password" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>
-                            <input type={showPassword ? 'text' : 'password'} id="password" name="password" value={formData.password} onChange={handleChange} className={styles.registerInput} autoComplete="new-password" required />
-                            <button type="button" tabIndex={-1} onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
+                            <input
+                                placeholder="Mật khẩu"
+                                type={showPassword ? 'text' : 'password'}
+                                id="password" name="password"
+                                value={formData.password} onChange={handleChange}
+                                className={styles.registerInput} autoComplete="new-password" required
+                            />
+                            <button tabIndex={-1} type="button" onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
                                 {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                             </button>
                         </div>
                     </div>
 
+                    {/* Input Xác nhận Mật khẩu */}
                     <div className={styles.registerInputGroup}>
-                        <label htmlFor="confirmPassword" className={styles.registerLabel}>パスワードの確認 (Xác nhận mật khẩu)</label>
+                        <label htmlFor="confirmPassword" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>
-                            <input type={showConfirmPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} className={styles.registerInput} autoComplete="new-password" required />
-                            <button type="button" tabIndex={-1} onClick={toggleConfirmPasswordVisibility} className={styles.togglePasswordBtn}>
+                            <input
+                                placeholder="Xác nhận mật khẩu"
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                id="confirmPassword" name="confirmPassword"
+                                value={formData.confirmPassword} onChange={handleChange}
+                                className={styles.registerInput} autoComplete="new-password" required
+                            />
+                            <button tabIndex={-1} type="button" onClick={toggleConfirmPasswordVisibility} className={styles.togglePasswordBtn}>
                                 {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
                             </button>
                         </div>
                     </div>
 
-                    <button type="submit" className={styles.registerButton}>登録 (Đăng ký)</button>
+                    <button type="submit" className={styles.registerButton}>Đăng ký</button>
+
                     <p className={styles.registerLinkText}>
-                        すでにアカウントをお持ちですか？ (Đã có tài khoản?){' '}
-                        <br/>
-                        <Link to="/login" style={{ marginLeft: '5px' }} className={styles.registerLink}>
-                            ログイン (Đăng nhập)
+                        Đã có tài khoản?{' '}
+                        <Link to="/login" className={styles.registerLink}>
+                            Đăng nhập
                         </Link>
                     </p>
                 </form>
@@ -115,4 +140,5 @@ function Register() {
         </div>
     );
 }
+
 export default Register;

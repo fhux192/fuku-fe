@@ -1,74 +1,133 @@
+/* Import font giống Login */
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+/* --- Cấu trúc chính --- */
 .registerFormWrapper {
     position: relative;
     overflow: hidden;
-    padding: 38px;
+    padding: 20px 30px 30px 30px;
+    margin: auto;
     border-radius: 50px;
     width: 100%;
-    max-width: 420px;
-    margin: auto;
-    text-align: center;
+    max-width: 360px; /* Giữ độ rộng này cho gọn giống Login */
     z-index: 10;
 }
 
 .registerFormBackground {
-    position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
-    background-image: url('../../../assets/images/auth-form-bg.gif');
-    background-size: cover; background-position: center; z-index: 1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(1.2);
+    background-color: #0e100f; /* Màu nền gốc của Login */
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
 }
 
-.registerFormOverlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.05); backdrop-filter: blur(3px); z-index: 2;
+
+.registerFormContent {
+    position: relative;
+    z-index: 3;
 }
 
-.registerFormContent { position: relative; z-index: 3; }
-
-.registerTitle { font-size: 36px; font-weight: 900; color: #f1f7fb; margin-bottom: 5vh; }
+/* --- Typography --- */
+.registerTitle {
+    font-size: 40px;
+    font-weight: 900;
+    font-family: "Google Sans Flex", sans-serif;
+    background: var(--gradient-macha, linear-gradient(to right, #90bb3c, #b8e986));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    text-align: center;
+}
 
 .registerForm { width: 100%; }
 
-.registerMessage {
-    background-color: rgba(27, 47, 29, 1); border: 1px solid rgba(138, 255, 145, 0.3);
-    color: #8aff91; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 14px;
-}
 .registerError {
-    background-color: rgba(47, 27, 29, 1); border: 1px solid rgba(255, 138, 138, 0.3);
-    color: #ff4d4d; padding: 12px; border-radius: 12px; margin-bottom: 16px; font-size: 14px;
+    color: #ff4d4d;
+    background-color: rgba(47, 27, 29, 1);
+    border: 1px solid rgba(255, 138, 138, 0.3);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    text-align: center;
 }
 
-.registerInputGroup { margin-bottom: 20px; text-align: left; }
-.registerLabel { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #aaa; }
+.registerMessage {
+    color: #8aff91;
+    background-color: rgba(27, 47, 29, 1);
+    border: 1px solid rgba(138, 255, 145, 0.3);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* --- Input Fields (Phong cách gạch chân) --- */
+.registerInputGroup { margin-bottom: 15px; text-align: left; }
+
+.registerLabel {
+    display: none; /* Ẩn label để theo style minimalist */
+}
+
 .passwordWrapper { position: relative; display: flex; align-items: center; }
 
 .registerInput {
-    width: 100%; padding: 12px 40px 12px 16px; border-radius: 12px;
-    border: 1px solid #444; background-color: rgba(15, 15, 15, 1);
-    color: #f5f5f5; font-size: 16px; font-weight: 600;
-    font-family: 'Noto Sans Japanese', sans-serif;
-    box-sizing: border-box; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+    width: 100%; padding: 20px 40px 12px 0px;
+    border:none;
+    border-bottom: 1px solid var(--color-surface75); background-color: transparent;
+    font-family: "Google Sans Flex", sans-serif;
+    color: var(--color-surface-white); font-size: 18px; font-weight: 600;
+    box-sizing: border-box; outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
-.registerInput:focus { border-color: #90bb3c; box-shadow: 0 0 10px rgba(149, 214, 0, 0.3); }
+
+.registerInput::placeholder {
+    font-family: "Google Sans Flex", sans-serif;
+}
+
+.registerInput:focus {
+    border: none;
+    border-bottom: 1px solid var(--color-lt-green, #90bb3c);
+}
 
 .togglePasswordBtn {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
     background: transparent; border: none; cursor: pointer; padding: 4px;
     display: flex; align-items: center; justify-content: center; color: #888;
 }
 .togglePasswordBtn:hover { color: #f5f5f5; }
 
 .registerButton {
-    width: 100%; padding: 14px; background-color: #90bb3c; color: #111;
+    width: 60%; /* Nút đăng ký thường full width để dễ bấm */
+    padding: 12px;
+    background: var(--gradient-macha, linear-gradient(to right, #90bb3c, #b8e986));
+    font-family: "MuseoModerno", sans-serif;
+    color: var(--color-just-black, #000);
     border: none; border-radius: 30px; cursor: pointer;
-    font-size: 16px; font-weight: 700; margin-top: 10px;
+    font-size: 18px; font-weight: 700; margin-top: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.registerButton:hover {  box-shadow: 0 4px 20px rgba(149, 214, 0, 0.4); }
+.registerButton:hover {
+    box-shadow: 0 4px 20px rgba(149, 214, 0, 0.2);
+}
 
-.registerLinkText { margin-top: 24px; font-size: 14px; color: #aaa; }
-.registerLink { color: #90bb3c; font-weight: 900; text-decoration: none; }
-.registerLink:hover { text-shadow: 0 0 5px rgba(149, 214, 0, 0.7); }
+.registerLinkText { margin-top: 24px; font-size: 14px; color: #aaa; text-align: center; }
+.registerLink {
+    font-family: "Google Sans Flex", sans-serif;
+    margin-left: 5px;
+    color: var(--color-shockingly-green, #90bb3c);
+    font-weight: 900;
+    text-decoration: none;
+}
+.registerLink:hover { text-shadow: 0 0 5px rgba(149, 214, 0, 0.3); }
 
 @media (max-width: 480px) {
     .registerFormWrapper { padding: 24px; border-radius: 30px; }
-    .registerTitle { font-size: 28px; }
+    .registerTitle { font-size: 32px; }
 }

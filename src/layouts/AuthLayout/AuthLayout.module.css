@@ -1,15 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
 .authContainer {
+    padding-top: 40px;
     min-height: 100vh;
     width: 100%;
-    background-color: #111;
-    font-family: 'Noto Sans JP', sans-serif;
+    background-color: var(--color-just-black);
+    font-family: "Google Sans Flex", sans-serif;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     cursor: default;
     position: relative;
+}
+
+.webflowBanner{
+    align-content: center;
+    position: absolute;
+    font-family: "MuseoModerno", sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--color-just-black);
+    top: 0;
+    width: 100vw;
+    height: 40px;
+    background:var(--gradient-macha);
+    z-index:10;
 }
 
 .desktopLogo {
@@ -60,7 +75,7 @@
 .leftSide {
     width: 100%;
     height: 100%;
-    border-radius: 0;
+    border-radius: 50px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -77,16 +92,14 @@
 
 .floatingKanji {
     position: absolute;
-    color: rgba(255, 255, 255, 0.1);
     font-weight: 900;
     line-height: 1;
     user-select: none;
     animation: float 5s ease-in-out infinite;
 }
 
-.kanji1 { bottom: 5%; left: 5%; font-size: 8rem; animation-delay: 0s; }
-.kanji2 { top: 15%; right: 5%; font-size: 10rem; animation-delay: 2s; }
-.kanji3 { top: 40%; left: 5%; font-size: 6rem; opacity: 0.05; animation-delay: 4s; }
+.kanji1 { color: rgba(255,255,255,0.2); bottom: 7%; left: 5%; font-size: 10rem; animation-delay: 0s; }
+.kanji2 { color:rgba(255,255,255,0.2); top: 18%; right: 5%; font-size: 10rem; animation-delay: 2s; }
 
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -96,7 +109,6 @@
 .overlayGradient {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: #050505;
     z-index: 0; pointer-events: none;
 }
 
@@ -106,48 +118,53 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 2rem;
 }
 
-
-
 .leftSideTitle {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 900;
-    color: #ccc;
-    margin: 0 0 15px 0;
+    font-family: 'Noto Sans Japanese', sans-serif;
+    text-align: left;
+    color: var(--color-surface-white);
+    margin: 0 0 1rem 1rem;
     line-height: 1.2;
     letter-spacing: -1px;
 }
 
-.highlightText { color: #90bb3c; display: inline-block; }
+.highlightText { color: var(--gradient-macha); display: inline-block; }
 
 .leftSideSubtitle {
     font-size: 1rem;
-    color:#333;
+    color: var(--color-surface-white);
+    margin-left: 1rem;
     margin-bottom: 30px;
     line-height: 1.5;
 }
 
 .leftSideSubtitle strong {
-    color: #aaa;
-    font-weight: 700;
+    color: var(--color-surface-white);
+    font-weight: 600;
     display: block;
     margin-top: 5px;
+    text-align: left;
     font-size: 1.1rem;
     letter-spacing: 1px;
 }
 
 .ctaButton {
     position: relative;
-    background: transparent;
-    color: #90bb3c;
-    font-family: 'Noto Sans JP', sans-serif;
+    border: 2px solid transparent;
+    border-radius: 6.25rem;
+    background:
+            linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
+            var(--gradient-macha) border-box;
+    color: var(--color-surface-white);
     font-size: 0.9rem;
-    font-weight: 700;
-    padding: 12px 30px;
-    border: 2px solid #90bb3c;
-    border-radius: 50px;
+    font-weight: 600;
+    font-family: "MuseoModerno", sans-serif;
+    padding: 12px 20px;
+    align-self: flex-start;
     cursor: pointer !important;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -159,18 +176,18 @@
 .ctaButton span { position: relative; z-index: 2; }
 .ctaButton::before {
     content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
-    background-color: #90bb3c; transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1;
+    background: var(--gradient-macha); transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1;
 }
-.ctaButton:hover { color: #030303; transform: scale(1.05); }
+.ctaButton:hover { color: var(--color-surface25); font-weight: 700; }
 .ctaButton:hover::before { width: 100%; }
-.ctaButton:active { transform: scale(0.98); }
+.ctaButton:active { transform: scale(0.9); }
 
 .rightSide {
     width: 100%;
     height: 100vh;
     position: fixed;
     top: 0; left: 0;
-    background-color: #111;
+    background-color: var(--color-surface-white);
     z-index: 100;
     display: none;
     justify-content: center;
@@ -198,8 +215,17 @@
 @media (min-width: 1024px) {
     .authContainer {
         display: grid;
-        grid-template-columns: 1.6fr 1fr;
+        grid-template-columns: 2.2fr 1fr;
         height: 100vh;
+    }
+
+    .webflowBanner{
+        font-size:18px;
+        position: absolute;
+        width: 100vw;
+        height: 40px;
+        background:var(--gradient-macha);
+        z-index:10;
     }
 
     .desktopLogo {
@@ -219,9 +245,8 @@
         display: none;
     }
 
-    .kanji1 { bottom: 5%; left: 5%; font-size: 15rem; }
-    .kanji2 { top: 5%; right: 5%; font-size: 20rem; }
-    .kanji3 { font-size: 12rem; }
+    .kanji1 { bottom: -3%; left: 5%; font-size: 15rem; }
+    .kanji2 { top: 7%; right: 3%; font-size: 17rem; }
 
     .glassCard {
         padding: 60px 40px;
@@ -229,9 +254,9 @@
         width: auto;
         border: none;
     }
-    .leftSideTitle { font-size: 3.5rem; }
+    .leftSideTitle { font-size: 3.5rem;  text-align: center}
     .leftSideSubtitle strong { font-size: 1.3rem; }
-    .ctaButton { font-size: 1rem; padding: 15px 45px; }
+    .ctaButton { font-size: 1rem; padding: 15px 1.2rem;  }
 
     .rightSide {
         position: relative;
