@@ -161,6 +161,7 @@
     font-size: 1rem;
     font-weight: 700;
     font-family: "MuseoModerno";
+    color:var(--color-just-black);
     padding: 12px 20px;
     align-self: flex-start;
     cursor: pointer !important;
