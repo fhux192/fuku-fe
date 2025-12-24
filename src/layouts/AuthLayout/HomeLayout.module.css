@@ -152,6 +152,12 @@
     letter-spacing: 1px;
 }
 
+.btnWrapper{
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+}
+
 .ctaButton {
     position: relative;
     border: 2px solid transparent;
@@ -269,7 +275,7 @@
     .ctaButton { font-size: 1.1rem; padding: 15px 1.8rem;  }
 
     .rightSide {
-        min-width: 50vh;
+        min-width: 55vh;
         position: relative;
         display: flex;
         height: 100%;

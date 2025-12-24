@@ -54,7 +54,7 @@ const HomeLayout = () => {
                             <p className={styles.leftSideSubtitle}>
                                 <strong>Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí</strong>
                             </p>
-<div style={{display:"flex",justifySelf:"center"}}><button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
+<div className={styles.btnWrapper}><button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
     <span>Bắt đầu ngay </span>
 
 </button>
