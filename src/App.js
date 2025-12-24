@@ -8,7 +8,7 @@ import ResetPassword from "./pages/auth/ResetPassword/ResetPassword";
 import RoadmapScreen from "./pages/RoadMap/RoadmapKanjiN5";
 import Profile from './pages/auth/Profile';
 import './App.css';
-import AuthLayout from "./layouts/AuthLayout/AuthLayout";
+import HomeLayout from "./layouts/AuthLayout/HomeLayout";
 import KanaReference from "./pages/KanaReference/KanaReference";
 
 const PrivateRoute = ({ children }) => {
@@ -21,7 +21,7 @@ function App() {
         <Router>
             <div className="App">
                 <Routes>
-                    <Route element={<AuthLayout />}>
+                    <Route element={<HomeLayout />}>
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -1,21 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Register.module.css';
+import lottie from 'lottie-web';
 
-const EyeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-);
-const EyeOffIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>
-);
+// 1. Import Element để đăng ký Trigger
+import { defineElement, Element } from '@lordicon/element';
 
+// --- ĐỊNH NGHĨA CUSTOM TRIGGER (Y CHANG CODE LOGIN) ---
+const CLICK_EVENTS = [
+    { name: 'mousedown' },
+    { name: 'touchstart', options: { passive: true } },
+];
+
+class CustomTrigger {
+    constructor(player, element, targetElement) {
+        this.player = player;
+        this.element = element;
+        this.targetElement = targetElement;
+        // Bắt đầu với hướng dương (1) để chạy từ Mở -> Đóng (Gạch chéo)
+        this.direction = 1;
+        this.onClick = this.onClick.bind(this);
+    }
+
+    onConnected() {
+        for (const event of CLICK_EVENTS) {
+            this.targetElement.addEventListener(event.name, this.onClick, event.options);
+        }
+    }
+
+    onDisconnected() {
+        for (const event of CLICK_EVENTS) {
+            this.targetElement.removeEventListener(event.name, this.onClick);
+        }
+    }
+
+    onReady() {
+        // --- LOGIC MỚI: Tự động chạy 1 lần khi load ---
+        // Gán hướng chạy xuôi
+        this.player.direction = this.direction;
+        // Kích hoạt chạy ngay lập tức để mắt nhắm lại (gạch chéo)
+        this.player.play();
+    }
+
+    onComplete() {
+        // Sau khi chạy xong 1 lượt, đảo chiều hướng chạy
+        // Lần đầu (auto): 1 -> chạy xong đảo thành -1 (để click lần sau nó mở ra)
+        this.direction = -this.direction;
+        this.player.direction = this.direction;
+    }
+
+    onClick() {
+        if (!this.player.isPlaying) {
+            this.player.play();
+        }
+    }
+}
+
+// --- COMPONENT REGISTER ---
 function Register() {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
+    // State quản lý hiển thị text mật khẩu
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     const navigate = useNavigate();
+
+    // 2. Đăng ký Trigger và Element khi component load
+    useEffect(() => {
+        // Kiểm tra xem trigger đã tồn tại chưa để tránh lỗi đăng ký trùng
+        try {
+            Element.defineTrigger('custom', CustomTrigger);
+        } catch (e) {
+            // Trigger đã được định nghĩa, bỏ qua
+        }
+
+        // Load lottie engine
+        defineElement(lottie.loadAnimation);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -67,6 +131,12 @@ function Register() {
             <div className={styles.registerFormOverlay}></div>
 
             <div className={styles.registerFormContent}>
+                <lord-icon
+                    src="https://cdn.lordicon.com/hroklero.json"
+                    state={"morph-group"}
+                    trigger="morph"
+                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}>
+                </lord-icon>
                 <h1 className={styles.registerTitle}>Đăng ký</h1>
 
                 <form onSubmit={handleSubmit} className={styles.registerForm} autoComplete="off">
@@ -83,7 +153,6 @@ function Register() {
                         />
                     </div>
 
-                    {/* Input Email */}
                     <div className={styles.registerInputGroup}>
                         <label htmlFor="email" className={styles.registerLabel}></label>
                         <input
@@ -94,6 +163,7 @@ function Register() {
                         />
                     </div>
 
+                    {/* Ô MẬT KHẨU */}
                     <div className={styles.registerInputGroup}>
                         <label htmlFor="password" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>
@@ -105,12 +175,17 @@ function Register() {
                                 className={styles.registerInput} autoComplete="new-password" required
                             />
                             <button tabIndex={-1} type="button" onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
-                                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/ntfnmkcn.json"
+                                    state={"morph-cross"}
+                                    trigger="custom"
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}>
+                                </lord-icon>
                             </button>
                         </div>
                     </div>
 
-                    {/* Input Xác nhận Mật khẩu */}
+                    {/* Ô XÁC NHẬN MẬT KHẨU */}
                     <div className={styles.registerInputGroup}>
                         <label htmlFor="confirmPassword" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>
@@ -122,7 +197,12 @@ function Register() {
                                 className={styles.registerInput} autoComplete="new-password" required
                             />
                             <button tabIndex={-1} type="button" onClick={toggleConfirmPasswordVisibility} className={styles.togglePasswordBtn}>
-                                {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/ntfnmkcn.json"
+                                    state={"morph-cross"}
+                                    trigger="custom"
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}>
+                                </lord-icon>
                             </button>
                         </div>
                     </div>

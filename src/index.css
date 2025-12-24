@@ -1,25 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Googlew+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
 
 :root {
-        --color-shockingly-green: #0ae448;
+    --color-surface-white: #ffffff;
+    --color-surface75: rgba(255, 255, 255, 0.3);
     --color-just-black: #0e100f;
-    --color-surface-white: #fffce1;
-    --color-pink: #fec5fb;
-    --color-shockingly-pink: #f100cb;
-    --color-orangey: #ff8709;
-    --color-lilac: #9d95ff;
-    --color-lt-green: #abff84;
-    --color-blue: #00bae2;
-    --color-grey: gray;
-    --color-surface75: #bbbaa6;
-    --color-surface50: #7c7c6f;
-    --color-surface25: #282828;
-    --gradient-macha: linear-gradient(114.41deg, var(--color-shockingly-green) 20.74%, var(--color-lt-green) 65.5%);
-    --gradient-orange-crush: linear-gradient(111.45deg, var(--color-orangey) 19.42%, #f7bdf8 73.08%);
-    --gradient-lipstick: linear-gradient(165.72deg, #f7bdf8 21.15%, #cd237f 81.93%);
-    --gradient-purple-haze: linear-gradient(153.58deg, #f7bdf8 32.25%, #2f3cc0 92.68%);
-    --gradient-skyfall: linear-gradient(131.77deg, #0a157a 30.82%, #15bfe4 81.82%);
-    --gradient-emerald-city: linear-gradient(166.9deg, var(--color-shockingly-green) 53.19%, #0085d0 107.69%);
+    --color-lt-green: #bfff00; /* Màu xanh sáng khi focus */
+    --color-shockingly-green: #95d600; /* Màu link */
+    --gradient-macha: linear-gradient(90deg, #95d600 0%, #bfff00 100%);
 }
 
 body {

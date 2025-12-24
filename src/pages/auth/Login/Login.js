@@ -1,7 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Login.module.css';
+import lottie from 'lottie-web';
 
+// 1. Import Element để đăng ký Trigger
+import { defineElement, Element } from '@lordicon/element';
+
+// --- ĐỊNH NGHĨA CUSTOM TRIGGER (Đã chỉnh sửa để auto-play) ---
+const CLICK_EVENTS = [
+    { name: 'mousedown' },
+    { name: 'touchstart', options: { passive: true } },
+];
+
+class CustomTrigger {
+    constructor(player, element, targetElement) {
+        this.player = player;
+        this.element = element;
+        this.targetElement = targetElement;
+        // Bắt đầu với hướng dương (1) để chạy từ Mở -> Đóng (Gạch chéo)
+        this.direction = 1;
+        this.onClick = this.onClick.bind(this);
+    }
+
+    onConnected() {
+        for (const event of CLICK_EVENTS) {
+            this.targetElement.addEventListener(event.name, this.onClick, event.options);
+        }
+    }
+
+    onDisconnected() {
+        for (const event of CLICK_EVENTS) {
+            this.targetElement.removeEventListener(event.name, this.onClick);
+        }
+    }
+
+    onReady() {
+        // --- LOGIC MỚI: Tự động chạy 1 lần khi load ---
+        // Gán hướng chạy xuôi
+        this.player.direction = this.direction;
+        // Kích hoạt chạy ngay lập tức để mắt nhắm lại (gạch chéo)
+        this.player.play();
+    }
+
+    onComplete() {
+        // Sau khi chạy xong 1 lượt, đảo chiều hướng chạy
+        // Lần đầu (auto): 1 -> chạy xong đảo thành -1 (để click lần sau nó mở ra)
+        this.direction = -this.direction;
+        this.player.direction = this.direction;
+    }
+
+    onClick() {
+        if (!this.player.isPlaying) {
+            this.player.play();
+        }
+    }
+}
+
+// --- COMPONENT LOGIN ---
+// (Các icon SVG tĩnh dự phòng nếu cần, hiện tại không dùng vì đã dùng lord-icon)
 const EyeIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
 );
@@ -14,6 +70,19 @@ function Login() {
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+
+    // 2. Đăng ký Trigger và Element khi component load
+    useEffect(() => {
+        // Kiểm tra xem trigger đã tồn tại chưa để tránh lỗi đăng ký trùng
+        try {
+            Element.defineTrigger('custom', CustomTrigger);
+        } catch (e) {
+            // Trigger đã được định nghĩa, bỏ qua
+        }
+
+        // Load lottie engine
+        defineElement(lottie.loadAnimation);
+    }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,6 +117,13 @@ function Login() {
             <div className={styles.loginFormBackground}></div>
             <div className={styles.loginFormOverlay}></div>
             <div className={styles.loginFormContent}>
+
+                <lord-icon
+                    src="https://cdn.lordicon.com/hroklero.json"
+                    state={"hover-looking-around"}
+                    trigger={"hover"}
+                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}>
+                </lord-icon>
                 <h1 className={styles.loginTitle}>Đăng nhập</h1>
                 <form onSubmit={handleSubmit} className={styles.loginForm} autoComplete="off">
                     {error && <p className={styles.loginError}>{error}</p>}
@@ -65,13 +141,18 @@ function Login() {
                         <label htmlFor="password" className={styles.loginLabel}></label>
                         <div className={styles.passwordWrapper}>
                             <input placeholder={'Mật khẩu'}
-                                type={showPassword ? 'text' : 'password'}
-                                id="password" name="password"
-                                value={formData.password} onChange={handleChange}
-                                className={styles.loginInput} autoComplete="new-password" required
+                                   type={showPassword ? 'text' : 'password'}
+                                   id="password" name="password"
+                                   value={formData.password} onChange={handleChange}
+                                   className={styles.loginInput} autoComplete="new-password" required
                             />
                             <button tabIndex={-1} type="button" onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
-                                {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/ntfnmkcn.json"
+                                    state={"morph-cross"}
+                                    trigger="custom"
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer' }}>
+                                </lord-icon>
                             </button>
                         </div>
                     </div>
@@ -84,7 +165,7 @@ function Login() {
 
                     <button type="submit" className={styles.loginButton}>Đăng nhập</button>
                     <p className={styles.loginLinkText}>
-                       Chưa có tài khoản?{'  '}
+                        Chưa có tài khoản?{'  '}
                         <Link to="/register" className={styles.loginLink}>
                             Đăng ký
                         </Link>
@@ -94,4 +175,5 @@ function Login() {
         </div>
     );
 }
+
 export default Login;

@@ -37,9 +37,8 @@
     font-size: 40px;
     font-weight: 900;
     font-family: "Google Sans Flex", sans-serif;
-    background: var(--gradient-macha, linear-gradient(to right, #90bb3c, #b8e986));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--color-surface-white);
+    margin-top: 0;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -113,9 +112,6 @@
     font-size: 18px; font-weight: 700; margin-top: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
-.registerButton:hover {
-    box-shadow: 0 4px 20px rgba(149, 214, 0, 0.2);
-}
 
 .registerLinkText { margin-top: 24px; font-size: 14px; color: #aaa; text-align: center; }
 .registerLink {
@@ -125,7 +121,6 @@
     font-weight: 900;
     text-decoration: none;
 }
-.registerLink:hover { text-shadow: 0 0 5px rgba(149, 214, 0, 0.3); }
 
 @media (max-width: 480px) {
     .registerFormWrapper { padding: 24px; border-radius: 30px; }

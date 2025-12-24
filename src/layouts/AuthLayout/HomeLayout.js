@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import styles from './AuthLayout.module.css';
-import { Megaphone } from 'lucide-react';
+import styles from './HomeLayout.module.css';
 import logo from '../../assets/images/logo192.png';
 
-const AuthLayout = () => {
+const HomeLayout = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
+    // Hàm này vừa chuyển trang vừa mở modal
     const handleMobileNav = (path) => {
         navigate(path);
         setIsModalOpen(true);
@@ -16,19 +16,29 @@ const AuthLayout = () => {
     return (
         <div className={styles.authContainer}>
             <div className={styles.webflowBanner}>
-            <span> Hiện tại Fuku đang <span style={{textDecoration:'underline'}}>miễn phí</span>  cho tất cả mọi người </span></div>
+                <span> Hiện tại Fuku đang <span style={{textDecoration:'underline'}}>miễn phí</span>  cho tất cả mọi người </span></div>
             <div className={styles.leftSideWrapper}>
                 <div className={styles.leftSide}>
+                    {/* --- CẬP NHẬT 1: Logo Desktop --- */}
+                    {/* Đổi sự kiện onClick để gọi handleMobileNav('/login') */}
                     <img
                         src={logo}
                         alt="Logo Desktop"
                         className={styles.desktopLogo}
-                        onClick={() => navigate('/')}
+                        onClick={() => handleMobileNav('/login')}
+                        style={{ cursor: 'pointer' }} // Thêm cursor pointer cho rõ ràng
                     />
 
                     <div className={styles.mobileHeader}>
                         <div className={styles.logoContainerMobile}>
-                            <img src={logo} alt="Logo" className={styles.logoImage} />
+                            {/* --- CẬP NHẬT 2: Logo Mobile --- */}
+                            {/* Thêm sự kiện onClick vào đây */}
+                            <img
+                                src={logo}
+                                alt="Logo"
+                                className={styles.logoImage}
+                                onClick={() => handleMobileNav('/login')}
+                            />
                         </div>
                     </div>
 
@@ -48,7 +58,12 @@ const AuthLayout = () => {
                             </p>
 
                             <button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
-                                <span>今すぐ始める (Bắt đầu ngay)</span>
+                                <span>Bắt đầu ngay </span>
+
+                            </button>
+                            <button className={styles.ctaInfoButton} onClick={() => handleMobileNav('/kana-reference')}>
+                                <span>Tìm hiểu </span>
+
                             </button>
                         </div>
                     </div>
@@ -58,6 +73,7 @@ const AuthLayout = () => {
             </div>
 
             <div className={`${styles.rightSide} ${isModalOpen ? styles.showModal : ''}`}>
+                {/* Nút đóng modal sẽ tắt state modal */}
                 <button className={styles.closeModalBtn} onClick={() => setIsModalOpen(false)}>
                     ✕
                 </button>
@@ -70,4 +86,4 @@ const AuthLayout = () => {
     );
 };
 
-export default AuthLayout;
+export default HomeLayout;

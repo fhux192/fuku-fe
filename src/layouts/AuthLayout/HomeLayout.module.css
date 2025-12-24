@@ -2,9 +2,8 @@
 
 .authContainer {
     padding-top: 40px;
-    min-height: 100vh;
+    min-height: 90vh;
     width: 100%;
-    background-color: var(--color-just-black);
     font-family: "Google Sans Flex", sans-serif;
     display: flex;
     flex-direction: column;
@@ -17,7 +16,7 @@
     align-content: center;
     position: absolute;
     font-family: "MuseoModerno", sans-serif;
-    font-weight: 500;
+    font-weight: 600;
     font-size: 15px;
     color: var(--color-just-black);
     top: 0;
@@ -64,18 +63,19 @@
 
 
 .leftSideWrapper {
-    display: block;
     width: 100%;
-    height: 100vh;
-    padding: 0;
+    height: 95vh;
+    background-color: var(--color-surface-white);
     box-sizing: border-box;
     position: relative;
+    z-index: 9999;
 }
 
 .leftSide {
+    background-color: var(--color-just-black);
     width: 100%;
     height: 100%;
-    border-radius: 50px;
+    border-radius: 0px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -156,35 +156,43 @@
     position: relative;
     border: 2px solid transparent;
     border-radius: 6.25rem;
-    background:
-            linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
-            var(--gradient-macha) border-box;
-    color: var(--color-surface-white);
-    font-size: 0.9rem;
-    font-weight: 600;
-    font-family: "MuseoModerno", sans-serif;
+    background-color:var(--color-lt-green);
+    margin-right: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: "MuseoModerno";
     padding: 12px 20px;
     align-self: flex-start;
     cursor: pointer !important;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    text-transform: uppercase;
     letter-spacing: 1px;
     z-index: 1;
 }
 
-.ctaButton span { position: relative; z-index: 2; }
-.ctaButton::before {
-    content: ''; position: absolute; top: 0; left: 0; width: 0; height: 100%;
-    background: var(--gradient-macha); transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); z-index: 1;
+.ctaInfoButton {
+    position: relative;
+    border: 2px solid transparent;
+    border-radius: 6.25rem;
+    background:
+            linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
+            var(--gradient-macha) border-box;
+    color: var(--color-surface-white);
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Google Sans Flex", sans-serif;
+    padding: 12px 22px;
+    align-self: flex-start;
+    cursor: pointer !important;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    letter-spacing: 1px;
+    z-index: 1;
 }
-.ctaButton:hover { color: var(--color-surface25); font-weight: 700; }
-.ctaButton:hover::before { width: 100%; }
-.ctaButton:active { transform: scale(0.9); }
 
 .rightSide {
     width: 100%;
-    height: 100vh;
+    height: 90vh;
     position: fixed;
     top: 0; left: 0;
     background-color: var(--color-surface-white);
@@ -212,11 +220,10 @@
     z-index: 101;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1350px) {
     .authContainer {
         display: grid;
         grid-template-columns: 2.2fr 1fr;
-        height: 100vh;
     }
 
     .webflowBanner{
@@ -233,7 +240,7 @@
     }
 
     .leftSideWrapper {
-        height: 100vh;
+        height: 95vh;
         padding: 20px 0 20px 20px;
     }
 
@@ -245,7 +252,7 @@
         display: none;
     }
 
-    .kanji1 { bottom: -3%; left: 5%; font-size: 15rem; }
+    .kanji1 { bottom: 0%; left: 5%; font-size: 15rem; }
     .kanji2 { top: 7%; right: 3%; font-size: 17rem; }
 
     .glassCard {
@@ -256,11 +263,12 @@
     }
     .leftSideTitle { font-size: 3.5rem;  text-align: center}
     .leftSideSubtitle strong { font-size: 1.3rem; }
-    .ctaButton { font-size: 1rem; padding: 15px 1.2rem;  }
+    .ctaButton { font-size: 1.1rem; padding: 15px 1.8rem;  }
 
     .rightSide {
         position: relative;
         display: flex;
+        height: 90vh;
         align-items: center;
         z-index: 5;
     }
