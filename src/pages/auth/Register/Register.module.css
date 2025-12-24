@@ -20,7 +20,6 @@
     width: 100%;
     height: 100%;
     transform: scale(1.2);
-    background-color: #0e100f; /* Màu nền gốc của Login */
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -37,7 +36,7 @@
     font-size: 40px;
     font-weight: 900;
     font-family: "Google Sans Flex", sans-serif;
-    color: var(--color-surface-white);
+    color: var(--color-just-black);
     margin-top: 0;
     margin-bottom: 20px;
     text-align: center;
@@ -79,7 +78,7 @@
 .registerInput {
     width: 100%; padding: 20px 40px 12px 0px;
     border:none;
-    border-bottom: 1px solid var(--color-surface75); background-color: transparent;
+    border-bottom: 1px solid var(--color-just-black); background-color: transparent;
     font-family: "Google Sans Flex", sans-serif;
     color: var(--color-surface-white); font-size: 18px; font-weight: 600;
     box-sizing: border-box; outline: none;

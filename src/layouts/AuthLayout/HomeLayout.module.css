@@ -172,6 +172,9 @@
 }
 
 .ctaInfoButton {
+    display: flex;
+    align-items: center;
+    gap:4px;
     position: relative;
     border: 2px solid transparent;
     border-radius: 6.25rem;
@@ -181,9 +184,8 @@
     color: var(--color-surface-white);
     font-size: 1rem;
     font-weight: 600;
-    font-family: "Google Sans Flex", sans-serif;
+    font-family: "MuseoModerno";
     padding: 12px 22px;
-    align-self: flex-start;
     cursor: pointer !important;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -192,7 +194,7 @@
 }
 
 .rightSide {
-    width: 100%;
+    min-width: 1vh;
     height: 90vh;
     position: fixed;
     top: 0; left: 0;
@@ -208,7 +210,7 @@
 }
 
 .rightSideContent {
-    width: 100%;
+    min-width: 100vh;
     max-width: 500px;
 }
 
@@ -221,7 +223,7 @@
     z-index: 101;
 }
 
-@media (min-width: 1350px) {
+@media (min-width: 1050px) {
     .authContainer {
         display: grid;
         grid-template-columns: 2.2fr 1fr;
@@ -241,12 +243,12 @@
     }
 
     .leftSideWrapper {
-        height: 95vh;
+        max-height: 95vh;
         padding: 20px 0 20px 20px;
     }
 
     .leftSide {
-        border-radius: 30px;
+        border-radius: 20px;
     }
 
     .mobileHeader, .closeModalBtn {
@@ -267,10 +269,12 @@
     .ctaButton { font-size: 1.1rem; padding: 15px 1.8rem;  }
 
     .rightSide {
+        min-width: 50vh;
         position: relative;
         display: flex;
-        height: 90vh;
+        height: 100%;
         align-items: center;
         z-index: 5;
     }
 }
+

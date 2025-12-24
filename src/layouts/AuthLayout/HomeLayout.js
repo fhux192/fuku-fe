@@ -19,8 +19,6 @@ const HomeLayout = () => {
                 <span> Hiện tại Fuku đang <span style={{textDecoration:'underline'}}>miễn phí</span>  cho tất cả mọi người </span></div>
             <div className={styles.leftSideWrapper}>
                 <div className={styles.leftSide}>
-                    {/* --- CẬP NHẬT 1: Logo Desktop --- */}
-                    {/* Đổi sự kiện onClick để gọi handleMobileNav('/login') */}
                     <img
                         src={logo}
                         alt="Logo Desktop"
@@ -51,20 +49,26 @@ const HomeLayout = () => {
                         <div className={styles.glassCard}>
                             <h1 className={styles.leftSideTitle}>
                                 日本語を<br />
-                                <span className={styles.highlightText}>楽しみましょう</span>
+                                <span className={styles.highlightText}>学びましょう</span>
                             </h1>
                             <p className={styles.leftSideSubtitle}>
                                 <strong>Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí</strong>
                             </p>
+<div style={{display:"flex",justifySelf:"center"}}><button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
+    <span>Bắt đầu ngay </span>
 
-                            <button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
-                                <span>Bắt đầu ngay </span>
+</button>
+    <button className={styles.ctaInfoButton} onClick={() => handleMobileNav('/kana-reference')}>
+        <span>Tìm hiểu </span>
+        <lord-icon
+            src="https://cdn.lordicon.com/yhtmwrae.json"
+            state={"hover-looking-around"}
+            trigger={"hover"}
+            colors="primary:#ffffff"
+            style={{ width: '30px', height: '30px', cursor: 'pointer' }}>
+        </lord-icon>
+    </button></div>
 
-                            </button>
-                            <button className={styles.ctaInfoButton} onClick={() => handleMobileNav('/kana-reference')}>
-                                <span>Tìm hiểu </span>
-
-                            </button>
                         </div>
                     </div>
 
