@@ -10,6 +10,8 @@ import Profile from './pages/auth/Profile';
 import './App.css';
 import HomeLayout from "./layouts/AuthLayout/HomeLayout";
 import KanaReference from "./pages/KanaReference/KanaReference";
+import DashboardLayout from "./layouts/DashboardLayout/DashboardLayout";
+import CoursePage from "./pages/Course/CoursePage";
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('authToken');
@@ -25,6 +27,10 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/forgot-password" element={<ForgotPassword />} />
+                    </Route>
+                    <Route element={<DashboardLayout />}>
+                        {/*<Route index element={<Navigate to="/trangchu" />} />*/}
+                        <Route path="/home/course" element={<CoursePage />} />
                     </Route>
                     <Route path="/verify-email" element={<VerifyEmail />} />
                     <Route path="/reset-password" element={<ResetPassword />} />

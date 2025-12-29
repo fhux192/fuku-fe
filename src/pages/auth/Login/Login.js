@@ -3,10 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import styles from './Login.module.css';
 import lottie from 'lottie-web';
 
-// 1. Import Element để đăng ký Trigger
 import { defineElement, Element } from '@lordicon/element';
 
-// --- ĐỊNH NGHĨA CUSTOM TRIGGER (Đã chỉnh sửa để auto-play) ---
 const CLICK_EVENTS = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
@@ -17,7 +15,6 @@ class CustomTrigger {
         this.player = player;
         this.element = element;
         this.targetElement = targetElement;
-        // Bắt đầu với hướng dương (1) để chạy từ Mở -> Đóng (Gạch chéo)
         this.direction = 1;
         this.onClick = this.onClick.bind(this);
     }
@@ -35,16 +32,11 @@ class CustomTrigger {
     }
 
     onReady() {
-        // --- LOGIC MỚI: Tự động chạy 1 lần khi load ---
-        // Gán hướng chạy xuôi
         this.player.direction = this.direction;
-        // Kích hoạt chạy ngay lập tức để mắt nhắm lại (gạch chéo)
         this.player.play();
     }
 
     onComplete() {
-        // Sau khi chạy xong 1 lượt, đảo chiều hướng chạy
-        // Lần đầu (auto): 1 -> chạy xong đảo thành -1 (để click lần sau nó mở ra)
         this.direction = -this.direction;
         this.player.direction = this.direction;
     }
@@ -56,31 +48,18 @@ class CustomTrigger {
     }
 }
 
-// --- COMPONENT LOGIN ---
-// (Các icon SVG tĩnh dự phòng nếu cần, hiện tại không dùng vì đã dùng lord-icon)
-const EyeIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-);
-const EyeOffIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>
-);
-
 function Login() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    // 2. Đăng ký Trigger và Element khi component load
     useEffect(() => {
-        // Kiểm tra xem trigger đã tồn tại chưa để tránh lỗi đăng ký trùng
         try {
             Element.defineTrigger('custom', CustomTrigger);
         } catch (e) {
-            // Trigger đã được định nghĩa, bỏ qua
         }
 
-        // Load lottie engine
         defineElement(lottie.loadAnimation);
     }, []);
 
@@ -100,7 +79,7 @@ function Login() {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('authToken', data.token);
-                navigate('/profile');
+                navigate('/home/course');
             } else {
                 const errorText = await response.text();
                 setError(errorText || 'ログインに失敗しました。(Đăng nhập thất bại.)');

@@ -1,0 +1,361 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+:root {
+    --sidebar-width: 260px;
+    --sidebar-mini-width: 90px;
+    --mobile-nav-height: 65px;
+    --color-text-subtle: rgba(255, 255, 255, 0.6);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Google Sans Flex", sans-serif;
+    color: var(--color-just-black);
+}
+
+.dashboardLayout {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100%;
+    background-color: var(--color-just-black);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    flex-shrink: 0;
+    z-index: 100;
+}
+
+.logoArea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    height: 50px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 10px;
+}
+
+.logoIcon {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 2rem;
+    color: var(--color-lt-green);
+    min-width: 30px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoText {
+    font-family: "MuseoModerno", sans-serif;
+    color: var(--color-lt-green);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    transition: opacity 0.2s;
+}
+
+.logoImage {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.navGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    color: var(--color-surface-white);
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.navIcon {
+    margin-right: 12px;
+    transition: margin 0.3s ease;
+}
+
+.navItem span {
+    transition: opacity 0.2s, transform 0.2s;
+    opacity: 1;
+}
+
+.navItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.activeNavItem {
+    border: 1px solid var(--color-lt-green);
+    color: var(--color-lt-green) !important;
+}
+
+.mainDisplay {
+    flex-grow: 1;
+    height: 100%;
+    background-color: var(--color-surface-white);
+    border-radius: 24px;
+    padding: 40px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    transition: padding 0.3s ease;
+}
+
+.viewTitle {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--color-just-black);
+    margin-bottom: 30px;
+    letter-spacing: -1px;
+}
+
+.courseGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    padding-bottom: 40px;
+}
+
+.jlptCard {
+    background: var(--color-just-black);
+    min-height: 260px;
+    border-radius: 32px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.kanjiBg {
+    position: absolute;
+    top: -10px;
+    right: -15px;
+    font-size: 11rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.04);
+    pointer-events: none;
+    line-height: 1;
+    font-family: "Noto Sans JP", sans-serif;
+    transition: transform 0.5s;
+}
+
+.jlptCard:hover .kanjiBg { transform: rotate(10deg) scale(1.05); }
+
+.cardContent { z-index: 2; position: relative; }
+
+.levelBadge {
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+    padding: 8px 10px;
+    height: 50px;
+    border-radius: 10px;
+    font-family: "MuseoModerno", sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    width: fit-content;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.cardName {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: start;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    margin-left: 12px;
+    line-height: 1.2;
+}
+
+.cardInfo {
+    display: flex;
+    text-align: start;
+    color: var(--color-text-subtle);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+@media (min-width: 650px) and (max-width: 1024px) {
+    .sidebar {
+        width: var(--sidebar-mini-width);
+        padding: 30px 10px;
+        align-items: center;
+    }
+
+    .logoArea {
+        width: 100%;
+        justify-content: center;
+        padding-left: 0;
+        margin-bottom: 30px;
+    }
+
+    .logoText {
+        display: none;
+        opacity: 0;
+    }
+
+    .logoIcon {
+        font-size: 2.2rem;
+    }
+
+    .navItem {
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        padding: 0;
+        margin: 0 auto 10px auto;
+    }
+
+    .navIcon {
+        margin-right: 0;
+    }
+
+    .navItem span {
+        display: none;
+        opacity: 0;
+        width: 0;
+    }
+
+    .mainDisplay {
+        padding: 30px;
+    }
+
+    .courseGrid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 649px) {
+    .dashboardLayout {
+        flex-direction: column;
+        padding: 0;
+        gap: 0;
+        height: 100dvh;
+    }
+
+    .sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 15px;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+        border-radius: 24px 24px 0 0;
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.15);
+    }
+
+    .logoArea { display: none; }
+
+    .navGroup {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-around;
+        gap: 0;
+        max-width: 500px;
+    }
+
+    .navItem {
+        width: auto;
+        height: auto;
+        padding: 8px 12px;
+        background: transparent !important;
+        flex-direction: column;
+        gap: 4px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .navIcon {
+        margin-right: 0;
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    .navItem span {
+        margin-left: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .activeNavItem {
+        border: none;
+        background: transparent !important;
+    }
+
+    .activeNavItem span,
+    .activeNavItem :global(lord-icon) {
+        color: var(--color-lt-green);
+    }
+
+    .activeNavItem::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 3px;
+        background-color: var(--color-lt-green);
+        border-radius: 10px;
+        margin-top: 4px;
+        position: absolute;
+        bottom: 2px;
+    }
+
+    .mainDisplay {
+        border-radius: 0;
+        padding: 20px 15px calc(90px + env(safe-area-inset-bottom)) 15px;
+    }
+
+    .viewTitle {
+        font-size: 1.8rem;
+        margin-top: 10px;
+    }
+
+    .courseGrid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .jlptCard {
+        min-height: 200px;
+    }
+}
+
+@media (max-width: 380px) {
+    .navItem { padding: 10px; }
+    .activeNavItem::after { bottom: 0; }
+}

@@ -7,8 +7,7 @@ const HomeLayout = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
-    // Hàm này vừa chuyển trang vừa mở modal
-    const handleMobileNav = (path) => {
+    const handleNav = (path) => {
         navigate(path);
         setIsModalOpen(true);
     };
@@ -23,19 +22,17 @@ const HomeLayout = () => {
                         src={logo}
                         alt="Logo Desktop"
                         className={styles.desktopLogo}
-                        onClick={() => handleMobileNav('/login')}
-                        style={{ cursor: 'pointer' }} // Thêm cursor pointer cho rõ ràng
+                        onClick={() => handleNav('/login')}
+                        style={{ cursor: 'pointer' }}
                     />
 
                     <div className={styles.mobileHeader}>
                         <div className={styles.logoContainerMobile}>
-                            {/* --- CẬP NHẬT 2: Logo Mobile --- */}
-                            {/* Thêm sự kiện onClick vào đây */}
                             <img
                                 src={logo}
                                 alt="Logo"
                                 className={styles.logoImage}
-                                onClick={() => handleMobileNav('/login')}
+                                onClick={() => handleNav('/login')}
                             />
                         </div>
                     </div>
@@ -54,11 +51,11 @@ const HomeLayout = () => {
                             <p className={styles.leftSideSubtitle}>
                                 <strong>Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí</strong>
                             </p>
-<div className={styles.btnWrapper}><button className={styles.ctaButton} onClick={() => handleMobileNav('/kana-reference')}>
+<div className={styles.btnWrapper}><button className={styles.ctaButton} onClick={() => handleNav('/kana-reference')}>
     <span>Bắt đầu ngay </span>
 
 </button>
-    <button className={styles.ctaInfoButton} onClick={() => handleMobileNav('/kana-reference')}>
+    <button className={styles.ctaInfoButton} onClick={() => handleNav('/home/course')}>
         <span>Tìm hiểu </span>
         <lord-icon
             src="https://cdn.lordicon.com/yhtmwrae.json"
