@@ -5,12 +5,24 @@
 .registerFormWrapper {
     position: relative;
     overflow: hidden;
-    padding: 20px 30px 30px 30px;
+    padding: 20px 0px 20px 00px;
     margin: auto;
     border-radius: 50px;
     width: 100%;
-    max-width: 360px; /* Giữ độ rộng này cho gọn giống Login */
+    max-width: 360px;
     z-index: 10;
+    animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .registerFormBackground {
@@ -25,15 +37,38 @@
     z-index: 1;
 }
 
-
 .registerFormContent {
     position: relative;
     z-index: 3;
 }
 
+/* Staggered animation for form elements */
+.registerFormContent > * {
+    animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+.registerFormContent > *:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.registerFormContent > *:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* --- Typography --- */
 .registerTitle {
-    font-size: 40px;
+    font-size: clamp(32px, 7vw, 40px);
     font-weight: 900;
     font-family: "Google Sans Flex", sans-serif;
     color: var(--color-just-black);
@@ -42,7 +77,9 @@
     text-align: center;
 }
 
-.registerForm { width: 100%; }
+.registerForm {
+    width: 100%;
+}
 
 .registerError {
     color: #ff4d4d;
@@ -51,8 +88,22 @@
     padding: 12px;
     border-radius: 12px;
     margin-bottom: 16px;
-    font-size: 14px;
+    font-size: clamp(13px, 3.2vw, 14px);
     text-align: center;
+    word-break: break-word;
+    animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shakeError {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
 }
 
 .registerMessage {
@@ -62,66 +113,292 @@
     padding: 12px;
     border-radius: 12px;
     margin-bottom: 16px;
-    font-size: 14px;
+    font-size: clamp(13px, 3.2vw, 14px);
     text-align: center;
+    word-break: break-word;
+    animation: slideInDown 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* --- Input Fields (Phong cách gạch chân) --- */
-.registerInputGroup { margin-bottom: 15px; text-align: left; }
-
-.registerLabel {
-    display: none; /* Ẩn label để theo style minimalist */
+.registerInputGroup {
+    margin-bottom: clamp(14px, 3.5vw, 15px);
+    text-align: left;
 }
 
-.passwordWrapper { position: relative; display: flex; align-items: center; }
+.registerLabel {
+    display: none;
+}
+
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
 .registerInput {
-    width: 100%; padding: 20px 40px 12px 0px;
-    border:none;
-    border-bottom: 1px solid var(--color-just-black); background-color: transparent;
+    width: 100%;
+    padding: 20px 40px 12px 0px;
+    border: none;
+    border-bottom: 1px solid var(--color-just-black);
+    background-color: transparent;
     font-family: "Google Sans Flex", sans-serif;
-    color: var(--color-surface-white); font-size: 18px; font-weight: 600;
-    box-sizing: border-box; outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    color: var(--color-surface-white);
+    font-size: clamp(17px, 3.8vw, 18px);
+    font-weight: 600;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .registerInput::placeholder {
     font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(16px, 3.5vw, 18px);
 }
 
 .registerInput:focus {
     border: none;
     border-bottom: 1px solid var(--color-lt-green, #90bb3c);
+    transform: translateY(-2px);
+}
+
+.registerInput:focus::placeholder {
+    opacity: 0.5;
+    transform: translateX(5px);
 }
 
 .togglePasswordBtn {
-    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-    background: transparent; border: none; cursor: pointer; padding: 4px;
-    display: flex; align-items: center; justify-content: center; color: #888;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    transition: color 0.2s ease, transform 0.2s ease;
 }
-.togglePasswordBtn:hover { color: #f5f5f5; }
+
+.togglePasswordBtn:hover {
+    color: #f5f5f5;
+    transform: translateY(-50%) scale(1.1);
+}
 
 .registerButton {
-    width: 60%; /* Nút đăng ký thường full width để dễ bấm */
-    padding: 12px;
+    width: 60%;
+    min-width: 150px;
+    padding: clamp(0.5rem, 2.5vw, 0.65rem);
     background: var(--gradient-macha, linear-gradient(to right, #90bb3c, #b8e986));
     font-family: "MuseoModerno", sans-serif;
     color: var(--color-just-black, #000);
-    border: none; border-radius: 30px; cursor: pointer;
-    font-size: 18px; font-weight: 700; margin-top: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: clamp(17px, 3.8vw, 18px);
+    font-weight: 700;
+    margin-top: clamp(16px, 4vw, 20px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.registerLinkText { margin-top: 24px; font-size: 14px; color: #aaa; text-align: center; }
+.registerButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.registerButton:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.registerButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(144, 187, 60, 0.4);
+}
+
+.registerButton:active {
+    transform: translateY(0);
+}
+
+.registerLinkText {
+    margin-top: clamp(20px, 5vw, 24px);
+    font-size: clamp(13px, 3.2vw, 14px);
+    color: #aaa;
+    text-align: center;
+}
+
 .registerLink {
     font-family: "Google Sans Flex", sans-serif;
     margin-left: 5px;
     color: var(--color-shockingly-green, #90bb3c);
     font-weight: 900;
     text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-block;
 }
 
+.registerLink:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Tablet devices */
+@media (max-width: 768px) {
+    .registerFormWrapper {
+        max-width: 90%;
+        padding: 20px 26px 28px;
+        border-radius: 40px;
+    }
+
+    .registerButton {
+        width: 65%;
+        min-width: 160px;
+    }
+}
+
+/* Mobile devices */
 @media (max-width: 480px) {
-    .registerFormWrapper { padding: 24px; border-radius: 30px; }
-    .registerTitle { font-size: 32px; }
+    .registerFormWrapper {
+        max-width: 92%;
+        padding: 20px 0px 26px;
+        border-radius: 35px;
+    }
+
+    .registerTitle {
+        margin-bottom: 18px;
+    }
+
+    .registerInput {
+        padding: 18px 40px 11px 0;
+    }
+
+    .registerButton {
+        width: 75%;
+        min-width: 170px;
+        margin-top: 16px;
+    }
+
+    .registerInputGroup {
+        margin-bottom: 13px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .registerFormWrapper {
+        max-width: 94%;
+        padding: 18px 0px 24px;
+        border-radius: 30px;
+    }
+
+    .registerTitle {
+        font-size: clamp(30px, 8vw, 36px);
+    }
+
+    .registerInputGroup {
+        margin-bottom: 12px;
+    }
+
+    .registerButton {
+        width: 80%;
+        min-width: 180px;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+    .registerFormWrapper {
+        padding: 14px 0px 18px;
+        border-radius: 28px;
+    }
+
+    .registerTitle {
+        margin-bottom: 14px;
+        font-size: clamp(26px, 5vw, 34px);
+    }
+
+    .registerInputGroup {
+        margin-bottom: 12px;
+    }
+
+    .registerInput {
+        padding: 16px 40px 10px 0;
+    }
+
+    .registerButton {
+        margin-top: 14px;
+        min-width: 140px;
+    }
+
+    .registerLinkText {
+        margin-top: 16px;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .registerButton,
+    .registerLink {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .togglePasswordBtn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* Very small screens protection */
+@media (max-width: 320px) {
+    .registerFormWrapper {
+        max-width: 96%;
+        padding: 16px 0px 22px;
+        border-radius: 25px;
+    }
+
+    .registerTitle {
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .registerInput {
+        font-size: 16px;
+        padding: 16px 38px 10px 0;
+    }
+
+    .registerButton {
+        width: 85%;
+        min-width: 190px;
+        font-size: 16px;
+    }
+
+    .registerError,
+    .registerMessage,
+    .registerLinkText {
+        font-size: 13px;
+    }
 }

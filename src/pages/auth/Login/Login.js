@@ -1,9 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import styles from './Login.module.css';
 import lottie from 'lottie-web';
-
 import { defineElement, Element } from '@lordicon/element';
+import styles from './Login.module.css';
+
+const UI_CONFIG = {
+    API: {
+        LOGIN: 'http://localhost:8080/api/auth/login'
+    },
+    ROUTES: {
+        HOME: '/home/course',
+        REGISTER: '/register',
+        FORGOT_PASS: '/forgot-password'
+    },
+    ICONS: {
+        AVATAR: 'https://cdn.lordicon.com/hroklero.json',
+        EYE: 'https://cdn.lordicon.com/ntfnmkcn.json'
+    },
+    MESSAGES: {
+        LOGIN_FAIL: 'ログインに失敗しました。(Đăng nhập thất bại.)',
+        ERROR: 'エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)'
+    }
+};
 
 const CLICK_EVENTS = [
     { name: 'mousedown' },
@@ -48,104 +66,140 @@ class CustomTrigger {
     }
 }
 
-function Login() {
+const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const navigate = useNavigate();
+    const isIconDefined = useRef(false);
 
     useEffect(() => {
-        try {
-            Element.defineTrigger('custom', CustomTrigger);
-        } catch (e) {
+        if (!isIconDefined.current) {
+            try {
+                Element.defineTrigger('custom', CustomTrigger);
+                defineElement(lottie.loadAnimation);
+                isIconDefined.current = true;
+            } catch (e) {
+                console.warn('LordIcon definitions already exist');
+            }
         }
-
-        defineElement(lottie.loadAnimation);
     }, []);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleInputChange = useCallback((e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        if (error) setError('');
+    }, [error]);
+
+    const togglePasswordVisibility = useCallback(() => {
+        setIsPasswordVisible(prev => !prev);
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
         try {
-            const response = await fetch('http://localhost:8080/api/auth/login', {
+            const response = await fetch(UI_CONFIG.API.LOGIN, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
+
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('authToken', data.token);
-                navigate('/home/course');
+                navigate(UI_CONFIG.ROUTES.HOME);
             } else {
                 const errorText = await response.text();
-                setError(errorText || 'ログインに失敗しました。(Đăng nhập thất bại.)');
+                setError(errorText || UI_CONFIG.MESSAGES.LOGIN_FAIL);
             }
         } catch (err) {
-            setError('エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)');
+            setError(UI_CONFIG.MESSAGES.ERROR);
         }
     };
 
-    const togglePasswordVisibility = () => { setShowPassword(!showPassword); };
-
     return (
         <div className={styles.loginFormWrapper}>
-            <div className={styles.loginFormBackground}></div>
-            <div className={styles.loginFormOverlay}></div>
-            <div className={styles.loginFormContent}>
+            <div className={styles.loginFormBackground} aria-hidden="true" />
+            <div className={styles.loginFormOverlay} aria-hidden="true" />
 
+            <div className={styles.loginFormContent}>
                 <lord-icon
-                    src="https://cdn.lordicon.com/hroklero.json"
-                    state={"hover-looking-around"}
-                    trigger={"hover"}
-                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}>
-                </lord-icon>
+                    src={UI_CONFIG.ICONS.AVATAR}
+                    state="hover-looking-around"
+                    trigger="hover"
+                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}
+                />
+
                 <h1 className={styles.loginTitle}>Đăng nhập</h1>
+
                 <form onSubmit={handleSubmit} className={styles.loginForm} autoComplete="off">
-                    {error && <p className={styles.loginError}>{error}</p>}
+                    {error && (
+                        <div className={styles.loginError} role="alert">
+                            {error}
+                        </div>
+                    )}
+
                     <div className={styles.loginInputGroup}>
-                        <label htmlFor="email" className={styles.loginLabel}></label>
                         <input
-                            placeholder={'Email'}
-                            type="email" id="email" name="email"
-                            value={formData.email} onChange={handleChange}
-                            className={styles.loginInput} autoComplete="off" required
+                            className={styles.loginInput}
+                            placeholder="Email"
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            autoComplete="email"
+                            required
+                            aria-label="Email Address"
                         />
                     </div>
 
                     <div className={styles.loginInputGroup}>
-                        <label htmlFor="password" className={styles.loginLabel}></label>
                         <div className={styles.passwordWrapper}>
-                            <input placeholder={'Mật khẩu'}
-                                   type={showPassword ? 'text' : 'password'}
-                                   id="password" name="password"
-                                   value={formData.password} onChange={handleChange}
-                                   className={styles.loginInput} autoComplete="new-password" required
+                            <input
+                                className={styles.loginInput}
+                                placeholder="Mật khẩu"
+                                type={isPasswordVisible ? 'text' : 'password'}
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                autoComplete="current-password"
+                                required
+                                aria-label="Password"
                             />
-                            <button tabIndex={-1} type="button" onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className={styles.togglePasswordBtn}
+                                tabIndex={-1}
+                                aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                            >
                                 <lord-icon
-                                    src="https://cdn.lordicon.com/ntfnmkcn.json"
-                                    state={"morph-cross"}
+                                    src={UI_CONFIG.ICONS.EYE}
+                                    state="morph-cross"
                                     trigger="custom"
-                                    style={{ width: '35px', height: '35px', cursor: 'pointer' }}>
-                                </lord-icon>
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer' }}
+                                />
                             </button>
                         </div>
                     </div>
 
                     <div className={styles.forgotPasswordWrapper}>
-                        <Link to="/forgot-password" className={styles.forgotPasswordLink}>
+                        <Link to={UI_CONFIG.ROUTES.FORGOT_PASS} className={styles.forgotPasswordLink}>
                             Quên mật khẩu?
                         </Link>
                     </div>
 
-                    <button type="submit" className={styles.loginButton}>Đăng nhập</button>
+                    <button type="submit" className={styles.loginButton}>
+                        Đăng nhập
+                    </button>
+
                     <p className={styles.loginLinkText}>
-                        Chưa có tài khoản?{'  '}
-                        <Link to="/register" className={styles.loginLink}>
+                        Chưa có tài khoản?{' '}
+                        <Link to={UI_CONFIG.ROUTES.REGISTER} className={styles.loginLink}>
                             Đăng ký
                         </Link>
                     </p>
@@ -153,6 +207,6 @@ function Login() {
             </div>
         </div>
     );
-}
+};
 
 export default Login;

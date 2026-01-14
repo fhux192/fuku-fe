@@ -1,51 +1,75 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
-.authContainer {
-    padding-top: 40px;
-    width: 100%;
-    font-family: "Google Sans Flex", sans-serif;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    cursor: default;
-    position: relative;
+/* CSS Variables for better maintainability */
+:root {
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 1rem;
+    --border-radius-sm: 0.5rem;
+    --border-radius-md: 1rem;
+    --border-radius-lg: 1.875rem;
+    --border-radius-full: 6.25rem;
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.webflowBanner{
-    align-content: center;
-    position: absolute;
-    font-family: "MuseoModerno", sans-serif;
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--color-just-black);
+.authContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 40px;
+    overflow-x: hidden;
+    font-family: "Google Sans Flex", sans-serif;
+    cursor: default;
+}
+
+.webflowBanner {
+    position: fixed;
     top: 0;
-    width: 100vw;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
     height: 40px;
-    background:var(--gradient-macha);
-    z-index:10;
+    background: var(--gradient-macha);
+    color: var(--color-just-black);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(0.775rem, 2vw, 1.125rem);
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .desktopLogo {
     display: none;
-    position: absolute;
-    top: 40px;
+    position: fixed;
+    top: 70px;
     left: 40px;
-    width: 80px;
-    height: auto;
     z-index: 50;
+    width: clamp(60px, 8vw, 80px);
+    height: auto;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
+.desktopLogo:hover {
+    transform: scale(1.05);
+}
+
 .mobileHeader {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
+    position: fixed;
+    top: 60px;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
     z-index: 50;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: var(--spacing-xs);
 }
 
 .logoContainerMobile {
@@ -54,38 +78,90 @@
 }
 
 .logoImage {
-    width: 50px;
-    height: 50px;
+    width: clamp(40px, 10vw, 50px);
+    height: clamp(40px, 10vw, 50px);
     object-fit: contain;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logoImage:hover {
+    transform: scale(1.05);
+}
+
+/* Floating Login Button */
+.floatingLoginBtn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: var(--gradient-macha);
+    border: none;
+    border-radius: var(--border-radius-full);
+    color: var(--color-just-black);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    animation: floatPulse 3s ease-in-out infinite;
+}
+
+.floatingLoginBtn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+}
+
+.floatingLoginBtn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+@keyframes floatPulse {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 .leftSideWrapper {
-    width: 100%;
-    height: 90vh;
-    background-color: var(--color-surface-white);
-    box-sizing: border-box;
     position: relative;
-    z-index: 9999;
+    z-index: 10;
+    width: 100%;
+    min-height: calc(100vh - 40px);
+    box-sizing: border-box;
+    background-color: var(--color-surface-white);
 }
 
 .leftSide {
-    background-color: var(--color-just-black);
-    width: 100%;
-    height: 100%;
-    border-radius: 0px;
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 40px);
+    padding: var(--spacing-lg) var(--spacing-sm);
+    overflow: hidden;
+    background-color: var(--color-just-black);
+    border-radius: 0;
 }
 
 .decorativeElements {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 1; pointer-events: none;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
 }
 
 .floatingKanji {
@@ -93,120 +169,184 @@
     font-weight: 900;
     line-height: 1;
     user-select: none;
+    opacity: 0.2;
     animation: float 5s ease-in-out infinite;
+    will-change: transform, opacity;
 }
 
-.kanji1 { color: rgba(255,255,255,0.2); bottom: 7%; left: 5%; font-size: 10rem; animation-delay: 0s; }
-.kanji2 { color:rgba(255,255,255,0.2); top: 18%; right: 5%; font-size: 10rem; animation-delay: 2s; }
+.kanji1 {
+    bottom: 5%;
+    left: -5%;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: clamp(6rem, 15vw, 10rem);
+    animation-delay: 0s;
+}
+
+.kanji2 {
+    top: 10%;
+    right: -5%;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: clamp(6rem, 15vw, 10rem);
+    animation-delay: 2s;
+}
 
 @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(2deg); }
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.2;
+    }
+    50% {
+        transform: translateY(-20px) rotate(2deg);
+        opacity: 0.15;
+    }
 }
 
 .overlayGradient {
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 0; pointer-events: none;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .leftSideContent {
     z-index: 10;
-    width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0 2rem;
+    width: 100%;
+    max-width: 600px;
+    padding: var(--spacing-sm);
+}
+
+.glassCard {
+    width: 100%;
+    padding: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-lg);
 }
 
 .leftSideTitle {
-    font-size: 2.5rem;
-    font-weight: 900;
-    font-family: 'Noto Sans Japanese', sans-serif;
-    text-align: left;
+    margin: 0 0 var(--spacing-md) 0;
     color: var(--color-surface-white);
-    margin: 0 0 1rem 1rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
     line-height: 1.2;
+    text-align: center;
     letter-spacing: -1px;
 }
 
-.highlightText { color: var(--gradient-macha); display: inline-block; }
+.highlightText {
+    display: inline-block;
+    background: var(--gradient-macha);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
 .leftSideSubtitle {
-    font-size: 1rem;
-    color: var(--color-surface-white);
-    margin-left: 1rem;
-    margin-bottom: 30px;
-    line-height: 1.5;
+    margin-bottom: var(--spacing-lg);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    line-height: 1.6;
+    text-align: center;
 }
 
 .leftSideSubtitle strong {
-    color: var(--color-surface-white);
-    font-weight: 600;
     display: block;
-    margin-top: 5px;
-    text-align: left;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    margin-top: var(--spacing-xs);
+    color: var(--color-surface-white);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
 }
 
-.btnWrapper{
+.btnWrapper {
     display: flex;
-    justify-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
     justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.ctaButton,
+.ctaInfoButton {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-width: 140px;
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.75rem);
+    border-radius: var(--border-radius-full);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(0.875rem, 2vw, 1.1rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    transform: translateY(0);
 }
 
 .ctaButton {
-    position: relative;
+    background-color: var(--color-lt-green);
     border: 2px solid transparent;
-    border-radius: 6.25rem;
-    background-color:var(--color-lt-green);
-    margin-right: 10px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    font-family: "MuseoModerno";
-    color:var(--color-just-black);
-    padding: 10px 20px;
-    align-self: flex-start;
-    cursor: pointer !important;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    letter-spacing: 1px;
-    z-index: 1;
+    color: var(--color-just-black);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.ctaButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ctaButton:active {
+    transform: translateY(0);
 }
 
 .ctaInfoButton {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap:4px;
-    position: relative;
+    gap: 6px;
+    background: linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
+    var(--gradient-macha) border-box;
     border: 2px solid transparent;
-    border-radius: 6.25rem;
-    background:
-            linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
-            var(--gradient-macha) border-box;
     color: var(--color-surface-white);
-    font-size: 0.9rem;
-    font-weight: 600;
-    font-family: "MuseoModerno";
-    padding: 10px 20px;
-    cursor: pointer !important;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    letter-spacing: 1px;
-    z-index: 1;
+}
+
+.ctaInfoButton:hover {
+    transform: translateY(-2px);
+
 }
 
 .rightSide {
-    min-width: 1vh;
-    height: 90vh;
-    position: fixed;
-    top: 0; left: 0;
-    background-color: var(--color-surface-white);
-    z-index: 100;
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .showModal {
@@ -214,32 +354,103 @@
 }
 
 .rightSideContent {
-    min-width: 90vh;
+    width: 90%;
     max-width: 500px;
+    max-height: 90vh;
+    padding: var(--spacing-lg);
+    overflow-y: auto;
+    background-color: var(--color-surface-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .closeModalBtn {
     position: absolute;
-    top: 20px; right: 20px;
-    background: none; border: none;
-    color: #fff; font-size: 1.5rem;
+    top: 20px;
+    right: 20px;
+    z-index: 201;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 1.5rem;
     cursor: pointer;
-    z-index: 101;
+    transition: var(--transition-smooth);
 }
 
+.closeModalBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Tablet Breakpoint */
+@media (min-width: 768px) {
+    .leftSide {
+        padding: var(--spacing-xl) var(--spacing-lg);
+    }
+
+    .glassCard {
+        padding: var(--spacing-xl);
+    }
+
+    .kanji1 {
+        bottom: 2%;
+        left: 0%;
+        font-size: clamp(10rem, 20vw, 15rem);
+    }
+
+    .kanji2 {
+        top: 8%;
+        right: 0%;
+        font-size: clamp(10rem, 20vw, 17rem);
+    }
+
+    .btnWrapper {
+        flex-wrap: nowrap;
+        gap: var(--spacing-md);
+    }
+
+    .ctaButton,
+    .ctaInfoButton {
+        flex: 0 1 auto;
+    }
+
+    .floatingLoginBtn {
+        bottom: 32px;
+        right: 32px;
+        padding: 14px 24px;
+    }
+}
+
+/* Desktop Breakpoint */
 @media (min-width: 1050px) {
     .authContainer {
         display: grid;
         grid-template-columns: 2.2fr 1fr;
+        gap: 0;
+        padding-top: 40px;
     }
 
-    .webflowBanner{
-        font-size:18px;
-        position: absolute;
-        width: 100vw;
-        height: 40px;
-        background:var(--gradient-macha);
-        z-index:10;
+    .webflowBanner {
+        font-size: 1.2rem;
     }
 
     .desktopLogo {
@@ -247,39 +458,135 @@
     }
 
     .leftSideWrapper {
-        max-height: 90vh;
+        max-height: calc(100vh - 60px);
         padding: 20px 0 20px 20px;
     }
 
     .leftSide {
+        min-height: 100%;
         border-radius: 30px;
     }
 
-    .mobileHeader, .closeModalBtn {
+    .mobileHeader,
+    .closeModalBtn,
+    .floatingLoginBtn {
         display: none;
     }
 
-    .kanji1 { bottom: 0%; left: 5%; font-size: 15rem; }
-    .kanji2 { top: 7%; right: 3%; font-size: 17rem; }
+    .kanji1 {
+        bottom: 0%;
+        left: 5%;
+        font-size: 15rem;
+    }
+
+    .kanji2 {
+        top: 7%;
+        right: 3%;
+        font-size: 17rem;
+    }
 
     .glassCard {
-        padding: 60px 40px;
-        max-width: none;
-        width: auto;
-        border: none;
+        max-width: 600px;
+        padding: 3.75rem 2.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .leftSideTitle { font-size: 3.5rem;  text-align: center}
-    .leftSideSubtitle strong { font-size: 1.3rem; }
-    .ctaButton { font-size: 1.1rem; padding: 12px 24px;  }
-    .ctaInfoButton { font-size: 1.1rem; padding: 12px 24px;  }
+
+    .leftSideTitle {
+        font-size: 3.5rem;
+        text-align: center;
+    }
+
+    .leftSideSubtitle {
+        text-align: center;
+    }
+
+    .leftSideSubtitle strong {
+        font-size: 1.3rem;
+    }
+
+    .ctaButton,
+    .ctaInfoButton {
+        padding: 0.875rem 1.75rem;
+        font-size: 1.1rem;
+    }
 
     .rightSide {
-        min-width: 60vh;
         position: relative;
-        display: flex;
-        height: 100%;
-        align-items: center;
         z-index: 5;
+        display: flex;
+        width: 100%;
+        height: calc(100vh - 40px);
+        background-color: var(--color-surface-white);
+        backdrop-filter: none;
+    }
+
+    .rightSideContent {
+        width: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        padding: var(--spacing-xl);
+        border-radius: 0;
+        box-shadow: none;
     }
 }
 
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .authContainer {
+        grid-template-columns: 2.5fr 1fr;
+    }
+
+    .leftSideContent {
+        max-width: 700px;
+    }
+
+    .glassCard {
+        max-width: 700px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 375px) {
+    .authContainer {
+        padding-top: 40px;
+    }
+
+    .mobileHeader {
+        top: 50px;
+        left: var(--spacing-xs);
+        right: var(--spacing-xs);
+    }
+
+    .leftSide {
+        padding: var(--spacing-md) var(--spacing-xs);
+    }
+
+    .glassCard {
+        padding: var(--spacing-md);
+    }
+
+    .btnWrapper {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .ctaButton,
+    .ctaInfoButton {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .floatingLoginBtn {
+        bottom: 16px;
+        right: 16px;
+        padding: 10px 16px;
+        font-size: 0.875rem;
+    }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .floatingLoginBtn {
+        min-height: 48px;
+    }
+}
