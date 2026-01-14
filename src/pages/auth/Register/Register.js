@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Register.module.css';
 import lottie from 'lottie-web';
 
-// 1. Import Element để đăng ký Trigger
 import { defineElement, Element } from '@lordicon/element';
 
-// --- ĐỊNH NGHĨA CUSTOM TRIGGER (Y CHANG CODE LOGIN) ---
 const CLICK_EVENTS = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
@@ -17,7 +15,6 @@ class CustomTrigger {
         this.player = player;
         this.element = element;
         this.targetElement = targetElement;
-        // Bắt đầu với hướng dương (1) để chạy từ Mở -> Đóng (Gạch chéo)
         this.direction = 1;
         this.onClick = this.onClick.bind(this);
     }
@@ -35,16 +32,11 @@ class CustomTrigger {
     }
 
     onReady() {
-        // --- LOGIC MỚI: Tự động chạy 1 lần khi load ---
-        // Gán hướng chạy xuôi
         this.player.direction = this.direction;
-        // Kích hoạt chạy ngay lập tức để mắt nhắm lại (gạch chéo)
         this.player.play();
     }
 
     onComplete() {
-        // Sau khi chạy xong 1 lượt, đảo chiều hướng chạy
-        // Lần đầu (auto): 1 -> chạy xong đảo thành -1 (để click lần sau nó mở ra)
         this.direction = -this.direction;
         this.player.direction = this.direction;
     }
@@ -56,29 +48,37 @@ class CustomTrigger {
     }
 }
 
-// --- COMPONENT REGISTER ---
 function Register() {
     const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
-    // State quản lý hiển thị text mật khẩu
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const navigate = useNavigate();
+    const avatarIconRef = useRef(null);
 
-    // 2. Đăng ký Trigger và Element khi component load
     useEffect(() => {
-        // Kiểm tra xem trigger đã tồn tại chưa để tránh lỗi đăng ký trùng
         try {
             Element.defineTrigger('custom', CustomTrigger);
         } catch (e) {
-            // Trigger đã được định nghĩa, bỏ qua
         }
 
-        // Load lottie engine
         defineElement(lottie.loadAnimation);
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (avatarIconRef.current) {
+                const player = avatarIconRef.current.playerInstance;
+                if (player && !player.isPlaying) {
+                    player.play();
+                }
+            }
+        }, 1000); // Delay 1s để đảm bảo icon đã load
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleChange = (e) => {
@@ -132,6 +132,7 @@ function Register() {
 
             <div className={styles.registerFormContent}>
                 <lord-icon
+                    ref={avatarIconRef}
                     src="https://cdn.lordicon.com/hroklero.json"
                     state={"morph-group"}
                     trigger="morph"

@@ -153,7 +153,7 @@
     border-bottom: 1px solid var(--color-just-black);
     background-color: transparent;
     font-family: "Google Sans Flex", sans-serif;
-    color: var(--color-surface-white);
+    color: var(--color-just-black);
     font-size: clamp(17px, 3.8vw, 18px);
     font-weight: 600;
     box-sizing: border-box;

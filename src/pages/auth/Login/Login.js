@@ -72,6 +72,7 @@ const Login = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const navigate = useNavigate();
     const isIconDefined = useRef(false);
+    const avatarIconRef = useRef(null);
 
     useEffect(() => {
         if (!isIconDefined.current) {
@@ -83,6 +84,19 @@ const Login = () => {
                 console.warn('LordIcon definitions already exist');
             }
         }
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (avatarIconRef.current) {
+                const player = avatarIconRef.current.playerInstance;
+                if (player && !player.isPlaying) {
+                    player.play();
+                }
+            }
+        }, 300);
+
+        return () => clearTimeout(timer);
     }, []);
 
     const handleInputChange = useCallback((e) => {
@@ -126,6 +140,7 @@ const Login = () => {
 
             <div className={styles.loginFormContent}>
                 <lord-icon
+                    ref={avatarIconRef}
                     src={UI_CONFIG.ICONS.AVATAR}
                     state="hover-looking-around"
                     trigger="hover"

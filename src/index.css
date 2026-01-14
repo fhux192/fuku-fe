@@ -4,8 +4,8 @@
     --color-surface-white: #ffffff;
     --color-surface75: rgba(255, 255, 255, 0.3);
     --color-just-black: #0e100f;
-    --color-lt-green: #bfff00; /* Màu xanh sáng khi focus */
-    --color-shockingly-green: #95d600; /* Màu link */
+    --color-lt-green: #bfff00;
+    --color-shockingly-green: #95d600;
     --gradient-macha: linear-gradient(90deg, #95d600 0%, #bfff00 100%);
 }
 

@@ -17,7 +17,13 @@ const UI_CONFIG = {
         SUBTITLE: 'Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí',
         BTN_START: 'Bắt đầu ngay',
         BTN_INFO: 'Tìm hiểu',
-        BTN_LOGIN: 'Đăng nhập'
+        BTN_LOGIN: 'Đăng nhập',
+        BTN_CLOSE: 'Quay lại',
+        ROUTES: {
+            LOGIN: '/login',
+            KANA: '/kana-reference',
+            COURSE: '/home/course'
+        }
     },
     ROUTES: {
         LOGIN: '/login',
@@ -48,7 +54,7 @@ const FloatingDecorations = memo(() => (
     </div>
 ));
 
-const HeroSection = memo(({ onNavigate, onOpenLogin }) => (
+const HeroSection = memo(({ onNavigate, onOpenToggleRightSide, isRightSideOpen }) => (
     <div className={styles.leftSideContent}>
         <section className={styles.glassCard}>
             <h1 className={styles.leftSideTitle}>
@@ -68,11 +74,10 @@ const HeroSection = memo(({ onNavigate, onOpenLogin }) => (
                     <span>{UI_CONFIG.TEXT.BTN_START}</span>
                 </button>
                 <button
-                    className={styles.ctaInfoButton}
-                    onClick={onOpenLogin}
+                    className={`${styles.ctaInfoButton} ${isRightSideOpen ? styles.toggled : ''}`}
+                    onClick={onOpenToggleRightSide}
                 >
-                    <span>{UI_CONFIG.TEXT.BTN_LOGIN}</span>
-
+                    <span>{isRightSideOpen ? UI_CONFIG.TEXT.BTN_CLOSE : UI_CONFIG.TEXT.BTN_LOGIN}</span>
                 </button>
             </div>
         </section>
@@ -97,48 +102,27 @@ const ContentDrawer = ({ isOpen, onClose, children }) => (
     </aside>
 );
 
-const FloatingLoginButton = memo(({ onClick }) => (
-    <button
-        className={styles.floatingLoginBtn}
-        onClick={onClick}
-        aria-label="Navigate to course information"
-    >
-        <lord-icon
-            src="https://cdn.lordicon.com/yhtmwrae.json"
-            trigger="hover"
-            state="hover-looking-around"
-            colors="primary:#000000"
-            style={{ width: '24px', height: '24px' }}
-        />
-        <span>{UI_CONFIG.TEXT.BTN_INFO}</span>
-    </button>
-));
-
 const HomeLayout = () => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isRightSideOpen, setIsRightSideOpen] = useState(false);
     const navigate = useNavigate();
 
     const handleNavigation = useCallback((path) => {
         navigate(path);
-        setIsDrawerOpen(true);
     }, [navigate]);
 
     const handleCloseDrawer = useCallback(() => {
-        setIsDrawerOpen(false);
+        setIsRightSideOpen(false);
     }, []);
 
-    const handleOpenLogin = useCallback(() => {
-        navigate(UI_CONFIG.ROUTES.LOGIN);
-        setIsDrawerOpen(true);
-    }, [navigate]);
-
-    const handleOpenCourse = useCallback(() => {
-        navigate(UI_CONFIG.ROUTES.COURSE);
-        setIsDrawerOpen(true);
-    }, [navigate]);
+    const handleToggleRightSide = useCallback(() => {
+        setIsRightSideOpen(prev => !prev);
+        if (!isRightSideOpen) {
+            navigate(UI_CONFIG.ROUTES.LOGIN);
+        }
+    }, [isRightSideOpen, navigate]);
 
     return (
-        <div className={styles.authContainer}>
+        <div className={`${styles.authContainer} ${!isRightSideOpen ? styles.rightsideHidden : ''}`}>
             <WebflowBanner />
 
             <main className={styles.leftSideWrapper}>
@@ -165,17 +149,27 @@ const HomeLayout = () => {
 
                     <FloatingDecorations />
 
-                    <HeroSection onNavigate={handleNavigation} onOpenLogin={handleOpenLogin} />
+                    <HeroSection
+                        onNavigate={handleNavigation}
+                        onOpenToggleRightSide={handleToggleRightSide}
+                        isRightSideOpen={isRightSideOpen}
+                    />
 
                     <div className={styles.overlayGradient} />
                 </div>
             </main>
 
-            <FloatingLoginButton onClick={handleOpenCourse} />
-
-            <ContentDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer}>
+            {/* Mobile Modal */}
+            <ContentDrawer isOpen={isRightSideOpen} onClose={handleCloseDrawer}>
                 <Outlet />
             </ContentDrawer>
+
+            {/* Desktop Right Side */}
+            <aside className={`${styles.rightSideDesktop} ${!isRightSideOpen ? styles.hidden : ''}`}>
+                <div className={styles.rightSideContent}>
+                    <Outlet />
+                </div>
+            </aside>
         </div>
     );
 };
