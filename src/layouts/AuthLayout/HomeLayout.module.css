@@ -222,11 +222,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm);
-    justify-self: center;
     justify-content: center;
-    justify-items: center;
     align-items: center;
     width: 80%;
+    margin: 0 auto;
 }
 
 .ctaButton,
@@ -285,7 +284,6 @@
     transform: scale(1);
 }
 
-/* Mobile Modal - chỉ hiển thị khi có class showModal */
 .rightSide {
     display: none;
     position: fixed;
@@ -296,8 +294,6 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(5px);
     animation: fadeIn 0.3s ease;
 }
 
@@ -343,8 +339,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     color: #fff;
@@ -386,12 +381,11 @@
 
     .btnWrapper {
         width: 100%;
-        justify-self: center;
         justify-content: center;
-        justify-items: center;
         align-items: center;
         flex-wrap: nowrap;
         gap: var(--spacing-md);
+        margin: 0 auto;
     }
 
     .ctaButton,
@@ -442,7 +436,6 @@
         min-height: calc(100vh - 40px);
     }
 
-    /* Ẩn mobile modal và close button trên desktop */
     .rightSide,
     .closeModalBtn {
         display: none !important;
@@ -483,7 +476,6 @@
         font-size: 1.1rem;
     }
 
-    /* Desktop Right Side - hiển thị dưới dạng sidebar */
     .rightSideDesktop {
         position: relative;
         z-index: 5;
@@ -553,13 +545,14 @@
         padding: var(--spacing-md);
     }
 
+    /* --- CẬP NHẬT MOBILE NHỎ --- */
     .btnWrapper {
-        justify-self: center;
-        justify-content: center;
-        justify-items: center;
-        align-items: center;
         flex-direction: column;
         width: 100%;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-sm);
+        margin: 0 auto;
     }
 
     .ctaButton,
