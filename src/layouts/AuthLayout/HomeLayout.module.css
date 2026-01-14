@@ -223,6 +223,8 @@
     flex-wrap: wrap;
     gap: var(--spacing-sm);
     justify-self: center;
+    justify-content: center;
+    justify-items: center;
     align-items: center;
     width: 80%;
 }
@@ -384,7 +386,10 @@
 
     .btnWrapper {
         width: 100%;
+        justify-self: center;
         justify-content: center;
+        justify-items: center;
+        align-items: center;
         flex-wrap: nowrap;
         gap: var(--spacing-md);
     }
@@ -549,6 +554,10 @@
     }
 
     .btnWrapper {
+        justify-self: center;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
         flex-direction: column;
         width: 100%;
     }
