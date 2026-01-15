@@ -220,7 +220,6 @@
 
 .btnWrapper {
     display: flex;
-    flex-wrap: wrap;
     gap: var(--spacing-sm);
     justify-content: center;
     align-items: center;
@@ -233,8 +232,8 @@
     position: relative;
     z-index: 1;
     flex: 1 1 auto;
-    min-width: 140px;
-    padding: clamp(0.75rem, 2vw, 1rem) clamp(1.25rem, 3vw, 1.75rem);
+    min-width: 170px;
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.75rem);
     border-radius: var(--border-radius-full);
     font-family: "MuseoModerno", sans-serif;
     font-size: clamp(0.9rem, 2vw, 1.1rem);
@@ -334,16 +333,17 @@
     top: 20px;
     right: 20px;
     z-index: 201;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(255, 255, 255);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 50%;
-    color: #fff;
+    color: var(--color-just-black);
     font-size: 1.5rem;
+    font-weight: bold;
     cursor: pointer;
     transition: var(--transition-smooth);
 }
@@ -383,7 +383,6 @@
         width: 100%;
         justify-content: center;
         align-items: center;
-        flex-wrap: nowrap;
         gap: var(--spacing-md);
         margin: 0 auto;
     }
@@ -547,7 +546,6 @@
 
     /* --- CẬP NHẬT MOBILE NHỎ --- */
     .btnWrapper {
-        flex-direction: column;
         width: 100%;
         justify-content: center;
         align-items: center;
