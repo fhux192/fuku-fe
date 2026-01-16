@@ -1,10 +1,53 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
 import styles from './Login.module.css';
 
-const UI_CONFIG = {
+interface LordIconElement extends HTMLElement {
+    playerInstance?: {
+        play: () => void;
+        isPlaying: boolean;
+    };
+}
+
+interface FormData {
+    email: string;
+    password: string;
+}
+
+interface UIConfig {
+    API: {
+        LOGIN: string;
+    };
+    ROUTES: {
+        HOME: string;
+        REGISTER: string;
+        FORGOT_PASS: string;
+    };
+    ICONS: {
+        AVATAR: string;
+        EYE: string;
+    };
+    MESSAGES: {
+        LOGIN_FAIL: string;
+        ERROR: string;
+    };
+}
+
+interface ClickEvent {
+    name: string;
+    options?: AddEventListenerOptions;
+}
+
+interface PlayerInstance {
+    direction: number;
+    play: () => void;
+    isPlaying: boolean;
+}
+
+const UI_CONFIG: UIConfig = {
     API: {
         LOGIN: 'http://localhost:8080/api/auth/login'
     },
@@ -23,13 +66,18 @@ const UI_CONFIG = {
     }
 };
 
-const CLICK_EVENTS = [
+const CLICK_EVENTS: ClickEvent[] = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
 ];
 
 class CustomTrigger {
-    constructor(player, element, targetElement) {
+    player: PlayerInstance;
+    element: any;
+    targetElement: HTMLElement;
+    direction: number;
+
+    constructor(player: PlayerInstance, element: any, targetElement: HTMLElement) {
         this.player = player;
         this.element = element;
         this.targetElement = targetElement;
@@ -37,42 +85,42 @@ class CustomTrigger {
         this.onClick = this.onClick.bind(this);
     }
 
-    onConnected() {
+    onConnected(): void {
         for (const event of CLICK_EVENTS) {
             this.targetElement.addEventListener(event.name, this.onClick, event.options);
         }
     }
 
-    onDisconnected() {
+    onDisconnected(): void {
         for (const event of CLICK_EVENTS) {
             this.targetElement.removeEventListener(event.name, this.onClick);
         }
     }
 
-    onReady() {
+    onReady(): void {
         this.player.direction = this.direction;
         this.player.play();
     }
 
-    onComplete() {
+    onComplete(): void {
         this.direction = -this.direction;
         this.player.direction = this.direction;
     }
 
-    onClick() {
+    onClick(): void {
         if (!this.player.isPlaying) {
             this.player.play();
         }
     }
 }
 
-const Login = () => {
-    const [formData, setFormData] = useState({ email: '', password: '' });
-    const [error, setError] = useState('');
-    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+const Login: React.FC = () => {
+    const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
+    const [error, setError] = useState<string>('');
+    const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const navigate = useNavigate();
-    const isIconDefined = useRef(false);
-    const avatarIconRef = useRef(null);
+    const isIconDefined = useRef<boolean>(false);
+    const avatarIconRef = useRef<LordIconElement>(null);
 
     useEffect(() => {
         if (!isIconDefined.current) {
@@ -99,17 +147,17 @@ const Login = () => {
         return () => clearTimeout(timer);
     }, []);
 
-    const handleInputChange = useCallback((e) => {
+    const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         if (error) setError('');
     }, [error]);
 
-    const togglePasswordVisibility = useCallback(() => {
+    const togglePasswordVisibility = useCallback((): void => {
         setIsPasswordVisible(prev => !prev);
     }, []);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setError('');
 
@@ -139,6 +187,7 @@ const Login = () => {
             <div className={styles.loginFormOverlay} aria-hidden="true" />
 
             <div className={styles.loginFormContent}>
+                {/* @ts-ignore */}
                 <lord-icon
                     ref={avatarIconRef}
                     src={UI_CONFIG.ICONS.AVATAR}
@@ -192,6 +241,7 @@ const Login = () => {
                                 tabIndex={-1}
                                 aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                             >
+                                {/* @ts-ignore */}
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.EYE}
                                     state="morph-cross"

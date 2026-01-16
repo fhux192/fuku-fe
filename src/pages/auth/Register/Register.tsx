@@ -1,17 +1,48 @@
 import React, { useState, useEffect, useRef } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styles from './Register.module.css';
 import lottie from 'lottie-web';
-
 import { defineElement, Element } from '@lordicon/element';
 
-const CLICK_EVENTS = [
+// Type definitions
+interface LordIconElement extends HTMLElement {
+    playerInstance?: {
+        play: () => void;
+        isPlaying: boolean;
+    };
+}
+
+interface FormData {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+interface ClickEvent {
+    name: string;
+    options?: AddEventListenerOptions;
+}
+
+interface PlayerInstance {
+    direction: number;
+    play: () => void;
+    isPlaying: boolean;
+}
+
+const CLICK_EVENTS: ClickEvent[] = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
 ];
 
 class CustomTrigger {
-    constructor(player, element, targetElement) {
+    player: PlayerInstance;
+    element: any;
+    targetElement: HTMLElement;
+    direction: number;
+
+    constructor(player: PlayerInstance, element: any, targetElement: HTMLElement) {
         this.player = player;
         this.element = element;
         this.targetElement = targetElement;
@@ -19,50 +50,56 @@ class CustomTrigger {
         this.onClick = this.onClick.bind(this);
     }
 
-    onConnected() {
+    onConnected(): void {
         for (const event of CLICK_EVENTS) {
             this.targetElement.addEventListener(event.name, this.onClick, event.options);
         }
     }
 
-    onDisconnected() {
+    onDisconnected(): void {
         for (const event of CLICK_EVENTS) {
             this.targetElement.removeEventListener(event.name, this.onClick);
         }
     }
 
-    onReady() {
+    onReady(): void {
         this.player.direction = this.direction;
         this.player.play();
     }
 
-    onComplete() {
+    onComplete(): void {
         this.direction = -this.direction;
         this.player.direction = this.direction;
     }
 
-    onClick() {
+    onClick(): void {
         if (!this.player.isPlaying) {
             this.player.play();
         }
     }
 }
 
-function Register() {
-    const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+const Register: React.FC = () => {
+    const [formData, setFormData] = useState<FormData>({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+    const [message, setMessage] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const avatarIconRef = useRef(null);
+    const avatarIconRef = useRef<LordIconElement>(null);
 
     useEffect(() => {
         try {
+            // @ts-ignore
             Element.defineTrigger('custom', CustomTrigger);
         } catch (e) {
+            // Ignore if already defined
         }
 
         defineElement(lottie.loadAnimation);
@@ -76,28 +113,31 @@ function Register() {
                     player.play();
                 }
             }
-        }, 1000); // Delay 1s để đảm bảo icon đã load
+        }, 1000);
 
         return () => clearTimeout(timer);
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
-        setMessage(''); setError('');
+        setMessage('');
+        setError('');
 
-        // Basic validation
         if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-            setError('Vui lòng nhập tất cả các trường.'); return;
+            setError('Vui lòng nhập tất cả các trường.');
+            return;
         }
         if (formData.password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự.'); return;
+            setError('Mật khẩu phải có ít nhất 6 ký tự.');
+            return;
         }
         if (formData.password !== formData.confirmPassword) {
-            setError('Mật khẩu xác nhận không khớp.'); return;
+            setError('Mật khẩu xác nhận không khớp.');
+            return;
         }
 
         try {
@@ -111,7 +151,9 @@ function Register() {
 
             if (response.ok) {
                 setMessage('Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt.');
-                setTimeout(() => { navigate('/login'); }, 3000);
+                setTimeout(() => {
+                    navigate('/login');
+                }, 3000);
             } else if (responseText.includes("Passwords do not match")) {
                 setError('Mật khẩu không khớp.');
             } else {
@@ -122,8 +164,13 @@ function Register() {
         }
     };
 
-    const togglePasswordVisibility = () => { setShowPassword(!showPassword); };
-    const toggleConfirmPasswordVisibility = () => { setShowConfirmPassword(!showConfirmPassword); };
+    const togglePasswordVisibility = (): void => {
+        setShowPassword(!showPassword);
+    };
+
+    const toggleConfirmPasswordVisibility = (): void => {
+        setShowConfirmPassword(!showConfirmPassword);
+    };
 
     return (
         <div className={styles.registerFormWrapper}>
@@ -131,13 +178,14 @@ function Register() {
             <div className={styles.registerFormOverlay}></div>
 
             <div className={styles.registerFormContent}>
+                {/* @ts-ignore */}
                 <lord-icon
                     ref={avatarIconRef}
                     src="https://cdn.lordicon.com/hroklero.json"
-                    state={"morph-group"}
+                    state="morph-group"
                     trigger="morph"
-                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}>
-                </lord-icon>
+                    style={{ width: '135px', height: '135px', cursor: 'pointer' }}
+                />
                 <h1 className={styles.registerTitle}>Đăng ký</h1>
 
                 <form onSubmit={handleSubmit} className={styles.registerForm} autoComplete="off">
@@ -148,9 +196,14 @@ function Register() {
                         <label htmlFor="name" className={styles.registerLabel}></label>
                         <input
                             placeholder="Họ và tên"
-                            type="text" id="name" name="name"
-                            value={formData.name} onChange={handleChange}
-                            className={styles.registerInput} autoComplete="off" required
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className={styles.registerInput}
+                            autoComplete="off"
+                            required
                         />
                     </div>
 
@@ -158,9 +211,14 @@ function Register() {
                         <label htmlFor="email" className={styles.registerLabel}></label>
                         <input
                             placeholder="Email"
-                            type="email" id="email" name="email"
-                            value={formData.email} onChange={handleChange}
-                            className={styles.registerInput} autoComplete="off" required
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className={styles.registerInput}
+                            autoComplete="off"
+                            required
                         />
                     </div>
 
@@ -171,17 +229,27 @@ function Register() {
                             <input
                                 placeholder="Mật khẩu"
                                 type={showPassword ? 'text' : 'password'}
-                                id="password" name="password"
-                                value={formData.password} onChange={handleChange}
-                                className={styles.registerInput} autoComplete="new-password" required
+                                id="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className={styles.registerInput}
+                                autoComplete="new-password"
+                                required
                             />
-                            <button tabIndex={-1} type="button" onClick={togglePasswordVisibility} className={styles.togglePasswordBtn}>
+                            <button
+                                tabIndex={-1}
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className={styles.togglePasswordBtn}
+                            >
+                                {/* @ts-ignore */}
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
-                                    state={"morph-cross"}
+                                    state="morph-cross"
                                     trigger="custom"
-                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}>
-                                </lord-icon>
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}
+                                />
                             </button>
                         </div>
                     </div>
@@ -193,22 +261,34 @@ function Register() {
                             <input
                                 placeholder="Xác nhận mật khẩu"
                                 type={showConfirmPassword ? 'text' : 'password'}
-                                id="confirmPassword" name="confirmPassword"
-                                value={formData.confirmPassword} onChange={handleChange}
-                                className={styles.registerInput} autoComplete="new-password" required
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                className={styles.registerInput}
+                                autoComplete="new-password"
+                                required
                             />
-                            <button tabIndex={-1} type="button" onClick={toggleConfirmPasswordVisibility} className={styles.togglePasswordBtn}>
+                            <button
+                                tabIndex={-1}
+                                type="button"
+                                onClick={toggleConfirmPasswordVisibility}
+                                className={styles.togglePasswordBtn}
+                            >
+                                {/* @ts-ignore */}
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
-                                    state={"morph-cross"}
+                                    state="morph-cross"
                                     trigger="custom"
-                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}>
-                                </lord-icon>
+                                    style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}
+                                />
                             </button>
                         </div>
                     </div>
 
-                    <button type="submit" className={styles.registerButton}>Đăng ký</button>
+                    <button type="submit" className={styles.registerButton}>
+                        Đăng ký
+                    </button>
 
                     <p className={styles.registerLinkText}>
                         Đã có tài khoản?{' '}
@@ -220,6 +300,6 @@ function Register() {
             </div>
         </div>
     );
-}
+};
 
 export default Register;

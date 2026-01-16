@@ -1,10 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
+import type { FormEvent, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import lottie from 'lottie-web';
-import { defineElement, Element } from '@lordicon/element';
+import { defineElement } from '@lordicon/element';
 import styles from './ForgotPassword.module.css';
 
-const UI_CONFIG = {
+interface LordIconElement extends HTMLElement {
+    playerInstance?: {
+        play: () => void;
+        isPlaying: boolean;
+    };
+}
+
+interface UIConfig {
+    API: {
+        FORGOT_PASSWORD: string;
+    };
+    ROUTES: {
+        LOGIN: string;
+    };
+    ICONS: {
+        AVATAR: string;
+    };
+    MESSAGES: {
+        SUCCESS: string;
+        ERROR: string;
+        CONNECTION_ERROR: string;
+        EMPTY_EMAIL: string;
+    };
+}
+
+const UI_CONFIG: UIConfig = {
     API: {
         FORGOT_PASSWORD: 'http://localhost:8080/api/auth/forgot-password'
     },
@@ -23,12 +49,12 @@ const UI_CONFIG = {
 };
 
 function ForgotPassword() {
-    const [email, setEmail] = useState('');
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const avatarIconRef = useRef(null);
-    const isIconDefined = useRef(false);
+    const [email, setEmail] = useState<string>('');
+    const [message, setMessage] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const avatarIconRef = useRef<LordIconElement>(null);
+    const isIconDefined = useRef<boolean>(false);
 
     useEffect(() => {
         if (!isIconDefined.current) {
@@ -41,7 +67,6 @@ function ForgotPassword() {
         }
     }, []);
 
-    // Tự động trigger animation khi component mount
     useEffect(() => {
         const timer = setTimeout(() => {
             if (avatarIconRef.current) {
@@ -55,7 +80,7 @@ function ForgotPassword() {
         return () => clearTimeout(timer);
     }, []);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setMessage('');
         setError('');
@@ -87,12 +112,17 @@ function ForgotPassword() {
         }
     };
 
+    const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+        setEmail(e.target.value);
+    };
+
     return (
         <div className={styles.forgotPasswordFormWrapper}>
             <div className={styles.forgotPasswordFormBackground} aria-hidden="true" />
             <div className={styles.forgotPasswordFormOverlay} aria-hidden="true" />
 
             <div className={styles.forgotPasswordFormContent}>
+                {/* @ts-ignore */}
                 <lord-icon
                     ref={avatarIconRef}
                     src={UI_CONFIG.ICONS.AVATAR}
@@ -124,7 +154,7 @@ function ForgotPassword() {
                             id="email"
                             name="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                             className={styles.forgotPasswordInput}
                             placeholder="Email"
                             autoComplete="email"

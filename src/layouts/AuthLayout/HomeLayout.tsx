@@ -1,9 +1,62 @@
 import React, { useState, useCallback, memo } from 'react';
+import type { ReactNode, KeyboardEvent } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import styles from './HomeLayout.module.css';
 import logo from '../../assets/images/logo192.png';
 
-const UI_CONFIG = {
+// ============================================================================
+// Types
+// ============================================================================
+
+interface KanjiItem {
+    id: string;
+    char: string;
+    className: string;
+}
+
+interface UIConfig {
+    KANJI: KanjiItem[];
+    TEXT: {
+        BANNER_PRE: string;
+        BANNER_HIGHLIGHT: string;
+        BANNER_POST: string;
+        MAIN_TITLE_JP: string;
+        MAIN_TITLE_HIGHLIGHT: string;
+        SUBTITLE: string;
+        BTN_START: string;
+        BTN_INFO: string;
+        BTN_LOGIN: string;
+        BTN_CLOSE: string;
+        ROUTES: {
+            LOGIN: string;
+            KANA: string;
+            COURSE: string;
+        };
+    };
+    ROUTES: {
+        LOGIN: string;
+        KANA: string;
+        COURSE: string;
+    };
+}
+
+interface HeroSectionProps {
+    onNavigate: (path: string) => void;
+    onOpenToggleRightSide: () => void;
+    isRightSideOpen: boolean;
+}
+
+interface ContentDrawerProps {
+    isOpen: boolean;
+    onClose: () => void;
+    children: ReactNode;
+}
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const UI_CONFIG: UIConfig = {
     KANJI: [
         { id: 'k1', char: '夢', className: 'kanji1' },
         { id: 'k2', char: '学', className: 'kanji2' }
@@ -27,10 +80,14 @@ const UI_CONFIG = {
     },
     ROUTES: {
         LOGIN: '/login',
-        KANA: '/kana-reference',
+        KANA: '/home/course',
         COURSE: '/home/course'
     }
 };
+
+// ============================================================================
+// Components
+// ============================================================================
 
 const WebflowBanner = memo(() => (
     <header className={styles.webflowBanner}>
@@ -44,6 +101,8 @@ const WebflowBanner = memo(() => (
     </header>
 ));
 
+WebflowBanner.displayName = 'WebflowBanner';
+
 const FloatingDecorations = memo(() => (
     <div className={styles.decorativeElements} aria-hidden="true">
         {UI_CONFIG.KANJI.map(({ id, char, className }) => (
@@ -54,7 +113,9 @@ const FloatingDecorations = memo(() => (
     </div>
 ));
 
-const HeroSection = memo(({ onNavigate, onOpenToggleRightSide, isRightSideOpen }) => (
+FloatingDecorations.displayName = 'FloatingDecorations';
+
+const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide, isRightSideOpen }) => (
     <div className={styles.leftSideContent}>
         <section className={styles.glassCard}>
             <h1 className={styles.leftSideTitle}>
@@ -84,7 +145,9 @@ const HeroSection = memo(({ onNavigate, onOpenToggleRightSide, isRightSideOpen }
     </div>
 ));
 
-const ContentDrawer = ({ isOpen, onClose, children }) => (
+HeroSection.displayName = 'HeroSection';
+
+const ContentDrawer: React.FC<ContentDrawerProps> = ({ isOpen, onClose, children }) => (
     <aside
         className={`${styles.rightSide} ${isOpen ? styles.showModal : ''}`}
         aria-expanded={isOpen}
@@ -102,24 +165,39 @@ const ContentDrawer = ({ isOpen, onClose, children }) => (
     </aside>
 );
 
-const HomeLayout = () => {
-    const [isRightSideOpen, setIsRightSideOpen] = useState(false);
+// ============================================================================
+// Main Component
+// ============================================================================
+
+const HomeLayout: React.FC = () => {
+    const [isRightSideOpen, setIsRightSideOpen] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const handleNavigation = useCallback((path) => {
+    const handleNavigation = useCallback((path: string): void => {
         navigate(path);
     }, [navigate]);
 
-    const handleCloseDrawer = useCallback(() => {
+    const handleCloseDrawer = useCallback((): void => {
         setIsRightSideOpen(false);
     }, []);
 
-    const handleToggleRightSide = useCallback(() => {
+    const handleToggleRightSide = useCallback((): void => {
         setIsRightSideOpen(prev => !prev);
         if (!isRightSideOpen) {
             navigate(UI_CONFIG.ROUTES.LOGIN);
         }
     }, [isRightSideOpen, navigate]);
+
+    const handleLogoClick = (): void => {
+        handleNavigation(UI_CONFIG.ROUTES.LOGIN);
+    };
+
+    const handleLogoKeyDown = (e: KeyboardEvent<HTMLImageElement>): void => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleNavigation(UI_CONFIG.ROUTES.LOGIN);
+        }
+    };
 
     return (
         <div className={`${styles.authContainer} ${!isRightSideOpen ? styles.rightsideHidden : ''}`}>
@@ -131,7 +209,8 @@ const HomeLayout = () => {
                         src={logo}
                         alt="Fuku Logo"
                         className={styles.desktopLogo}
-                        onClick={() => handleNavigation(UI_CONFIG.ROUTES.LOGIN)}
+                        onClick={handleLogoClick}
+                        onKeyDown={handleLogoKeyDown}
                         role="button"
                         tabIndex={0}
                     />
@@ -142,7 +221,7 @@ const HomeLayout = () => {
                                 src={logo}
                                 alt="Fuku Logo"
                                 className={styles.logoImage}
-                                onClick={() => handleNavigation(UI_CONFIG.ROUTES.LOGIN)}
+                                onClick={handleLogoClick}
                             />
                         </div>
                     </div>
@@ -159,12 +238,10 @@ const HomeLayout = () => {
                 </div>
             </main>
 
-            {/* Mobile Modal */}
             <ContentDrawer isOpen={isRightSideOpen} onClose={handleCloseDrawer}>
                 <Outlet />
             </ContentDrawer>
 
-            {/* Desktop Right Side */}
             <aside className={`${styles.rightSideDesktop} ${!isRightSideOpen ? styles.hidden : ''}`}>
                 <div className={styles.rightSideContent}>
                     <Outlet />

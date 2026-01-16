@@ -11,7 +11,7 @@ import './App.css';
 import HomeLayout from "./layouts/AuthLayout/HomeLayout";
 import KanaReference from "./pages/KanaReference/KanaReference";
 import DashboardLayout from "./layouts/DashboardLayout/DashboardLayout";
-import CoursePage from "./pages/Course/CoursePage";
+import CoursePage from "./pages/CoursePage/CoursePage";
 
 const PrivateRoute = ({ children }) => {
     const token = localStorage.getItem('authToken');
