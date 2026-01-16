@@ -157,6 +157,18 @@ const Login: React.FC = () => {
         setIsPasswordVisible(prev => !prev);
     }, []);
 
+    const handleButtonMouseEnter = useCallback((): void => {
+        if (avatarIconRef.current) {
+            // Simulate hover event trên avatar icon
+            const hoverEvent = new MouseEvent('mouseenter', {
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            avatarIconRef.current.dispatchEvent(hoverEvent);
+        }
+    }, []);
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setError('');
@@ -258,7 +270,11 @@ const Login: React.FC = () => {
                         </Link>
                     </div>
 
-                    <button type="submit" className={styles.loginButton}>
+                    <button
+                        type="submit"
+                        className={styles.loginButton}
+                        onMouseEnter={handleButtonMouseEnter}
+                    >
                         Đăng nhập
                     </button>
 

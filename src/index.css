@@ -7,6 +7,39 @@
     --color-lt-green: #bfff00;
     --color-shockingly-green: #95d600;
     --gradient-macha: linear-gradient(90deg, #95d600 0%, #bfff00 100%);
+
+    --color-cyber-blue: #00f0ff;
+    --color-cyber-blue-light: #ccfcff;
+    --color-cyber-blue-dark: #008a94;
+
+    --color-hyper-pink: #ff00f7;
+    --color-hyper-pink-light: #ffccfd;
+    --color-hyper-pink-dark: #9e0099;
+
+    --color-electric-purple: #bd00ff;
+    --color-electric-purple-light: #f2ccff;
+    --color-electric-purple-dark: #76009e;
+
+    /* 4. Blaze Orange */
+    --color-blaze-orange: #ff5e00;
+    --color-blaze-orange-light: #ffdfcc;
+    --color-blaze-orange-dark: #9e3a00;
+
+    --color-lightning-yellow: #ffea00;
+    --color-lightning-yellow-light: #fffccc;
+    --color-lightning-yellow-dark: #9e9100;
+
+    --color-torch-red: #ff2a2a;
+    --color-torch-red-light: #ffcccc;
+    --color-torch-red-dark: #9e1a1a;
+
+    --color-quantum-teal: #00ffaa;
+    --color-quantum-teal-light: #ccffee;
+    --color-quantum-teal-dark: #009e69;
+
+    --color-black-card: #1c1f1e;
+    --color-black-border: #2f3332;
+    --color-white-dim: #e0e0e0;
 }
 
 body {

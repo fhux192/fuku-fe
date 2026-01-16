@@ -23,9 +23,9 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
     {
         path: '/home',
-        label: 'Trang chủ',
+        label: 'Diễn đàn',
         icon: 'https://cdn.lordicon.com/oeotfwsx.json',
-        title: 'Trang chủ'
+        title: 'Diễn đàn'
     },
     {
         path: '/home/course',
@@ -41,8 +41,8 @@ const NAV_ITEMS: NavItem[] = [
     }
 ];
 
-const SCROLL_THRESHOLD = 10; // Ngưỡng scroll để trigger ẩn/hiện
-const MOBILE_BREAKPOINT = 650; // Breakpoint cho mobile
+const SCROLL_THRESHOLD = 10;
+const MOBILE_BREAKPOINT = 650;
 
 // ============================================================================
 // Component
@@ -53,18 +53,14 @@ const DashboardLayout: React.FC = () => {
     const location = useLocation();
     const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
-    // State for real-time clock
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
 
-    // State for mobile navigation visibility
     const [isNavVisible, setIsNavVisible] = useState<boolean>(true);
     const [isMobile, setIsMobile] = useState<boolean>(false);
 
-    // Refs for scroll tracking
     const lastScrollY = useRef<number>(0);
     const ticking = useRef<boolean>(false);
 
-    // Update clock every second
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
@@ -154,7 +150,6 @@ const DashboardLayout: React.FC = () => {
                         lordIcon.setAttribute('trigger', 'none');
                         setTimeout(() => {
                             lordIcon.setAttribute('trigger', 'morph');
-                            // Dispatch custom event
                             const event = new CustomEvent('trigger', { detail: 'hover' });
                             lordIcon.dispatchEvent(event);
                         }, 10);
@@ -166,7 +161,6 @@ const DashboardLayout: React.FC = () => {
         };
 
         const timeoutId = setTimeout(() => {
-            // Attach hover listeners
             currentNavItemRefs.forEach((navItem, path) => {
                 const onMouseEnter = () => handleMouseEnter(path);
                 navItem.addEventListener('mouseenter', onMouseEnter);

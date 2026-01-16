@@ -1,83 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
-/* ============================================================================
-   Container
-   ============================================================================ */
+:root {
+    --color-lt-green: #bfff00;
+    --color-bg: #050505;
+    --color-card: #121212;
+    --color-card-border: rgba(255, 255, 255, 0.08);
+}
 
 .pageContainer {
     width: 100%;
     min-height: 100%;
     font-family: "Google Sans Flex", sans-serif;
+    color: white;
 }
 
-/* ============================================================================
-   Header
-   ============================================================================ */
-
+/* --- Header --- */
 .pageHeader {
-    margin-bottom: 40px;
+    margin-bottom: 32px;
 }
-
 .pageTitle {
     font-size: 2.5rem;
-    font-weight: 900;
-    color: #000000;
-    margin-bottom: 8px;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 4px;
     letter-spacing: -1px;
 }
-
 .pageSubtitle {
     font-size: 1rem;
-    color: rgba(0, 0, 0, 0.5);
-    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
 }
 
-/* ============================================================================
-   Learning Path
-   ============================================================================ */
-
+/* --- Learning Path --- */
 .pathSection {
-    background: #f8f9fa;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.05);
     border-radius: 20px;
-    padding: 28px;
+    padding: 24px;
     margin-bottom: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
 }
-
 .pathHeader {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 24px;
-    color: #000000;
+    margin-bottom: 20px;
+    color: #000;
     font-weight: 700;
-    font-size: 1rem;
 }
-
-.pathHeader svg {
-    color: var(--color-lt-green);
-}
-
 .pathTrack {
     display: flex;
     align-items: center;
-    gap: 0;
     overflow-x: auto;
-    padding: 8px 0;
+    padding-bottom: 8px;
 }
-
-.pathTrack::-webkit-scrollbar {
-    height: 4px;
-}
-
-.pathTrack::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.pathTrack::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-}
-
 .pathNode {
     display: flex;
     flex-direction: column;
@@ -85,100 +61,287 @@
     gap: 8px;
     flex-shrink: 0;
 }
-
 .pathKanji {
-    width: 56px;
-    height: 56px;
-    background: linear-gradient(135deg, #000000 0%, #2a2a2a 100%);
-    border-radius: 14px;
+    width: 50px;
+    height: 50px;
+    background: #000;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: var(--color-lt-green);
     font-family: "Noto Sans JP", sans-serif;
-    cursor: default;
-    transition: transform 0.3s ease;
 }
-
-
 .pathLabel {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 800;
-    color: #000000;
+    color: #000;
     font-family: "MuseoModerno", sans-serif;
 }
-
 .pathLine {
     width: 40px;
     height: 2px;
-    background: var(--color-just-black);
+    background: #000;
+    flex-shrink: 0;
+    margin: 0 4px 18px 4px; /* Align line with box center */
+}
+
+/* ============================================================================
+   RANKING SECTION (REVISED)
+   ============================================================================ */
+
+.rankSection {
+    margin-bottom: 40px;
+}
+
+.rankContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+}
+
+.rankBoard {
+    /* Đã thay đổi từ gradient sang màu đơn sắc */
+    background: #121212;
+    border: 1px solid var(--color-card-border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow effect header */
+.rankBoard::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 100px;
+    background: var(--color-lt-green);
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.boardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.boardTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.boardTitle h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+}
+.boardTitle p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.iconBox {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* TABLE GRID LAYOUT - Fixed Alignment */
+.tableHeader, .rankItem {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px; /* Fixed columns */
+    align-items: center;
+    gap: 12px;
+}
+
+.tableHeader {
+    padding: 0 12px 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.colScore { text-align: right; }
+
+.scrollList {
+    max-height: 280px; /* Limit height */
+    overflow-y: auto;
+    padding-top: 8px;
+    /* Hide scrollbar visually but allow scroll */
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+}
+
+.rankItem {
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 4px;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.rankItem:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Top 1 Highlight */
+.top1 {
+    /* Đã thay đổi từ gradient sang màu nền phẳng có độ trong suốt */
+    background: rgba(191,255,0,0.1);
+    border: 1px solid rgba(191,255,0,0.2);
+}
+
+/* Avatar & Info */
+.colName {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden; /* Prevent text overflow */
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: #2a2a2a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
     flex-shrink: 0;
 }
+
+.info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* Important for ellipsis */
+}
+
+.uName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.uSub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+}
+
+/* Scores */
+.scoreVal {
+    font-family: "MuseoModerno", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.scoreBadge {
+    display: inline-block;
+    background: rgba(191,255,0,0.1);
+    color: var(--color-lt-green);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    font-family: "MuseoModerno", sans-serif;
+}
+
+.trendIcon {
+    color: #4ade80;
+    margin-left: 4px;
+}
+
+/* Rank Badges */
+.badge1, .badge2, .badge3, .badgeNormal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.badge1 { color: var(--color-lt-green); }
+.badge2 { color: #e2e8f0; }
+.badge3 { color: #d6a47a; }
+.badgeNormal { color: #666; font-size: 0.875rem; }
 
 /* ============================================================================
    Course Grid
    ============================================================================ */
+.sectionHeading {
+    font-size: 1.5rem;
+    color: black;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
 
 .courseGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
-    margin-bottom: 40px;
+    padding-bottom: 40px;
 }
 
-/* ============================================================================
-   Course Card
-   ============================================================================ */
-
 .courseCard {
-    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    /* Đã thay đổi từ gradient sang màu đơn sắc */
+    background: #121212;
     border-radius: 20px;
     padding: 24px;
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    min-height: 200px;
+    min-height: 180px;
     display: flex;
     flex-direction: column;
+    transition: transform 0.3s ease;
 }
 
 .courseCard:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .courseCard.selected {
-    box-shadow: 0 0 0 2px var(--color-lt-green), 0 12px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 2px var(--color-lt-green);
 }
 
 .cardBg {
     position: absolute;
-    top: -20px;
-    right: -20px;
-    font-size: 9rem;
+    top: -10px;
+    right: -10px;
+    font-size: 8rem;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.03);
+    color: rgba(255,255,255,0.04);
     pointer-events: none;
-    line-height: 1;
     font-family: "Noto Sans JP", sans-serif;
-    transition: transform 0.5s ease;
 }
-
-.courseCard:hover .cardBg {
-    transform: rotate(10deg) scale(1.05);
-}
-
-/* ============================================================================
-   Card Content
-   ============================================================================ */
 
 .cardTop {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     margin-bottom: 16px;
     position: relative;
@@ -187,66 +350,38 @@
 
 .levelBadge {
     background: var(--color-lt-green);
-    color: #000000;
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-family: "MuseoModerno", sans-serif;
+    color: #000;
+    padding: 6px 12px;
+    border-radius: 8px;
     font-weight: 800;
-    font-size: 1rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
+    font-family: "MuseoModerno", sans-serif;
 }
 
 .selectedBadge {
-    width: 32px;
-    height: 32px;
-    background: rgba(134, 239, 172, 0.2);
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: pulse 2s ease-in-out infinite;
-}
-
-.selectedBadge svg {
     color: var(--color-lt-green);
 }
 
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1.05);
-    }
-}
-
 .courseName {
-    text-align: start;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: white;
-    margin-bottom: auto;
+    margin: 0 0 auto 0;
     position: relative;
     z-index: 2;
-    line-height: 1.2;
 }
-
-/* ============================================================================
-   Course Stats
-   ============================================================================ */
 
 .courseStats {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    gap: 16px;
     margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.1);
     position: relative;
     z-index: 2;
 }
@@ -254,217 +389,15 @@
 .stat {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.875rem;
+    gap: 6px;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
 }
 
-.stat svg {
-    color: var(--color-lt-green);
-    flex-shrink: 0;
-}
-
-/* ============================================================================
-   Tablet (650px - 1024px)
-   ============================================================================ */
-
-@media (min-width: 650px) and (max-width: 1024px) {
-    .pageTitle {
-        font-size: 2.2rem;
-    }
-
-    .pageSubtitle {
-        font-size: 0.9375rem;
-    }
-
-    .pathSection {
-        padding: 24px;
-    }
-
-    .pathKanji {
-        width: 48px;
-        height: 48px;
-        font-size: 1.5rem;
-    }
-
-    .pathLine {
-        width: 32px;
-    }
-
-    .courseGrid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 16px;
-    }
-
-    .courseCard {
-        min-height: 180px;
-        padding: 20px;
-    }
-
-    .cardBg {
-        font-size: 7rem;
-    }
-
-    .courseName {
-        font-size: 1.5rem;
-    }
-}
-
-/* ============================================================================
-   Mobile (< 650px)
-   ============================================================================ */
-
-@media (max-width: 649px) {
-    .pageHeader {
-        margin-bottom: 28px;
-    }
-
-    .pageTitle {
-        font-size: 2rem;
-    }
-
-    .pageSubtitle {
-        font-size: 0.875rem;
-    }
-
-    .pathSection {
-        padding: 20px;
-        margin-bottom: 28px;
-    }
-
-    .pathHeader {
-        font-size: 0.9375rem;
-        margin-bottom: 20px;
-    }
-
-    .pathTrack {
-        gap: 0;
-    }
-
-    .pathKanji {
-        width: 44px;
-        height: 44px;
-        font-size: 1.375rem;
-    }
-
-    .pathLabel {
-        font-size: 0.75rem;
-    }
-
-    .pathLine {
-        width: 24px;
-    }
-
-    .courseGrid {
+@media (max-width: 650px) {
+    .rankContainer {
         grid-template-columns: 1fr;
-        gap: 16px;
-        margin-bottom: 28px;
     }
-
-    .courseCard {
-        min-height: 160px;
-        padding: 20px;
-    }
-
-    .cardBg {
-        font-size: 6rem;
-        top: -15px;
-        right: -15px;
-    }
-
-    .cardTop {
-        margin-bottom: 12px;
-    }
-
-    .levelBadge {
-        padding: 6px 12px;
-        font-size: 0.9375rem;
-    }
-
-    .selectedBadge {
-        width: 28px;
-        height: 28px;
-    }
-
-    .selectedBadge svg {
-        width: 11px;
-        height: 11px;
-    }
-
-    .courseName {
-        font-size: 1.5rem;
-    }
-
-    .courseStats {
-        gap: 8px;
-        margin-top: 16px;
-        padding-top: 16px;
-    }
-
-    .stat {
-        font-size: 0.8125rem;
-    }
-
-    .stat svg {
-        width: 13px;
-        height: 13px;
-    }
-}
-
-/* ============================================================================
-   Small Mobile (< 380px)
-   ============================================================================ */
-
-@media (max-width: 380px) {
-    .pageTitle {
-        font-size: 1.75rem;
-    }
-
-    .pageSubtitle {
-        font-size: 0.8125rem;
-    }
-
-    .pathSection {
-        padding: 16px;
-    }
-
-    .pathKanji {
-        width: 40px;
-        height: 40px;
-        font-size: 1.25rem;
-    }
-
-    .pathLabel {
-        font-size: 0.6875rem;
-    }
-
-    .pathLine {
-        width: 20px;
-    }
-
-    .courseCard {
-        min-height: 150px;
-        padding: 18px;
-    }
-
-    .cardBg {
-        font-size: 5rem;
-    }
-
-    .levelBadge {
-        padding: 6px 10px;
-        font-size: 0.875rem;
-    }
-
-    .courseName {
-        font-size: 1.375rem;
-    }
-
-    .courseStats {
-        gap: 7px;
-    }
-
-    .stat {
-        font-size: 0.75rem;
-    }
+    .pageTitle { font-size: 2rem; }
+    .courseGrid { grid-template-columns: 1fr; }
 }

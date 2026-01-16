@@ -232,7 +232,7 @@ body {
 .currentTime {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--color-lt-green);
+    color: var(--color-surface-white);
     font-family: "MuseoModerno", sans-serif;
     margin-bottom: 8px;
 }
