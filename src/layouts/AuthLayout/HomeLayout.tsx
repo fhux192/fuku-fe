@@ -150,7 +150,7 @@ HeroSection.displayName = 'HeroSection';
 const ContentDrawer: React.FC<ContentDrawerProps> = ({ isOpen, onClose, children }) => (
     <aside
         className={`${styles.rightSide} ${isOpen ? styles.showModal : ''}`}
-        aria-expanded={isOpen}
+        aria-hidden={!isOpen}
     >
         <button
             className={styles.closeModalBtn}

@@ -128,8 +128,10 @@ const DashboardLayout: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        const currentNavItemRefs = navItemRefs.current;
+
         const handleMouseEnter = (path: string) => {
-            const navItem = navItemRefs.current.get(path);
+            const navItem = currentNavItemRefs.get(path);
             if (navItem) {
                 const lordIcon = navItem.querySelector('lord-icon') as any;
                 if (lordIcon) {
@@ -165,7 +167,7 @@ const DashboardLayout: React.FC = () => {
 
         const timeoutId = setTimeout(() => {
             // Attach hover listeners
-            navItemRefs.current.forEach((navItem, path) => {
+            currentNavItemRefs.forEach((navItem, path) => {
                 const onMouseEnter = () => handleMouseEnter(path);
                 navItem.addEventListener('mouseenter', onMouseEnter);
 
@@ -175,7 +177,7 @@ const DashboardLayout: React.FC = () => {
 
         return () => {
             clearTimeout(timeoutId);
-            navItemRefs.current.forEach((navItem) => {
+            currentNavItemRefs.forEach((navItem) => {
                 if ((navItem as any)._hoverListener) {
                     navItem.removeEventListener('mouseenter', (navItem as any)._hoverListener);
                 }
