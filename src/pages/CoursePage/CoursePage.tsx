@@ -17,7 +17,8 @@ import {
 import styles from './CoursePage.module.css';
 
 const CoursePage: React.FC = () => {
-    const { selectedCourse, selectCourse, isSelected } = useCourseSelection();
+
+    const {selectCourse, isSelected } = useCourseSelection();
 
     // State to control roadmap visibility
     const [showRoadmap, setShowRoadmap] = useState(false);
