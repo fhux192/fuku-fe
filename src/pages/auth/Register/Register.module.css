@@ -148,7 +148,7 @@
 
 .registerInput {
     width: 100%;
-    padding: 20px 40px 12px 0px;
+    padding: 20px 40px 12px 4px;
     border: none;
     border-bottom: 1px solid var(--color-just-black);
     background-color: transparent;
@@ -168,7 +168,7 @@
 
 .registerInput:focus {
     border: none;
-    border-bottom: 1px solid var(--color-lt-green, #90bb3c);
+    border-bottom: 1px solid var(--color-just-black);
     transform: translateY(-2px);
 }
 

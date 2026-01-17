@@ -1,10 +1,6 @@
 
 import { LevelNode, UserProgress } from '../types/roadmap.types';
 
-/**
- * Generate 50 levels with boss battles every 10 levels
- * Boss levels require higher scores and unlock special rewards
- */
 export const generateLevels = (): LevelNode[] => {
     const levels: LevelNode[] = [];
 

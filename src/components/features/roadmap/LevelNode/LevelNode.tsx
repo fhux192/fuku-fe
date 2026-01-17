@@ -1,6 +1,6 @@
 import React from 'react';
 import { Lock, CheckCircle, Zap, Crown, Star, Gift } from 'lucide-react';
-import { LevelNode as LevelNodeType } from '../../types/roadmap.types';
+import { LevelNode as LevelNodeType } from '../../../../types/roadmap.types';
 import styles from './LevelNode.module.css';
 
 interface LevelNodeProps {

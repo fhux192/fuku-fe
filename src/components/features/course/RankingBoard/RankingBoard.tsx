@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Crown, Medal, TrendingUp, Flame, Trophy } from 'lucide-react';
-import { RankingBoardProps, RankUser } from '../../types/course.types';
+import { RankingBoardProps, RankUser } from '../../../../types/course.types';
 import styles from './RankingBoard.module.css';
 
 /**

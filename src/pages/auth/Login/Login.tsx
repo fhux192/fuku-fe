@@ -123,6 +123,13 @@ const Login: React.FC = () => {
     const avatarIconRef = useRef<LordIconElement>(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            navigate(UI_CONFIG.ROUTES.HOME, { replace: true });
+        }
+    }, [navigate]);
+
+    useEffect(() => {
         if (!isIconDefined.current) {
             try {
                 Element.defineTrigger('custom', CustomTrigger);
@@ -183,7 +190,7 @@ const Login: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 localStorage.setItem('authToken', data.token);
-                navigate(UI_CONFIG.ROUTES.HOME);
+                navigate(UI_CONFIG.ROUTES.HOME, { replace: true });
             } else {
                 const errorText = await response.text();
                 setError(errorText || UI_CONFIG.MESSAGES.LOGIN_FAIL);

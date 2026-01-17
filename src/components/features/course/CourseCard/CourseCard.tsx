@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Award } from 'lucide-react';
-import { Course } from '../../types/course.types';
-import { LORDICON_URLS } from '../../constants/course.constants';
+import { Course } from '../../../../types/course.types';
+import { LORDICON_URLS } from '../../../../constants/course.constants';
 import styles from './CourseCard.module.css';
 
 interface CourseCardProps {

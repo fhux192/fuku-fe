@@ -1,11 +1,9 @@
-// pages/CoursePage/CoursePage.tsx
-
 import React, { useEffect, useState } from 'react';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
-import RankingBoard from '../../components/RankingBoard/RankingBoard';
-import CourseCard from '../../components/CourseCard/CourseCard';
-import LearningPath from '../../components/LearningPath/LearningPath';
+import RankingBoard from '../../components/features/course/RankingBoard/RankingBoard';
+import CourseCard from '../../components/features/course/CourseCard/CourseCard';
+import LearningPath from '../../components/features/roadmap/LearningPath/LearningPath';
 import RoadmapPage from '../RoadmapPage/RoadmapPage'; // Import RoadmapPage
 import { useCourseSelection } from '../../hooks/useCourseSelection';
 import {

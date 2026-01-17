@@ -184,6 +184,139 @@ body {
     animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* User profile in navigation for mobile/tablet */
+.navUserProfileContainer {
+    position: relative;
+    margin-top: 12px;
+}
+
+.navUserProfile {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.navUserProfile:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+.navUserAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-right: 16px;
+}
+
+/* Mobile menu dropdown in navigation */
+.mobileMenuDropdown {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(20, 20, 20, 0.98);
+    backdrop-filter: blur(12px);
+    border-radius: var(--border-radius-md);
+    padding: 8px;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+    animation: dropdownSlideUp 0.2s ease-out;
+    z-index: 1000;
+}
+
+@keyframes dropdownSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobileMenuHeader {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 4px;
+}
+
+.mobileMenuUserName {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mobileMenuUserEmail {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mobileMenuDivider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+.mobileMenuItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-align: left;
+}
+
+.mobileMenuItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.mobileMenuItem svg {
+    flex-shrink: 0;
+    color: var(--color-text-subtle);
+    transition: color 0.2s ease;
+}
+
+.mobileMenuItem:hover svg {
+    color: white;
+}
+
+.mobileMenuItemDanger {
+    color: #ff4444;
+}
+
+.mobileMenuItemDanger svg {
+    color: #ff4444;
+}
+
+.mobileMenuItemDanger:hover {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff6666;
+}
+
+.mobileMenuItemDanger:hover svg {
+    color: #ff6666;
+}
+
 /* ============================================================================
    Main Display
    ============================================================================ */
@@ -275,6 +408,14 @@ body {
     margin-top: 4px;
 }
 
+/* ============================================================================
+   User Profile & Dropdown (Desktop)
+   ============================================================================ */
+
+.userProfileContainer {
+    position: relative;
+}
+
 .userProfile {
     display: flex;
     align-items: center;
@@ -301,21 +442,128 @@ body {
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
+    flex-shrink: 0;
 }
 
 .userInfo {
     flex: 1;
+    min-width: 0;
 }
 
 .userName {
     font-size: 0.9rem;
     font-weight: 600;
     color: white;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .userStatus {
     font-size: 0.75rem;
     color: var(--color-text-subtle);
+}
+
+.dropdownIcon {
+    color: var(--color-text-subtle);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.dropdownIconOpen {
+    transform: rotate(180deg);
+}
+
+.dropdownMenu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(26, 26, 26, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-md);
+    padding: 8px;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
+    animation: dropdownSlideUp 0.2s ease-out;
+    z-index: 1000;
+}
+
+.dropdownHeader {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 4px;
+}
+
+.dropdownUserName {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdownUserEmail {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdownDivider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 0;
+}
+
+.dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-align: left;
+}
+
+.dropdownItem:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.dropdownItem svg {
+    flex-shrink: 0;
+    color: var(--color-text-subtle);
+    transition: color 0.2s ease;
+}
+
+.dropdownItem:hover svg {
+    color: white;
+}
+
+.dropdownItemDanger {
+    color: #ff4444;
+}
+
+.dropdownItemDanger svg {
+    color: #ff4444;
+}
+
+.dropdownItemDanger:hover {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff6666;
+}
+
+.dropdownItemDanger:hover svg {
+    color: #ff6666;
 }
 
 /* ============================================================================
@@ -352,9 +600,11 @@ body {
 
     .navGroup {
         gap: 10px;
+        width: 100%;
     }
 
-    .navItem {
+    /* Hide text on regular nav items, show icon only */
+    .navItem:not(.navUserProfile) {
         justify-content: center;
         width: 56px;
         height: 56px;
@@ -362,22 +612,55 @@ body {
         margin: 0 auto;
     }
 
-    .navItem::before {
+    .navItem:not(.navUserProfile)::before {
         display: none;
     }
 
-    .navIcon {
+    .navItem:not(.navUserProfile) .navIcon {
         margin-right: 0;
     }
 
-    .navItem span {
+    .navItem:not(.navUserProfile) span {
         display: none;
         opacity: 0;
         width: 0;
     }
 
-    .navItem:hover {
+    .navItem:not(.navUserProfile):hover {
         transform: scale(1.05);
+    }
+
+    /* User profile in nav for tablet */
+    .navUserProfileContainer {
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .navUserProfile {
+        width: 56px;
+        height: 56px;
+        padding: 8px;
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    .navUserProfile span {
+        display: none;
+    }
+
+    .navUserAvatar {
+        margin-right: 0;
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+    }
+
+    /* Adjust dropdown position for tablet */
+    .mobileMenuDropdown {
+        left: calc(100% + 12px);
+        right: auto;
+        bottom: 0;
+        min-width: 260px;
     }
 
     .sidebarFooter {
@@ -417,15 +700,12 @@ body {
         border-radius: 30px 30px 0 0;
         box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
-
-        /* Animation cho hide/show */
         transform: translateY(0);
         transition: var(--transition-nav), opacity 0.3s ease, visibility 0.3s ease;
         opacity: 1;
         visibility: visible;
     }
 
-    /* Trạng thái ẩn của sidebar trên mobile */
     .sidebarHidden {
         transform: translateY(calc(100% + 20px));
         opacity: 0;
@@ -449,25 +729,25 @@ body {
         flex-direction: row;
         width: 100%;
         justify-content: space-around;
-        gap: 8px;
+        align-items: flex-end;
+        gap: 4px;
         max-width: 500px;
-        transition: transform 0.3s ease;
     }
 
-    .navItem {
+    .navItem:not(.navUserProfile) {
         width: auto;
         height: auto;
-        padding: 10px 16px;
+        padding: 10px 12px;
         background: transparent !important;
         flex-direction: column;
         gap: 6px;
         border-radius: var(--border-radius-sm);
         font-size: 0.75rem;
         min-width: 70px;
-        transition: transform 0.2s ease, background 0.2s ease;
+        flex: 1;
     }
 
-    .navItem::before {
+    .navItem:not(.navUserProfile)::before {
         display: none;
     }
 
@@ -475,26 +755,23 @@ body {
         margin-right: 0;
         width: 28px !important;
         height: 28px !important;
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .navItem span {
+    .navItem:not(.navUserProfile) span {
         display: block;
         opacity: 1;
         width: auto;
-        margin-left: 0;
         text-align: center;
         font-size: 0.7rem;
         font-weight: 600;
-        transition: color 0.2s ease;
     }
 
-    .navItem:hover {
+    .navItem:not(.navUserProfile):hover {
         transform: none;
         background: rgba(255, 255, 255, 0.08) !important;
     }
 
-    .navItem:hover .navIcon {
+    .navItem:not(.navUserProfile):hover .navIcon {
         animation: iconPopMobile 0.3s ease;
     }
 
@@ -504,23 +781,23 @@ body {
         100% { transform: scale(1); }
     }
 
-    .navItem:active {
+    .navItem:not(.navUserProfile):active {
         transform: scale(0.95);
     }
 
-    .activeNavItem {
+    .activeNavItem:not(.navUserProfile) {
         background: transparent !important;
     }
 
-    .activeNavItem span {
+    .activeNavItem:not(.navUserProfile) span {
         color: var(--color-lt-green);
     }
 
-    .activeNavItem .navIcon {
+    .activeNavItem:not(.navUserProfile) .navIcon {
         animation: none;
     }
 
-    .activeNavItem::after {
+    .activeNavItem:not(.navUserProfile)::after {
         content: '';
         display: block;
         width: 24px;
@@ -545,14 +822,56 @@ body {
         }
     }
 
+    /* User profile in nav for mobile */
+    .navUserProfileContainer {
+        margin-top: 0;
+        flex: 1;
+        min-width: 70px;
+    }
+
+    .navUserProfile {
+        width: auto;
+        padding: 10px 12px;
+        flex-direction: column;
+        gap: 6px;
+        background: transparent !important;
+    }
+
+    .navUserProfile:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .navUserAvatar {
+        margin-right: 0;
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .navUserProfile span {
+        display: block;
+        opacity: 1;
+        width: auto;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    /* Adjust dropdown for mobile */
+    .mobileMenuDropdown {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(100% + 12px);
+        min-width: 280px;
+        max-width: calc(100vw - 32px);
+    }
+
     .mainDisplay {
         border-radius: 0;
         padding: 20px 16px calc(90px + env(safe-area-inset-bottom)) 16px;
         box-shadow: none;
-        transition: padding 0.3s ease;
     }
 
-    /* Điều chỉnh padding khi sidebar bị ẩn */
     .sidebarHidden ~ .mainDisplay {
         padding-bottom: calc(20px + env(safe-area-inset-bottom));
     }
@@ -563,12 +882,13 @@ body {
    ============================================================================ */
 
 @media (max-width: 380px) {
-    .navItem {
-        padding: 8px 12px;
+    .navItem:not(.navUserProfile) {
+        padding: 8px 8px;
         min-width: 60px;
     }
 
-    .navItem span {
+    .navItem:not(.navUserProfile) span,
+    .navUserProfile span {
         font-size: 0.65rem;
     }
 
@@ -577,7 +897,13 @@ body {
         height: 24px !important;
     }
 
-    .activeNavItem::after {
+    .navUserAvatar {
+        width: 24px;
+        height: 24px;
+        font-size: 0.7rem;
+    }
+
+    .activeNavItem:not(.navUserProfile)::after {
         bottom: 2px;
         width: 20px;
     }
@@ -589,38 +915,17 @@ body {
     .sidebarHidden ~ .mainDisplay {
         padding-bottom: calc(16px + env(safe-area-inset-bottom));
     }
+
+    .mobileMenuDropdown {
+        min-width: 260px;
+    }
 }
 
 /* ============================================================================
-   Animation cho scroll indicator (optional)
+   Animations
    ============================================================================ */
 
 @media (max-width: 649px) {
-    /* Fade in animation khi sidebar hiện lại */
-    @keyframes slideUpFadeIn {
-        0% {
-            transform: translateY(calc(100% + 20px));
-            opacity: 0;
-        }
-        100% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Fade out animation khi sidebar ẩn đi */
-    @keyframes slideDownFadeOut {
-        0% {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(calc(100% + 20px));
-            opacity: 0;
-        }
-    }
-
-    /* Backdrop blur effect cho navigation */
     .sidebar::before {
         content: '';
         position: absolute;

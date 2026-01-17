@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, Zap, Trophy } from 'lucide-react';
-import { UserProgress } from '../../types/roadmap.types';
+import { UserProgress } from '../../../../types/roadmap.types';
 import styles from './ProgressHeader.module.css';
 
 interface ProgressHeaderProps {

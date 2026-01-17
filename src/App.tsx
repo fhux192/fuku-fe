@@ -12,7 +12,6 @@ import VerifyEmail from './pages/auth/VerifyEmail/VerifyEmail';
 import Login from './pages/auth/Login/Login';
 import ForgotPassword from './pages/auth/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword/ResetPassword';
-import Profile from './pages/auth/Profile';
 import RoadmapScreen from './pages/RoadMap/RoadmapKanjiN5';
 import KanaReference from './pages/KanaReference/KanaReference';
 import CoursePage from './pages/CoursePage/CoursePage';
@@ -38,7 +37,6 @@ const ROUTES = {
     FORGOT_PASSWORD: '/forgot-password',
     RESET_PASSWORD: '/reset-password',
     VERIFY_EMAIL: '/verify-email',
-    PROFILE: '/profile',
     ROADMAP: '/roadmap',
     KANA_REFERENCE: '/kana-reference',
     HOME_COURSE: '/home/course',
@@ -91,16 +89,6 @@ const App: FC = () => {
                     <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
                     <Route path={ROUTES.ROADMAP} element={<RoadmapScreen />} />
                     <Route path={ROUTES.KANA_REFERENCE} element={<KanaReference />} />
-
-                    {/* Protected routes */}
-                    <Route
-                        path={ROUTES.PROFILE}
-                        element={
-                            <PrivateRoute>
-                                <Profile />
-                            </PrivateRoute>
-                        }
-                    />
 
                     {/* Default redirect */}
                     <Route path={ROUTES.ROOT} element={<Navigate to={ROUTES.LOGIN} replace />} />

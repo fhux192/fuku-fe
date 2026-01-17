@@ -1,6 +1,6 @@
 import React from 'react';
 import { Zap } from 'lucide-react';
-import { Course } from '../../types/course.types';
+import { Course } from '../../../../types/course.types';
 import styles from './LearningPath.module.css';
 
 interface LearningPathProps {

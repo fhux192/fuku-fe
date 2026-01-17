@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Star, Zap, Book, Play, Lock } from 'lucide-react';
-import { LevelNode } from '../../types/roadmap.types';
+import { LevelNode } from '../../../../types/roadmap.types';
 import styles from './LevelDetailModal.module.css';
 
 interface LevelDetailModalProps {
