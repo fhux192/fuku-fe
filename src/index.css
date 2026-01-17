@@ -40,6 +40,45 @@
     --color-black-card: #1c1f1e;
     --color-black-border: #2f3332;
     --color-white-dim: #e0e0e0;
+
+    /* Spacing Scale - consistent spacing across all components */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 12px;
+    --space-lg: 16px;
+    --space-xl: 20px;
+    --space-2xl: 24px;
+    --space-3xl: 32px;
+    --space-4xl: 40px;
+
+    /* Border Radius Scale - design system consistency */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+
+    /* Shadows - layered elevation system */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+    /* Transitions - consistent animation timing */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+
+    /* Z-index Scale - prevents z-index wars */
+    --z-base: 1;
+    --z-elevated: 10;
+    --z-sticky: 100;
+    --z-modal: 1000;
+    --z-tooltip: 2000;
+
+    /* Font Families */
+    --font-primary: "Google Sans Flex", sans-serif;
+    --font-display: "MuseoModerno", sans-serif;
+    --font-japanese: "Noto Sans JP", sans-serif;
 }
 
 body {

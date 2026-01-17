@@ -1,0 +1,850 @@
+/* pages/RoadmapPage/RoadmapPage.module.css */
+
+/* =============================================================================
+   Design Tokens
+   Restricted to brand colors only - no shadows, glows, or blur effects
+   ============================================================================= */
+
+:root {
+    --color-surface-white: #ffffff;
+    --color-surface75: rgba(255, 255, 255, 0.3);
+    --color-just-black: #0e100f;
+    --color-lt-green: #bfff00;
+    --color-shockingly-green: #95d600;
+
+    /* Derived colors for UI states */
+    --color-border: rgba(14, 16, 15, 0.1);
+    --color-border-strong: rgba(14, 16, 15, 0.2);
+    --color-text-muted: rgba(14, 16, 15, 0.5);
+    --color-bg-subtle: rgba(14, 16, 15, 0.03);
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Radius */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+
+    /* Card sizing */
+    --card-width: 300px;
+    --card-gap: 48px;
+    --path-thickness: 2px;
+}
+
+/* =============================================================================
+   Base Layout
+   ============================================================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--color-surface-white);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* =============================================================================
+   Header
+   ============================================================================= */
+
+.header {
+    flex-shrink: 0;
+    background: var(--color-just-black);
+    padding: var(--space-lg);
+}
+
+.headerInner {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.headerTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.titleGroup {
+    flex: 1;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-surface-white);
+    margin: 0 0 var(--space-xs) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.titleIcon {
+    color: var(--color-lt-green);
+}
+
+.subtitle {
+    font-size: 0.875rem;
+    color: var(--color-surface75);
+    margin: 0;
+}
+
+.closeBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--color-surface75);
+    color: var(--color-surface-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 150ms ease;
+    flex-shrink: 0;
+}
+
+.closeBtn:hover {
+    background: var(--color-surface75);
+}
+
+/* =============================================================================
+   Stats Row
+   ============================================================================= */
+
+.statsRow {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.statBox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-surface-white);
+    border-radius: var(--radius-md);
+    flex: 1;
+}
+
+.statIcon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.statInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.statValue {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-just-black);
+    line-height: 1.2;
+}
+
+.statLabel {
+    font-size: 0.65rem;
+    color: var(--color-just-black);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* =============================================================================
+   Progress Bar
+   ============================================================================= */
+
+.progressWrap {
+    position: relative;
+}
+
+.progressTrack {
+    height: 4px;
+    background: var(--color-surface75);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--color-lt-green);
+    border-radius: 2px;
+    transition: width 300ms ease;
+}
+
+.progressText {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    font-size: 0.7rem;
+    color: var(--color-surface75);
+    font-weight: 600;
+}
+
+/* =============================================================================
+   Content Area
+   ============================================================================= */
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--space-xl) var(--space-lg);
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);;
+}
+
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 3px;
+}
+
+.pathContainer {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* =============================================================================
+   Level Rows with Connection Paths
+   Zigzag layout: odd rows left-to-right, even rows right-to-left
+   ============================================================================= */
+
+.levelRow {
+    display: flex;
+    gap: var(--card-gap);
+    position: relative;
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-xl);
+}
+
+/* Alternate direction for zigzag effect */
+.levelRow:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+/* =============================================================================
+   Level Card
+   Flat design with clear information hierarchy
+   ============================================================================= */
+
+.card {
+    width: var(--card-width);
+    background: var(--color-surface-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: border-color 150ms ease;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.card:hover:not(.cardLocked) {
+    border-color: var(--color-lt-green);
+}
+
+/* Card header */
+.cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-sm);
+}
+
+.levelBadge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-just-black);
+    color: var(--color-lt-green);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.statusIcon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statusCompleted {
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+}
+
+.statusCurrent {
+    background: var(--color-just-black);
+    color: var(--color-lt-green);
+}
+
+.statusUnlocked {
+    background: var(--color-bg-subtle);
+    color: var(--color-text-muted);
+}
+
+.statusLocked {
+    background: var(--color-bg-subtle);
+    color: var(--color-text-muted);
+}
+
+/* Card title */
+.cardTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-just-black);
+    margin: 0 0 var(--space-sm) 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Topic tags */
+.cardTopics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+    min-height: 24px;
+}
+
+.topicTag {
+    padding: 2px 8px;
+    background: var(--color-bg-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+}
+
+/* Card footer */
+.cardFooter {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border);
+}
+
+.xpBadge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-shockingly-green);
+}
+
+.typeBadge {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: auto;
+}
+
+.typeNormal {
+    background: var(--color-bg-subtle);
+    color: var(--color-text-muted);
+}
+
+.typeBoss {
+    background: var(--color-just-black);
+    color: var(--color-lt-green);
+}
+
+.typeBonus {
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+}
+
+/* Stars for completed */
+.starsRow {
+    display: flex;
+    gap: 2px;
+}
+
+.starFilled {
+    color: var(--color-lt-green);
+}
+
+/* =============================================================================
+   Card State Variations
+   ============================================================================= */
+
+.cardLocked {
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.cardLocked .levelBadge {
+    background: var(--color-text-muted);
+    color: var(--color-surface-white);
+}
+
+.cardCompleted {
+    border-color: var(--color-lt-green);
+}
+
+.cardCompleted .levelBadge {
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+}
+
+.cardCurrent {
+    border-color: var(--color-just-black);
+    border-width: 2px;
+}
+
+/* =============================================================================
+   Modal
+   ============================================================================= */
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14, 16, 15, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: var(--space-md);
+}
+
+.modal {
+    background: var(--color-surface-white);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modalClose {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-bg-subtle);
+    border: none;
+    color: var(--color-just-black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.modalClose:hover {
+    background: var(--color-border);
+}
+
+.modalHeader {
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.modalLevelBadge {
+    display: inline-flex;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-just-black);
+    color: var(--color-lt-green);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-just-black);
+    margin: 0 0 var(--space-md) 0;
+    padding-right: var(--space-xl);
+}
+
+.modalMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.modalXp {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-shockingly-green);
+}
+
+.modalType {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.modalBody {
+    padding: var(--space-lg);
+}
+
+.modalSection {
+    margin-bottom: var(--space-lg);
+}
+
+.modalSection:last-child {
+    margin-bottom: 0;
+}
+
+.modalSectionTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md) 0;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.topicsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.topicItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-subtle);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--color-just-black);
+}
+
+.topicDot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-lt-green);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.requirementBox {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--color-just-black);
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-lt-green);
+}
+
+.modalFooter {
+    padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.startBtn {
+    width: 100%;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    transition: opacity 150ms ease;
+    border: none;
+    font-family: inherit;
+}
+
+.startBtnPrimary {
+    background: var(--color-just-black);
+    color: var(--color-lt-green);
+}
+
+.startBtnPrimary:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.startBtnPrimary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.startBtnCompleted {
+    background: var(--color-lt-green);
+    color: var(--color-just-black);
+}
+
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--color-surface75);
+    border-top-color: var(--color-lt-green);
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* =============================================================================
+   Responsive - Tablet
+   ============================================================================= */
+
+@media (max-width: 900px) {
+    :root {
+        --card-width: 260px;
+        --card-gap: 32px;
+    }
+
+    .levelRow {
+        justify-content: center;
+    }
+}
+
+/* =============================================================================
+   Responsive - Mobile
+   Single column layout with vertical path
+   ============================================================================= */
+
+@media (max-width: 640px) {
+    :root {
+        --card-width: 100%;
+        --card-gap: 0;
+    }
+
+    .header {
+        padding: var(--space-md);
+    }
+
+    .headerTop {
+        margin-bottom: var(--space-md);
+    }
+
+    .title {
+        font-size: 1.1rem;
+    }
+
+    .subtitle {
+        font-size: 0.8rem;
+    }
+
+    .closeBtn {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* Stack stats 2x2 grid */
+    .statsRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
+    }
+
+    .statBox {
+        padding: var(--space-sm);
+    }
+
+    .statIcon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .statValue {
+        font-size: 0.9rem;
+    }
+
+    .statLabel {
+        font-size: 0.6rem;
+    }
+
+    /* Content */
+    .content {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    /* Single column - all rows same direction */
+    .levelRow {
+        flex-direction: column !important;
+        gap: var(--space-md);
+        margin-bottom: var(--space-md);
+        padding-bottom: var(--space-md);
+    }
+
+    /* Hide horizontal path on mobile */
+    .levelRow::before {
+    }
+
+    /* Vertical path centered */
+    .levelRow:not(:last-child)::after {
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+        bottom: 0;
+        height: var(--space-md);
+    }
+
+    /* Card full width */
+    .card {
+        width: 100%;
+    }
+
+    .cardTitle {
+        font-size: 0.9rem;
+    }
+
+    .cardTopics {
+        margin-bottom: var(--space-sm);
+    }
+
+    /* Modal bottom sheet style */
+    .modalOverlay {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .modal {
+        max-width: none;
+        max-height: 85vh;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .modalHeader {
+        padding: var(--space-md);
+    }
+
+    .modalTitle {
+        font-size: 1.1rem;
+    }
+
+    .modalBody {
+        padding: var(--space-md);
+    }
+
+    .modalFooter {
+        padding: 0 var(--space-md) var(--space-md);
+    }
+}
+
+/* =============================================================================
+   Responsive - Small Mobile
+   ============================================================================= */
+
+@media (max-width: 380px) {
+    .statsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .statBox {
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+
+
+    .cardFooter {
+        flex-wrap: wrap;
+    }
+}
+
+/* =============================================================================
+   Responsive - Landscape Mobile
+   ============================================================================= */
+
+@media (max-height: 480px) and (orientation: landscape) {
+    .header {
+        padding: var(--space-sm) var(--space-md);
+    }
+
+    .headerTop {
+        margin-bottom: var(--space-sm);
+    }
+
+    .statsRow {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: var(--space-sm);
+    }
+
+    .statBox {
+        flex: 1;
+        padding: var(--space-xs) var(--space-sm);
+    }
+
+    .content {
+        padding: var(--space-md);
+    }
+
+    .modalOverlay {
+        align-items: center;
+        padding: var(--space-sm);
+    }
+
+    .modal {
+        max-height: 95vh;
+        border-radius: var(--radius-lg);
+    }
+
+    .modalHeader,
+    .modalBody,
+    .modalFooter {
+        padding: var(--space-sm) var(--space-md);
+    }
+}

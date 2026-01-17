@@ -1,0 +1,190 @@
+/* components/RankingBoard/RankingBoard.module.css */
+
+.rankBoard {
+    background: #121212;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow effect header */
+.rankBoard::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 100px;
+    background: var(--color-lt-green);
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+}
+
+.boardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+.boardTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.boardTitle h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+}
+
+.boardTitle p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.iconBox {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* TABLE GRID LAYOUT */
+.tableHeader, .rankItem {
+    display: grid;
+    grid-template-columns: 40px 1fr 80px;
+    align-items: center;
+    gap: 12px;
+}
+
+.tableHeader {
+    padding: 0 12px 10px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.colScore {
+    text-align: right;
+}
+
+.scrollList {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-top: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #333 transparent;
+}
+
+.rankItem {
+    padding: 10px 12px;
+    border-radius: 12px;
+    margin-bottom: 4px;
+    background: transparent;
+    transition: background 0.2s;
+}
+
+.rankItem:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Top 1 Highlight */
+.top1 {
+    background: rgba(191,255,0,0.1);
+    border: 1px solid rgba(191,255,0,0.2);
+}
+
+/* Avatar & Info */
+.colName {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow: hidden;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    background: #2a2a2a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.uName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.uSub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+}
+
+/* Scores */
+.scoreVal {
+    font-family: "MuseoModerno", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.scoreBadge {
+    display: inline-block;
+    background: rgba(191,255,0,0.1);
+    color: var(--color-lt-green);
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    font-family: "MuseoModerno", sans-serif;
+}
+
+.trendIcon {
+    color: #4ade80;
+    margin-left: 4px;
+}
+
+/* Rank Badges */
+.badge1, .badge2, .badge3, .badgeNormal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+.badge1 { color: var(--color-lt-green); }
+.badge2 { color: #e2e8f0; }
+.badge3 { color: #d6a47a; }
+.badgeNormal { color: #666; font-size: 0.875rem; }
