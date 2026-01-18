@@ -1,16 +1,15 @@
-/* Import font giống Login */
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
-/* --- Cấu trúc chính --- */
 .registerFormWrapper {
     position: relative;
-    overflow: hidden;
-    padding: 20px 0px 20px 00px;
-    margin: auto;
-    border-radius: 50px;
-    width: 100%;
-    max-width: 360px;
     z-index: 10;
+    width: 100%;
+    max-width: 420px;
+    max-height: 100vh;
+    margin: auto;
+    padding: 20px 0px 20px 0px;
+    overflow: hidden;
+    border-radius: 510px;
     animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -29,17 +28,18 @@
     position: absolute;
     bottom: 0;
     left: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
-    transform: scale(1.2);
-    background-size: cover;
     background-position: center;
-    z-index: 1;
 }
 
 .registerFormContent {
     position: relative;
     z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Staggered animation for form elements */
@@ -55,6 +55,10 @@
     animation-delay: 0.15s;
 }
 
+.registerFormContent > *:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
 @keyframes slideInUp {
     from {
         opacity: 0;
@@ -66,14 +70,13 @@
     }
 }
 
-/* --- Typography --- */
 .registerTitle {
-    font-size: clamp(32px, 7vw, 40px);
-    font-weight: 900;
-    font-family: "Google Sans Flex", sans-serif;
-    color: var(--color-just-black);
     margin-top: 0;
     margin-bottom: 20px;
+    color: var(--color-just-black);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(32px, 7vw, 40px);
+    font-weight: 900;
     text-align: center;
 }
 
@@ -82,14 +85,13 @@
 }
 
 .registerError {
-    color: #ff4d4d;
+    margin-bottom: 16px;
+    padding: 12px;
     background-color: rgba(47, 27, 29, 1);
     border: 1px solid rgba(255, 138, 138, 0.3);
-    padding: 12px;
     border-radius: 12px;
-    margin-bottom: 16px;
+    color: #ff4d4d;
     font-size: clamp(13px, 3.2vw, 14px);
-    text-align: center;
     word-break: break-word;
     animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
@@ -107,14 +109,13 @@
 }
 
 .registerMessage {
-    color: #8aff91;
+    margin-bottom: 16px;
+    padding: 12px;
     background-color: rgba(27, 47, 29, 1);
     border: 1px solid rgba(138, 255, 145, 0.3);
-    padding: 12px;
     border-radius: 12px;
-    margin-bottom: 16px;
+    color: #8aff91;
     font-size: clamp(13px, 3.2vw, 14px);
-    text-align: center;
     word-break: break-word;
     animation: slideInDown 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -130,14 +131,17 @@
     }
 }
 
-/* --- Input Fields (Phong cách gạch chân) --- */
 .registerInputGroup {
-    margin-bottom: clamp(14px, 3.5vw, 15px);
+    margin-bottom: clamp(18px, 4vw, 20px);
     text-align: left;
 }
 
 .registerLabel {
-    display: none;
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-just-black);
+    font-size: clamp(13px, 3.2vw, 14px);
+    font-weight: 600;
 }
 
 .passwordWrapper {
@@ -147,27 +151,21 @@
 }
 
 .registerInput {
+    box-sizing: border-box;
     width: 100%;
     padding: 20px 40px 12px 4px;
+    background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--color-just-black);
-    background-color: transparent;
-    font-family: "Google Sans Flex", sans-serif;
+    outline: none;
     color: var(--color-just-black);
+    font-family: "Google Sans Flex", sans-serif;
     font-size: clamp(17px, 3.8vw, 18px);
     font-weight: 600;
-    box-sizing: border-box;
-    outline: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.registerInput::placeholder {
-    font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(16px, 3.5vw, 18px);
-}
-
 .registerInput:focus {
-    border: none;
     border-bottom: 1px solid var(--color-just-black);
     transform: translateY(-2px);
 }
@@ -177,40 +175,43 @@
     transform: translateX(5px);
 }
 
+.registerInput::placeholder {
+    font-size: clamp(16px, 3.5vw, 18px);
+}
+
 .togglePasswordBtn {
     position: absolute;
-    right: 0;
     top: 50%;
-    transform: translateY(-50%);
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
     background: transparent;
     border: none;
-    cursor: pointer;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     color: #888;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
 .togglePasswordBtn:hover {
     color: #f5f5f5;
-    transform: translateY(-50%) scale(1.1);
 }
 
 .registerButton {
     width: 60%;
     min-width: 150px;
-    padding: clamp(0.5rem, 2.5vw, 0.65rem);
-    background: var(--gradient-macha, linear-gradient(to right, #90bb3c, #b8e986));
-    font-family: "MuseoModerno", sans-serif;
-    color: var(--color-just-black, #000);
+    margin-top: 10px;
+    padding: clamp(0.5rem, 2vw, 0.6rem) 0.3rem;
+    background: var(--gradient-macha);
     border: none;
     border-radius: 30px;
-    cursor: pointer;
+    color: var(--color-just-black);
+    font-family: "MuseoModerno", sans-serif;
     font-size: clamp(17px, 3.8vw, 18px);
     font-weight: 700;
-    margin-top: clamp(16px, 4vw, 20px);
+    cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
@@ -243,15 +244,15 @@
 
 .registerLinkText {
     margin-top: clamp(20px, 5vw, 24px);
-    font-size: clamp(13px, 3.2vw, 14px);
     color: #aaa;
+    font-size: clamp(13px, 3.2vw, 14px);
     text-align: center;
 }
 
 .registerLink {
+    margin-left: 2px;
+    color: var(--color-shockingly-green);
     font-family: "Google Sans Flex", sans-serif;
-    margin-left: 5px;
-    color: var(--color-shockingly-green, #90bb3c);
     font-weight: 900;
     text-decoration: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -267,8 +268,8 @@
 @media (max-width: 768px) {
     .registerFormWrapper {
         max-width: 90%;
-        padding: 20px 26px 28px;
-        border-radius: 40px;
+        padding: 20px 0px 28px;
+        border-radius: 50px;
     }
 
     .registerButton {
@@ -280,9 +281,10 @@
 /* Mobile devices */
 @media (max-width: 480px) {
     .registerFormWrapper {
-        max-width: 92%;
-        padding: 20px 0px 26px;
-        border-radius: 35px;
+        max-width: 100%;
+        max-height: 90vh;
+        padding: 0 15px;
+        border-radius: 50px;
     }
 
     .registerTitle {
@@ -296,11 +298,7 @@
     .registerButton {
         width: 75%;
         min-width: 170px;
-        margin-top: 16px;
-    }
-
-    .registerInputGroup {
-        margin-bottom: 13px;
+        margin-top: 10px;
     }
 }
 
@@ -309,7 +307,7 @@
     .registerFormWrapper {
         max-width: 94%;
         padding: 18px 0px 24px;
-        border-radius: 30px;
+        border-radius: 50px;
     }
 
     .registerTitle {
@@ -317,7 +315,7 @@
     }
 
     .registerInputGroup {
-        margin-bottom: 12px;
+        margin-bottom: 16px;
     }
 
     .registerButton {
@@ -330,7 +328,7 @@
 @media (max-height: 600px) and (orientation: landscape) {
     .registerFormWrapper {
         padding: 14px 0px 18px;
-        border-radius: 28px;
+        border-radius: 50px;
     }
 
     .registerTitle {
@@ -339,7 +337,7 @@
     }
 
     .registerInputGroup {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
     }
 
     .registerInput {
@@ -347,7 +345,7 @@
     }
 
     .registerButton {
-        margin-top: 14px;
+        margin-top: 8px;
         min-width: 140px;
     }
 
@@ -377,7 +375,7 @@
     .registerFormWrapper {
         max-width: 96%;
         padding: 16px 0px 22px;
-        border-radius: 25px;
+        border-radius: 50px;
     }
 
     .registerTitle {
@@ -398,6 +396,7 @@
 
     .registerError,
     .registerMessage,
+    .registerLabel,
     .registerLinkText {
         font-size: 13px;
     }

@@ -306,14 +306,13 @@
 }
 
 .rightSideContent {
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    padding: var(--spacing-lg);
-    overflow-y: auto;
+    position: relative;
+    width: 100%;
+    max-width: 345px;
+    max-height: 100vh;
+    padding: 25px;
     background-color: var(--color-surface-white);
-    border-radius: var(--border-radius-lg);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border-radius: 40px;
     animation: slideUp 0.3s ease;
 }
 
@@ -330,18 +329,18 @@
 
 .closeModalBtn {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 2px;
+    right: 6px;
     z-index: 201;
     width: 50px;
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255);
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 50%;
-    color: var(--color-just-black);
+    background: rgba(0,0,0);
+    border: 4px solid rgb(255, 255, 255);
+    border-radius: 100%;
+    color: var( --color-torch-red-dark);
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
@@ -500,7 +499,7 @@
         width: 100%;
         max-width: 100%;
         max-height: 100%;
-        padding: var(--spacing-xl);
+        padding: 2rem;
         border-radius: 0;
         box-shadow: none;
         animation: none;
