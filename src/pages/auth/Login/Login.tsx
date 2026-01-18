@@ -122,12 +122,8 @@ const Login: React.FC = () => {
     const isIconDefined = useRef<boolean>(false);
     const avatarIconRef = useRef<LordIconElement>(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        if (token) {
-            navigate(UI_CONFIG.ROUTES.HOME, { replace: true });
-        }
-    }, [navigate]);
+    // Removed auto-redirect check - users can access login page even when already authenticated
+    // This allows re-authentication or switching accounts without forced redirects
 
     useEffect(() => {
         if (!isIconDefined.current) {
@@ -142,6 +138,7 @@ const Login: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        // Delay prevents race condition with icon rendering
         const timer = setTimeout(() => {
             if (avatarIconRef.current) {
                 const player = avatarIconRef.current.playerInstance;
@@ -157,6 +154,7 @@ const Login: React.FC = () => {
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+        // Clear error immediately for better UX
         if (error) setError('');
     }, [error]);
 
@@ -166,7 +164,7 @@ const Login: React.FC = () => {
 
     const handleButtonMouseEnter = useCallback((): void => {
         if (avatarIconRef.current) {
-            // Simulate hover event trên avatar icon
+            // Programmatically trigger avatar animation for visual feedback
             const hoverEvent = new MouseEvent('mouseenter', {
                 bubbles: true,
                 cancelable: true,

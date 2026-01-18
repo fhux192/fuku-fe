@@ -69,7 +69,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 48px;
+    margin-bottom: 30px;
     height: 60px;
     padding: 8px;
 }
@@ -144,7 +144,6 @@ body {
 
 .navItem:hover {
     background: rgba(255, 255, 255, 0.12);
-    transform: translateX(4px);
 }
 
 .navItem:hover .navIcon {
@@ -213,17 +212,17 @@ body {
     margin-right: 16px;
 }
 
-/* Mobile menu dropdown in navigation */
+/* Mobile menu dropdown in navigation - Light Mode */
 .mobileMenuDropdown {
     position: absolute;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 12px);
     left: 0;
     right: 0;
-    background: rgba(20, 20, 20, 0.98);
+    background: white;
     backdrop-filter: blur(12px);
     border-radius: var(--border-radius-md);
     padding: 8px;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
     animation: dropdownSlideUp 0.2s ease-out;
     z-index: 1000;
 }
@@ -241,14 +240,14 @@ body {
 
 .mobileMenuHeader {
     padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     margin-bottom: 4px;
 }
 
 .mobileMenuUserName {
     font-size: 0.95rem;
     font-weight: 600;
-    color: white;
+    color: #1a1a1a;
     margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -257,7 +256,7 @@ body {
 
 .mobileMenuUserEmail {
     font-size: 0.8rem;
-    color: var(--color-text-subtle);
+    color: #666;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -265,7 +264,7 @@ body {
 
 .mobileMenuDivider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.08);
     margin: 4px 0;
 }
 
@@ -278,7 +277,7 @@ body {
     background: transparent;
     border: none;
     border-radius: var(--border-radius-sm);
-    color: white;
+    color: #1a1a1a;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -287,34 +286,34 @@ body {
 }
 
 .mobileMenuItem:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .mobileMenuItem svg {
     flex-shrink: 0;
-    color: var(--color-text-subtle);
+    color: #666;
     transition: color 0.2s ease;
 }
 
 .mobileMenuItem:hover svg {
-    color: white;
+    color: #1a1a1a;
 }
 
 .mobileMenuItemDanger {
-    color: #ff4444;
+    color: #dc2626;
 }
 
 .mobileMenuItemDanger svg {
-    color: #ff4444;
+    color: #dc2626;
 }
 
 .mobileMenuItemDanger:hover {
-    background: rgba(255, 68, 68, 0.1);
-    color: #ff6666;
+    background: rgba(220, 38, 38, 0.08);
+    color: #b91c1c;
 }
 
 .mobileMenuItemDanger:hover svg {
-    color: #ff6666;
+    color: #b91c1c;
 }
 
 /* ============================================================================
@@ -409,7 +408,7 @@ body {
 }
 
 /* ============================================================================
-   User Profile & Dropdown (Desktop)
+   User Profile & Dropdown (Desktop) - Light Mode, Right Position
    ============================================================================ */
 
 .userProfileContainer {
@@ -474,30 +473,44 @@ body {
     transform: rotate(180deg);
 }
 
+/* Desktop dropdown - positioned to the right */
 .dropdownMenu {
     position: absolute;
-    bottom: calc(100% + 8px);
-    left: 0;
+    left: calc(100% + 24px);
+    bottom: -4px;
     right: 0;
-    background: rgba(26, 26, 26, 0.98);
+    min-width: 280px;
+    max-width: 320px;
+    background: white;
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius-md);
     padding: 8px;
-    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3);
-    animation: dropdownSlideUp 0.2s ease-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    animation: dropdownSlideRight 0.2s ease-out;
     z-index: 1000;
+}
+
+@keyframes dropdownSlideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .dropdownHeader {
     padding: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     margin-bottom: 4px;
 }
 
 .dropdownUserName {
     font-size: 0.95rem;
     font-weight: 600;
-    color: white;
+    color: #1a1a1a;
     margin-bottom: 4px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -506,7 +519,7 @@ body {
 
 .dropdownUserEmail {
     font-size: 0.8rem;
-    color: var(--color-text-subtle);
+    color: #666;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -514,7 +527,7 @@ body {
 
 .dropdownDivider {
     height: 1px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.08);
     margin: 4px 0;
 }
 
@@ -527,7 +540,7 @@ body {
     background: transparent;
     border: none;
     border-radius: var(--border-radius-sm);
-    color: white;
+    color: #1a1a1a;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -536,34 +549,34 @@ body {
 }
 
 .dropdownItem:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .dropdownItem svg {
     flex-shrink: 0;
-    color: var(--color-text-subtle);
+    color: #666;
     transition: color 0.2s ease;
 }
 
 .dropdownItem:hover svg {
-    color: white;
+    color: #1a1a1a;
 }
 
 .dropdownItemDanger {
-    color: #ff4444;
+    color: #dc2626;
 }
 
 .dropdownItemDanger svg {
-    color: #ff4444;
+    color: #dc2626;
 }
 
 .dropdownItemDanger:hover {
-    background: rgba(255, 68, 68, 0.1);
-    color: #ff6666;
+    background: rgba(220, 38, 38, 0.08);
+    color: #b91c1c;
 }
 
 .dropdownItemDanger:hover svg {
-    color: #ff6666;
+    color: #b91c1c;
 }
 
 /* ============================================================================
@@ -603,7 +616,6 @@ body {
         width: 100%;
     }
 
-    /* Hide text on regular nav items, show icon only */
     .navItem:not(.navUserProfile) {
         justify-content: center;
         width: 56px;
@@ -630,7 +642,6 @@ body {
         transform: scale(1.05);
     }
 
-    /* User profile in nav for tablet */
     .navUserProfileContainer {
         width: 100%;
         margin-top: 16px;
@@ -655,12 +666,15 @@ body {
         font-size: 0.95rem;
     }
 
-    /* Adjust dropdown position for tablet */
     .mobileMenuDropdown {
-        left: calc(100% + 12px);
+        position: absolute;
+        left: calc(100% + 16px);
         right: auto;
-        bottom: 0;
-        min-width: 260px;
+        bottom: auto;
+        top: 0;
+        min-width: 280px;
+        max-width: 320px;
+        animation: dropdownSlideRight 0.2s ease-out;
     }
 
     .sidebarFooter {
@@ -695,7 +709,7 @@ body {
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 12px 16px;
+        padding: 2px 16px;
         padding-bottom: calc(12px + env(safe-area-inset-bottom));
         border-radius: 30px 30px 0 0;
         box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.12);
@@ -822,11 +836,11 @@ body {
         }
     }
 
-    /* User profile in nav for mobile */
     .navUserProfileContainer {
         margin-top: 0;
         flex: 1;
         min-width: 70px;
+        position: relative;
     }
 
     .navUserProfile {
@@ -848,22 +862,25 @@ body {
         font-size: 0.75rem;
     }
 
-    .navUserProfile span {
-        display: block;
-        opacity: 1;
+
+    .mobileMenuDropdown {
+        position: fixed;
+        bottom: calc(90px + 16px + env(safe-area-inset-bottom));
         width: auto;
-        text-align: center;
-        font-size: 0.7rem;
-        font-weight: 600;
+        max-width: 320px;
+        margin: 0 auto;
+        animation: dropdownSlideUpMobile 0.2s ease-out;
     }
 
-    /* Adjust dropdown for mobile */
-    .mobileMenuDropdown {
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: calc(100% + 12px);
-        min-width: 280px;
-        max-width: calc(100vw - 32px);
+    @keyframes dropdownSlideUpMobile {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .mainDisplay {
@@ -917,7 +934,9 @@ body {
     }
 
     .mobileMenuDropdown {
-        min-width: 260px;
+        left: 12px;
+        right: 12px;
+        max-width: 280px;
     }
 }
 

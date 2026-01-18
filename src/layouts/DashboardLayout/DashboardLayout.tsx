@@ -4,6 +4,7 @@ import styles from './DashboardLayout.module.css';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 import logo from '../../assets/images/logo192.png';
+import LoginModal from '../../components/features/auth/LoginModal/LoginModal';
 
 // ============================================================================
 // Types
@@ -150,6 +151,10 @@ const DashboardLayout: React.FC = () => {
     const dropdownRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
 
+    // ------------------------------------------------------------------------
+    // UI State
+    // ------------------------------------------------------------------------
+
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
     const [isNavVisible, setIsNavVisible] = useState<boolean>(true);
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -157,12 +162,26 @@ const DashboardLayout: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
+    // ------------------------------------------------------------------------
+    // User State
+    // ------------------------------------------------------------------------
+
     const [userName, setUserName] = useState<string>('Học viên');
-    const [userEmail, setUserEmail] = useState<string>('');
+    const [, setUserEmail] = useState<string>('');
     const [userInitials, setUserInitials] = useState<string>('HV');
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+
+    // ------------------------------------------------------------------------
+    // Scroll State
+    // ------------------------------------------------------------------------
 
     const lastScrollY = useRef<number>(0);
     const ticking = useRef<boolean>(false);
+
+    // ------------------------------------------------------------------------
+    // User authentication check
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
         const user = getUserFromToken();
@@ -171,20 +190,29 @@ const DashboardLayout: React.FC = () => {
             setUserName(user.name);
             setUserEmail(user.email);
             setUserInitials(getUserInitials(user.name));
+            setIsAuthenticated(true);
         } else {
-            // If no valid token, user shouldn't be on dashboard
-            console.warn('No valid token found, redirecting to login');
-            navigate('/login', { replace: true });
+            // Guest users will keep default values
+            setIsAuthenticated(false);
         }
-    }, [navigate]);
+    }, []);
+
+    // ------------------------------------------------------------------------
+    // Clock update
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
+        // Update clock every second for real-time display
         const timer = setInterval(() => {
             setCurrentTime(new Date());
         }, 1000);
 
         return () => clearInterval(timer);
     }, []);
+
+    // ------------------------------------------------------------------------
+    // Screen size detection
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
         const checkScreenSize = () => {
@@ -199,12 +227,17 @@ const DashboardLayout: React.FC = () => {
         return () => window.removeEventListener('resize', checkScreenSize);
     }, []);
 
+    // ------------------------------------------------------------------------
+    // Mobile scroll behavior
+    // ------------------------------------------------------------------------
+
     useEffect(() => {
         if (!isMobile) return;
 
         const mainDisplay = document.querySelector(`.${styles.mainDisplay}`);
         if (!mainDisplay) return;
 
+        // Hide nav on scroll down, show on scroll up for better mobile UX
         const handleScroll = () => {
             if (!ticking.current) {
                 window.requestAnimationFrame(() => {
@@ -238,7 +271,10 @@ const DashboardLayout: React.FC = () => {
         };
     }, [isMobile]);
 
-    // Close dropdown when clicking outside
+    // ------------------------------------------------------------------------
+    // Close dropdown/menu when clicking outside
+    // ------------------------------------------------------------------------
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -258,7 +294,10 @@ const DashboardLayout: React.FC = () => {
         };
     }, [isDropdownOpen, isMobileMenuOpen]);
 
+    // ------------------------------------------------------------------------
     // Close dropdown/menu on escape key
+    // ------------------------------------------------------------------------
+
     useEffect(() => {
         const handleEscape = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
@@ -273,6 +312,10 @@ const DashboardLayout: React.FC = () => {
             document.removeEventListener('keydown', handleEscape);
         };
     }, [isDropdownOpen, isMobileMenuOpen]);
+
+    // ------------------------------------------------------------------------
+    // LordIcon initialization
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
         defineElement(lottie.loadAnimation);
@@ -302,6 +345,7 @@ const DashboardLayout: React.FC = () => {
                             }
                         }
 
+                        // Fallback method when direct methods unavailable
                         lordIcon.setAttribute('trigger', 'none');
                         setTimeout(() => {
                             lordIcon.setAttribute('trigger', 'morph');
@@ -315,6 +359,7 @@ const DashboardLayout: React.FC = () => {
             }
         };
 
+        // Delay to ensure icons are fully loaded before attaching listeners
         const timeoutId = setTimeout(() => {
             currentNavItemRefs.forEach((navItem, path) => {
                 const onMouseEnter = () => handleMouseEnter(path);
@@ -334,9 +379,9 @@ const DashboardLayout: React.FC = () => {
         };
     }, []);
 
-    // ========================================================================
-    // Handlers
-    // ========================================================================
+    // ------------------------------------------------------------------------
+    // Navigation Handlers
+    // ------------------------------------------------------------------------
 
     const handleLogoClick = (): void => {
         navigate('/login');
@@ -344,7 +389,7 @@ const DashboardLayout: React.FC = () => {
 
     const handleNavigation = (path: string): void => {
         navigate(path);
-        // Close mobile menu after navigation
+        // Close mobile menu after navigation for better UX
         if (isMobileMenuOpen) {
             setIsMobileMenuOpen(false);
         }
@@ -365,17 +410,33 @@ const DashboardLayout: React.FC = () => {
         }
     };
 
+    // ------------------------------------------------------------------------
+    // User Profile Handlers
+    // ------------------------------------------------------------------------
+
     const handleUserProfileClick = (): void => {
-        if (isMobile || isTablet) {
-            setIsMobileMenuOpen(prev => !prev);
+        if (isAuthenticated) {
+            // Show dropdown for authenticated users
+            if (isMobile || isTablet) {
+                setIsMobileMenuOpen(prev => !prev);
+            } else {
+                setIsDropdownOpen(prev => !prev);
+            }
         } else {
-            setIsDropdownOpen(prev => !prev);
+            // Show login modal for guest users
+            setIsLoginModalOpen(true);
         }
     };
 
     const handleLogout = (): void => {
         // Clear authentication data before redirect
         localStorage.removeItem('authToken');
+
+        // Reset user state to guest
+        setUserName('Học viên');
+        setUserEmail('');
+        setUserInitials('HV');
+        setIsAuthenticated(false);
 
         // Close menus to prevent UI flash
         setIsDropdownOpen(false);
@@ -399,9 +460,28 @@ const DashboardLayout: React.FC = () => {
         console.log('Navigate to profile');
     };
 
-    // ========================================================================
-    // Helpers
-    // ========================================================================
+    // ------------------------------------------------------------------------
+    // Login Modal Handlers
+    // ------------------------------------------------------------------------
+
+    const handleLoginModalClose = (): void => {
+        setIsLoginModalOpen(false);
+    };
+
+    const handleLoginSuccess = (): void => {
+        // Reload user data after successful login
+        const user = getUserFromToken();
+        if (user) {
+            setUserName(user.name);
+            setUserEmail(user.email);
+            setUserInitials(getUserInitials(user.name));
+            setIsAuthenticated(true);
+        }
+    };
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
 
     const isActive = (path: string): boolean => {
         return location.pathname === path;
@@ -424,12 +504,13 @@ const DashboardLayout: React.FC = () => {
         });
     };
 
-    // ========================================================================
+    // ------------------------------------------------------------------------
     // Render
-    // ========================================================================
+    // ------------------------------------------------------------------------
 
     return (
         <div className={styles.dashboardLayout}>
+            {/* Sidebar */}
             <aside
                 className={`${styles.sidebar} ${isMobile && !isNavVisible ? styles.sidebarHidden : ''}`}
                 aria-hidden={isMobile && !isNavVisible}
@@ -510,18 +591,12 @@ const DashboardLayout: React.FC = () => {
                             </div>
 
                             {/* Mobile Menu Dropdown */}
-                            {isMobileMenuOpen && (
+                            {isMobileMenuOpen && isAuthenticated && (
                                 <div
                                     className={styles.mobileMenuDropdown}
                                     role="menu"
                                     aria-label="Menu người dùng"
                                 >
-                                    <div className={styles.mobileMenuHeader}>
-                                        <div className={styles.mobileMenuUserName}>{userName}</div>
-                                        <div className={styles.mobileMenuUserEmail}>{userEmail}</div>
-                                    </div>
-
-                                    <div className={styles.mobileMenuDivider} />
 
                                     <button
                                         className={styles.mobileMenuItem}
@@ -611,7 +686,9 @@ const DashboardLayout: React.FC = () => {
                             </div>
                             <div className={styles.userInfo}>
                                 <div className={styles.userName}>{userName}</div>
-                                <div className={styles.userStatus}>Đang hoạt động</div>
+                                <div className={styles.userStatus}>
+                                    {isAuthenticated ? 'Đang hoạt động' : 'Khách'}
+                                </div>
                             </div>
                             <svg
                                 className={`${styles.dropdownIcon} ${isDropdownOpen ? styles.dropdownIconOpen : ''}`}
@@ -631,19 +708,14 @@ const DashboardLayout: React.FC = () => {
                             </svg>
                         </div>
 
-                        {/* Dropdown Menu */}
-                        {isDropdownOpen && (
+                        {/* Dropdown Menu for authenticated users */}
+                        {isDropdownOpen && isAuthenticated && (
                             <div
                                 className={styles.dropdownMenu}
                                 role="menu"
                                 aria-label="Menu người dùng"
                             >
-                                <div className={styles.dropdownHeader}>
-                                    <div className={styles.dropdownUserName}>{userName}</div>
-                                    <div className={styles.dropdownUserEmail}>{userEmail}</div>
-                                </div>
 
-                                <div className={styles.dropdownDivider} />
 
                                 <button
                                     className={styles.dropdownItem}
@@ -693,6 +765,13 @@ const DashboardLayout: React.FC = () => {
             <main className={styles.mainDisplay} role="main">
                 <Outlet />
             </main>
+
+            {/* Login Modal */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={handleLoginModalClose}
+                onLoginSuccess={handleLoginSuccess}
+            />
         </div>
     );
 };

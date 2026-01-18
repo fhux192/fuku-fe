@@ -1,0 +1,499 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+/* ============================================================================
+   Modal Overlay & Container
+   ============================================================================ */
+
+/* Fixed overlay covering entire viewport with backdrop blur */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Scrollable container for modal content */
+.modalContainer {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ============================================================================
+   Close Button
+   ============================================================================ */
+
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    color: var(--color-just-black);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.closeButton:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.closeButton:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* ============================================================================
+   Form Wrapper & Content
+   ============================================================================ */
+
+.registerFormWrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    margin: auto;
+    padding: 30px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 50px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.registerFormContent {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Staggered animation for form elements */
+.registerFormContent > * {
+    animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+.registerFormContent > *:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.registerFormContent > *:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.registerFormContent > *:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   Title & Form
+   ============================================================================ */
+
+.registerTitle {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--color-just-black);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(32px, 7vw, 40px);
+    font-weight: 900;
+    text-align: center;
+}
+
+.registerForm {
+    width: 100%;
+}
+
+/* ============================================================================
+   Messages
+   ============================================================================ */
+
+.registerError {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: rgba(47, 27, 29, 1);
+    border: 1px solid rgba(255, 138, 138, 0.3);
+    border-radius: 12px;
+    color: #ff4d4d;
+    font-size: clamp(13px, 3.2vw, 14px);
+    text-align: center;
+    word-break: break-word;
+    animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shakeError {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+.registerMessage {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: rgba(27, 47, 29, 1);
+    border: 1px solid rgba(138, 255, 145, 0.3);
+    border-radius: 12px;
+    color: #8aff91;
+    font-size: clamp(13px, 3.2vw, 14px);
+    text-align: center;
+    word-break: break-word;
+    animation: slideInDown 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   Input Fields
+   ============================================================================ */
+
+.registerInputGroup {
+    margin-bottom: clamp(14px, 3.5vw, 15px);
+    text-align: left;
+}
+
+.passwordWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.registerInput {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px 40px 12px 4px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid var(--color-just-black);
+    outline: none;
+    color: var(--color-just-black);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(17px, 3.8vw, 18px);
+    font-weight: 600;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.registerInput:focus {
+    border-bottom: 1px solid var(--color-just-black);
+    transform: translateY(-2px);
+}
+
+.registerInput:focus::placeholder {
+    opacity: 0.5;
+    transform: translateX(5px);
+}
+
+.registerInput::placeholder {
+    font-size: clamp(16px, 3.5vw, 18px);
+}
+
+.togglePasswordBtn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    background: transparent;
+    border: none;
+    color: #888;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.togglePasswordBtn:hover {
+    color: var(--color-just-black);
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* ============================================================================
+   Buttons & Links
+   ============================================================================ */
+
+.registerButton {
+    width: 60%;
+    min-width: 150px;
+    margin-top: clamp(16px, 4vw, 20px);
+    padding: clamp(0.5rem, 2.5vw, 0.65rem);
+    background: var(--gradient-macha);
+    border: none;
+    border-radius: 30px;
+    color: var(--color-just-black);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(17px, 3.8vw, 18px);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.registerButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(144, 187, 60, 0.4);
+}
+
+.registerButton:active {
+    transform: translateY(0);
+}
+
+.registerLinkText {
+    margin-top: clamp(20px, 5vw, 24px);
+    color: #666;
+    font-size: clamp(13px, 3.2vw, 14px);
+    text-align: center;
+}
+
+.registerLink {
+    margin-left: 5px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: var(--color-shockingly-green);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(13px, 3.2vw, 14px);
+    font-weight: 900;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-block;
+}
+
+.registerLink:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* ============================================================================
+   Responsive Design - Desktop/Large Tablet
+   ============================================================================ */
+
+@media (min-width: 769px) {
+    .modalContainer {
+        max-width: 420px;
+    }
+
+    .registerFormWrapper {
+        padding: 40px 50px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design - Tablet
+   ============================================================================ */
+
+@media (max-width: 768px) and (min-width: 481px) {
+    .modalContainer {
+        max-width: 480px;
+        padding: 0 20px;
+    }
+
+    .registerFormWrapper {
+        padding: 35px 40px;
+        border-radius: 40px;
+    }
+
+    .registerButton {
+        width: 65%;
+        min-width: 160px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design - Mobile
+   ============================================================================ */
+
+@media (max-width: 480px) and (min-width: 361px) {
+    .modalContainer {
+        max-width: 100%;
+        max-height: 100vh;
+        padding: 0 15px;
+    }
+
+    .registerFormWrapper {
+        padding: 25px 30px;
+        border-radius: 35px;
+    }
+
+    .closeButton {
+        width: 36px;
+        height: 36px;
+    }
+
+    .registerTitle {
+        margin-bottom: 18px;
+    }
+
+    .registerInput {
+        padding: 18px 40px 11px 0;
+    }
+
+    .registerButton {
+        width: 70%;
+        min-width: 160px;
+    }
+
+    .registerInputGroup {
+        margin-bottom: 13px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design - Extra Small
+   ============================================================================ */
+
+@media (max-width: 360px) {
+    .modalContainer {
+        max-width: 100%;
+        max-height: 100vh;
+        padding: 0 10px;
+    }
+
+    .registerFormWrapper {
+        padding: 20px 25px;
+        border-radius: 30px;
+    }
+
+    .closeButton {
+        width: 34px;
+        height: 34px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .registerTitle {
+        font-size: clamp(28px, 8vw, 34px);
+        margin-bottom: 16px;
+    }
+
+    .registerInputGroup {
+        margin-bottom: 12px;
+    }
+
+    .registerButton {
+        width: 75%;
+        min-width: 150px;
+    }
+}
+
+/* ============================================================================
+   Responsive Design - Landscape Mobile
+   ============================================================================ */
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .modalContainer {
+        max-height: 95vh;
+        padding: 10px;
+    }
+
+    .registerFormWrapper {
+        padding: 20px 30px;
+        border-radius: 25px;
+    }
+
+    .registerTitle {
+        font-size: clamp(24px, 5vw, 32px);
+        margin-bottom: 12px;
+    }
+
+    .registerInputGroup {
+        margin-bottom: 10px;
+    }
+
+    .registerInput {
+        padding: 14px 40px 10px 0;
+    }
+
+    .registerButton {
+        margin-top: 12px;
+    }
+
+    .registerLinkText {
+        margin-top: 12px;
+    }
+}
+
+/* ============================================================================
+   Touch Device Optimizations
+   ============================================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    .registerButton,
+    .registerLink,
+    .closeButton {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .togglePasswordBtn {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}

@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import type { FC, ReactNode } from 'react';
+import type { FC} from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 // Pages
@@ -25,11 +25,6 @@ import './App.css';
 // ============================================================================
 // Constants
 // ============================================================================
-
-const STORAGE_KEYS = {
-    AUTH_TOKEN: 'authToken',
-} as const;
-
 const ROUTES = {
     ROOT: '/',
     LOGIN: '/login',
@@ -46,9 +41,9 @@ const ROUTES = {
 // Types
 // ============================================================================
 
-interface PrivateRouteProps {
-    children: ReactNode;
-}
+// interface PrivateRouteProps {
+//     children: ReactNode;
+// }
 
 // ============================================================================
 // Components
@@ -58,10 +53,10 @@ interface PrivateRouteProps {
  * Protects routes requiring authentication
  * Redirects to login if token not found
  */
-const PrivateRoute: FC<PrivateRouteProps> = ({ children }) => {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    return token ? <>{children}</> : <Navigate to={ROUTES.LOGIN} replace />;
-};
+// const PrivateRoute: FC<PrivateRouteProps> = ({ children }) => {
+//     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+//     return token ? <>{children}</> : <Navigate to={ROUTES.LOGIN} replace />;
+// };
 
 // ============================================================================
 // Main App

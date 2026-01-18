@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import lottie from 'lottie-web';
-import { defineElement } from '@lordicon/element';
+import {defineElement} from '@lordicon/element';
 import RankingBoard from '../../components/features/course/RankingBoard/RankingBoard';
 import CourseCard from '../../components/features/course/CourseCard/CourseCard';
 import LearningPath from '../../components/features/roadmap/LearningPath/LearningPath';
 import RoadmapPage from '../RoadmapPage/RoadmapPage'; // Import RoadmapPage
-import { useCourseSelection } from '../../hooks/useCourseSelection';
+import {useCourseSelection} from '../../hooks/useCourseSelection';
 import {
     COURSES_DATA,
     HARD_WORKING_USERS,
@@ -16,7 +16,7 @@ import styles from './CoursePage.module.css';
 
 const CoursePage: React.FC = () => {
 
-    const {selectCourse, isSelected } = useCourseSelection();
+    const {selectCourse, isSelected} = useCourseSelection();
 
     // State to control roadmap visibility
     const [showRoadmap, setShowRoadmap] = useState(false);
@@ -54,7 +54,7 @@ const CoursePage: React.FC = () => {
                         <p className={styles.pageSubtitle}>Chinh phục tiếng Nhật từ con số 0 đến N1</p>
                     </header>
 
-                    <LearningPath courses={COURSES_DATA} />
+                    <LearningPath courses={COURSES_DATA}/>
 
                     <section className={styles.rankSection} aria-labelledby="ranking-title">
                         <h2 id="ranking-title" className="sr-only">Bảng xếp hạng</h2>
