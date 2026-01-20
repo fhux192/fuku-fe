@@ -4,8 +4,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import styles from './Register.module.css';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
+import { useModalClose } from '../../../layouts/HomeLayout/HomeLayout';
 
-// Type definitions
+// ============================================================================
+// Type Definitions
+// ============================================================================
+
 interface LordIconElement extends HTMLElement {
     playerInstance?: {
         play: () => void;
@@ -31,10 +35,18 @@ interface PlayerInstance {
     isPlaying: boolean;
 }
 
+// ============================================================================
+// Constants
+// ============================================================================
+
 const CLICK_EVENTS: ClickEvent[] = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
 ];
+
+// ============================================================================
+// Custom Trigger Class
+// ============================================================================
 
 class CustomTrigger {
     player: PlayerInstance;
@@ -79,6 +91,10 @@ class CustomTrigger {
     }
 }
 
+// ============================================================================
+// Main Component
+// ============================================================================
+
 const Register: React.FC = () => {
     const [formData, setFormData] = useState<FormData>({
         name: '',
@@ -93,6 +109,10 @@ const Register: React.FC = () => {
 
     const navigate = useNavigate();
     const avatarIconRef = useRef<LordIconElement>(null);
+
+    // Get onClose from outlet context if available (mobile mode)
+    const context = useModalClose();
+    const onClose = context?.onClose;
 
     useEffect(() => {
         try {
@@ -174,6 +194,16 @@ const Register: React.FC = () => {
 
     return (
         <div className={styles.registerFormWrapper}>
+            {onClose && (
+                <button
+                    className={styles.closeModalBtn}
+                    onClick={onClose}
+                    aria-label="Close register form"
+                >
+                    ✕
+                </button>
+            )}
+
             <div className={styles.registerFormBackground}></div>
             <div className={styles.registerFormOverlay}></div>
 
@@ -222,7 +252,6 @@ const Register: React.FC = () => {
                         />
                     </div>
 
-                    {/* Ô MẬT KHẨU */}
                     <div className={styles.registerInputGroup}>
                         <label htmlFor="password" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>
@@ -254,7 +283,6 @@ const Register: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Ô XÁC NHẬN MẬT KHẨU */}
                     <div className={styles.registerInputGroup}>
                         <label htmlFor="confirmPassword" className={styles.registerLabel}></label>
                         <div className={styles.passwordWrapper}>

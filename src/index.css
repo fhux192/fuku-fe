@@ -79,6 +79,24 @@
     --font-primary: "Google Sans Flex", sans-serif;
     --font-display: "MuseoModerno", sans-serif;
     --font-japanese: "Noto Sans JP", sans-serif;
+
+    --modal-padding: 16px;
+    --form-padding: 32px 36px;
+    --form-max-width: 360px;
+    --form-border-radius: 40px;
+
+    --title-size: clamp(1.5rem, 4vw + 0.5rem, 1.875rem);
+    --input-size: 0.8rem;
+    --small-text: 0.7125rem;
+    --button-size: 0.9rem;
+
+    --group-gap: 16px;
+    --input-padding-y: 14px;
+
+    --button-width: 55%;
+    --button-min-width: 130px;
+
+    --touch-target: 44px;
 }
 
 body {

@@ -1,8 +1,11 @@
-import React, { useState, useCallback, memo } from 'react';
-import type { ReactNode, KeyboardEvent } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useCallback, memo } from 'react';
+import type { KeyboardEvent } from 'react';
+import { Outlet, useNavigate, useOutletContext } from 'react-router-dom';
 import styles from './HomeLayout.module.css';
 import logo from '../../assets/images/logo192.png';
+import LoginModal from '../../components/features/auth/LoginModal/LoginModal';
+import RegisterModal from '../../components/features/auth/RegisterModal/RegisterModal';
+import ForgotPasswordModal from '../../components/features/auth/ForgotPasswordModal/ForgotPasswordModal';
 
 // ============================================================================
 // Types
@@ -24,19 +27,17 @@ interface UIConfig {
         MAIN_TITLE_HIGHLIGHT: string;
         SUBTITLE: string;
         BTN_START: string;
-        BTN_INFO: string;
         BTN_LOGIN: string;
         BTN_CLOSE: string;
-        ROUTES: {
-            LOGIN: string;
-            KANA: string;
-            COURSE: string;
-        };
     };
     ROUTES: {
         LOGIN: string;
+        FORGOT_PASS: string;
         KANA: string;
         COURSE: string;
+    };
+    BREAKPOINTS: {
+        DESKTOP: number;
     };
 }
 
@@ -46,11 +47,9 @@ interface HeroSectionProps {
     isRightSideOpen: boolean;
 }
 
-interface ContentDrawerProps {
-    isOpen: boolean;
+type OutletContextType = {
     onClose: () => void;
-    children: ReactNode;
-}
+};
 
 // ============================================================================
 // Constants
@@ -69,20 +68,46 @@ const UI_CONFIG: UIConfig = {
         MAIN_TITLE_HIGHLIGHT: '学びましょう',
         SUBTITLE: 'Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí',
         BTN_START: 'Bắt đầu ngay',
-        BTN_INFO: 'Tìm hiểu',
         BTN_LOGIN: 'Đăng nhập',
-        BTN_CLOSE: 'Quay lại',
-        ROUTES: {
-            LOGIN: '/login',
-            KANA: '/kana-reference',
-            COURSE: '/home/course'
-        }
+        BTN_CLOSE: 'Quay lại'
     },
     ROUTES: {
         LOGIN: '/login',
+        FORGOT_PASS: '/forgot-password',
         KANA: '/home/course',
         COURSE: '/home/course'
+    },
+    BREAKPOINTS: {
+        DESKTOP: 1050
     }
+};
+
+// ============================================================================
+// Hooks
+// ============================================================================
+
+export const useModalClose = () => {
+    return useOutletContext<OutletContextType>();
+};
+
+/**
+ * Tracks viewport width to determine mobile vs desktop layout
+ */
+const useIsMobile = (breakpoint: number): boolean => {
+    const [isMobile, setIsMobile] = useState<boolean>(
+        typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
+    );
+
+    useEffect(() => {
+        const handleResize = (): void => {
+            setIsMobile(window.innerWidth < breakpoint);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [breakpoint]);
+
+    return isMobile;
 };
 
 // ============================================================================
@@ -147,46 +172,40 @@ const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide,
 
 HeroSection.displayName = 'HeroSection';
 
-const ContentDrawer: React.FC<ContentDrawerProps> = ({ isOpen, onClose, children }) => (
-    <aside
-        className={`${styles.rightSide} ${isOpen ? styles.showModal : ''}`}
-        aria-hidden={!isOpen}
-    >
-        <button
-            className={styles.closeModalBtn}
-            onClick={onClose}
-            aria-label="Close navigation drawer"
-        >
-            ✕
-        </button>
-        <div className={styles.rightSideContent}>
-            {children}
-        </div>
-    </aside>
-);
-
 // ============================================================================
 // Main Component
 // ============================================================================
 
 const HomeLayout: React.FC = () => {
     const [isRightSideOpen, setIsRightSideOpen] = useState<boolean>(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
+    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false); // State mới
     const navigate = useNavigate();
+    const isMobile = useIsMobile(UI_CONFIG.BREAKPOINTS.DESKTOP);
+
+    // ------------------------------------------------------------------------
+    // Navigation handlers
+    // ------------------------------------------------------------------------
 
     const handleNavigation = useCallback((path: string): void => {
         navigate(path);
     }, [navigate]);
 
-    const handleCloseDrawer = useCallback((): void => {
-        setIsRightSideOpen(false);
-    }, []);
-
+    /**
+     * Mobile: open LoginModal
+     * Desktop: toggle rightside panel and navigate to login route
+     */
     const handleToggleRightSide = useCallback((): void => {
-        setIsRightSideOpen(prev => !prev);
-        if (!isRightSideOpen) {
-            navigate(UI_CONFIG.ROUTES.LOGIN);
+        if (isMobile) {
+            setIsLoginModalOpen(prev => !prev);
+        } else {
+            setIsRightSideOpen(prev => !prev);
+            if (!isRightSideOpen) {
+                navigate(UI_CONFIG.ROUTES.LOGIN);
+            }
         }
-    }, [isRightSideOpen, navigate]);
+    }, [isMobile, isRightSideOpen, navigate]);
 
     const handleLogoClick = (): void => {
         handleNavigation(UI_CONFIG.ROUTES.LOGIN);
@@ -198,6 +217,56 @@ const HomeLayout: React.FC = () => {
             handleNavigation(UI_CONFIG.ROUTES.LOGIN);
         }
     };
+
+    // ------------------------------------------------------------------------
+    // Modal handlers
+    // ------------------------------------------------------------------------
+
+    const handleCloseLoginModal = useCallback((): void => {
+        setIsLoginModalOpen(false);
+    }, []);
+
+    const handleCloseRegisterModal = useCallback((): void => {
+        setIsRegisterModalOpen(false);
+    }, []);
+
+    const handleCloseForgotPasswordModal = useCallback((): void => {
+        setIsForgotPasswordModalOpen(false);
+    }, []);
+
+    const handleLoginSuccess = useCallback((): void => {
+        setIsLoginModalOpen(false);
+        navigate(UI_CONFIG.ROUTES.COURSE);
+    }, [navigate]);
+
+    /**
+     * After successful registration, switch to LoginModal
+     */
+    const handleRegisterSuccess = useCallback((): void => {
+        setIsRegisterModalOpen(false);
+        setIsLoginModalOpen(true);
+    }, []);
+
+    /**
+     * Chuyển đổi giữa các Modal (Dành cho Mobile)
+     */
+    const handleSwitchToRegister = useCallback((): void => {
+        setIsLoginModalOpen(false);
+        setIsForgotPasswordModalOpen(false);
+        setIsRegisterModalOpen(true);
+    }, []);
+
+    const handleSwitchToLogin = useCallback((): void => {
+        setIsRegisterModalOpen(false);
+        setIsForgotPasswordModalOpen(false);
+        setIsLoginModalOpen(true);
+    }, []);
+
+    const handleSwitchToForgotPass = useCallback((): void => {
+        setIsLoginModalOpen(false);
+        setIsRegisterModalOpen(false);
+        setIsForgotPasswordModalOpen(true);
+    }, []);
 
     return (
         <div className={`${styles.authContainer} ${!isRightSideOpen ? styles.rightsideHidden : ''}`}>
@@ -231,17 +300,38 @@ const HomeLayout: React.FC = () => {
                     <HeroSection
                         onNavigate={handleNavigation}
                         onOpenToggleRightSide={handleToggleRightSide}
-                        isRightSideOpen={isRightSideOpen}
+                        isRightSideOpen={isMobile ? (isLoginModalOpen || isRegisterModalOpen || isForgotPasswordModalOpen) : isRightSideOpen}
                     />
 
                     <div className={styles.overlayGradient} />
                 </div>
             </main>
 
-            <ContentDrawer isOpen={isRightSideOpen} onClose={handleCloseDrawer}>
-                <Outlet />
-            </ContentDrawer>
+            {/* Mobile: LoginModal */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={handleCloseLoginModal}
+                onLoginSuccess={handleLoginSuccess}
+                onSwitchToRegister={handleSwitchToRegister}
+                onSwitchToForgotPass={handleSwitchToForgotPass} // Truyền callback chuyển sang Quên MK
+            />
 
+            {/* Mobile: RegisterModal */}
+            <RegisterModal
+                isOpen={isRegisterModalOpen}
+                onClose={handleCloseRegisterModal}
+                onRegisterSuccess={handleRegisterSuccess}
+                onSwitchToLogin={handleSwitchToLogin}
+            />
+
+            {/* Mobile: ForgotPasswordModal */}
+            <ForgotPasswordModal
+                isOpen={isForgotPasswordModalOpen}
+                onClose={handleCloseForgotPasswordModal}
+                onSwitchToLogin={handleSwitchToLogin} // Truyền callback quay lại Đăng nhập
+            />
+
+            {/* Desktop: Rightside panel */}
             <aside className={`${styles.rightSideDesktop} ${!isRightSideOpen ? styles.hidden : ''}`}>
                 <div className={styles.rightSideContent}>
                     <Outlet />

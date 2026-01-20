@@ -20,6 +20,8 @@ interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
     onLoginSuccess?: () => void;
+    onSwitchToRegister?: () => void;
+    onSwitchToForgotPass?: () => void; // Thêm prop này
 }
 
 interface FormData {
@@ -30,6 +32,9 @@ interface FormData {
 interface UIConfig {
     API: {
         LOGIN: string;
+    };
+    ROUTES: {
+        FORGOT_PASS: string;
     };
     ICONS: {
         AVATAR: string;
@@ -59,6 +64,9 @@ interface PlayerInstance {
 const UI_CONFIG: UIConfig = {
     API: {
         LOGIN: 'http://localhost:8080/api/auth/login'
+    },
+    ROUTES: {
+        FORGOT_PASS: '/forgot-password'
     },
     ICONS: {
         AVATAR: 'https://cdn.lordicon.com/hroklero.json',
@@ -127,7 +135,13 @@ class CustomTrigger {
 // Main Component
 // ============================================================================
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
+const LoginModal: React.FC<LoginModalProps> = ({
+                                                   isOpen,
+                                                   onClose,
+                                                   onLoginSuccess,
+                                                   onSwitchToRegister,
+                                                   onSwitchToForgotPass
+                                               }) => {
     // ------------------------------------------------------------------------
     // State
     // ------------------------------------------------------------------------
@@ -286,13 +300,19 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     // ------------------------------------------------------------------------
 
     const handleRegisterClick = (): void => {
-        onClose();
-        navigate('/register');
+        if (onSwitchToRegister) {
+            onSwitchToRegister();
+        }
     };
 
     const handleForgotPasswordClick = (): void => {
-        onClose();
-        navigate('/forgot-password');
+        // Nếu có truyền handler mở modal thì gọi nó, ngược lại thì dùng navigate mặc định
+        if (onSwitchToForgotPass) {
+            onSwitchToForgotPass();
+        } else {
+            onClose();
+            navigate(UI_CONFIG.ROUTES.FORGOT_PASS);
+        }
     };
 
     // ------------------------------------------------------------------------
@@ -306,23 +326,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             <div className={styles.modalContainer} ref={modalRef}>
                 {/* Close button */}
                 <button
-                    className={styles.closeButton}
+                    className={styles.closeModalBtn}
                     onClick={onClose}
-                    aria-label="Đóng modal đăng nhập"
+                    aria-label="Close login form"
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M18 6L6 18M6 6L18 18"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
+                    ✕
                 </button>
 
                 {/* Login form wrapper */}
                 <div className={styles.loginFormWrapper}>
+                    <div className={styles.loginFormBackground} aria-hidden="true" />
+                    <div className={styles.loginFormOverlay} aria-hidden="true" />
+
                     <div className={styles.loginFormContent}>
                         {/* Avatar icon */}
                         {/* @ts-ignore */}

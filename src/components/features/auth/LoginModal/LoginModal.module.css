@@ -4,45 +4,34 @@
    Modal Overlay & Container
    ============================================================================ */
 
-/* Fixed overlay covering entire viewport with backdrop blur */
 .modalOverlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
+    padding: var(--modal-padding);
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     animation: fadeIn 0.3s ease-out;
+    overflow-y: auto;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* Scrollable container for modal content */
 .modalContainer {
     position: relative;
-    width: 100%;
-    max-width: 420px;
-    max-height: 90vh;
-    overflow-y: auto;
+    width: min(100%, var(--form-max-width));
     animation: modalSlideIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @keyframes modalSlideIn {
     from {
         opacity: 0;
-        transform: scale(0.9) translateY(30px);
+        transform: scale(0.95) translateY(20px);
     }
     to {
         opacity: 1;
@@ -51,50 +40,35 @@
 }
 
 /* ============================================================================
-   Close Button
-   ============================================================================ */
-
-.closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: none;
-    border-radius: 50%;
-    color: var(--color-just-black);
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.closeButton:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
-}
-
-.closeButton:active {
-    transform: rotate(90deg) scale(0.95);
-}
-
-/* ============================================================================
-   Form Wrapper & Content
+   Form Wrapper
    ============================================================================ */
 
 .loginFormWrapper {
     position: relative;
     z-index: 10;
     width: 100%;
-    margin: auto;
-    padding: 30px;
-    overflow: hidden;
-    background: rgba(255, 255, 255, 1);
-    border-radius: 50px;
+    padding: var(--form-padding);
+    background-color: var(--color-surface-white);
+    border-radius: var(--form-border-radius);
+    animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.loginFormBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-position: center;
 }
 
 .loginFormContent {
@@ -105,22 +79,44 @@
     align-items: center;
 }
 
-/* Staggered animation for form elements */
+/* ============================================================================
+   Close Button
+   ============================================================================ */
+
+.closeModalBtn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 201;
+    width: 55px;
+    height: 55px;
+    display: grid;
+    place-items: center;
+    background: var(--color-just-black);
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    color: var(--color-torch-red-dark);
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.closeModalBtn:hover {
+    transform: scale(1.1);
+}
+
+/* ============================================================================
+   Content Stagger Animation
+   ============================================================================ */
+
 .loginFormContent > * {
     animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
 }
 
-.loginFormContent > *:nth-child(1) {
-    animation-delay: 0.1s;
-}
-
-.loginFormContent > *:nth-child(2) {
-    animation-delay: 0.15s;
-}
-
-.loginFormContent > *:nth-child(3) {
-    animation-delay: 0.2s;
-}
+.loginFormContent > *:nth-child(1) { animation-delay: 0.1s; }
+.loginFormContent > *:nth-child(2) { animation-delay: 0.15s; }
+.loginFormContent > *:nth-child(3) { animation-delay: 0.2s; }
 
 @keyframes slideInUp {
     from {
@@ -134,59 +130,53 @@
 }
 
 /* ============================================================================
-   Title & Form
+   Typography
    ============================================================================ */
 
 .loginTitle {
-    margin-top: 0;
-    margin-bottom: 20px;
+    margin: 0 0 var(--group-gap);
     color: var(--color-just-black);
     font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(32px, 7vw, 40px);
+    font-size: var(--title-size);
     font-weight: 900;
     text-align: center;
+    line-height: 1.2;
 }
+
+/* ============================================================================
+   Form Elements
+   ============================================================================ */
 
 .loginForm {
     width: 100%;
 }
 
-/* ============================================================================
-   Error Message
-   ============================================================================ */
-
 .loginError {
-    margin-bottom: 16px;
-    padding: 12px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
     background-color: rgba(47, 27, 29, 1);
     border: 1px solid rgba(255, 138, 138, 0.3);
-    border-radius: 12px;
+    border-radius: 10px;
     color: #ff4d4d;
-    font-size: clamp(13px, 3.2vw, 14px);
+    font-size: var(--small-text);
     word-break: break-word;
     animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
 @keyframes shakeError {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-        transform: translateX(-5px);
-    }
-    20%, 40%, 60%, 80% {
-        transform: translateX(5px);
-    }
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.loginInputGroup {
+    margin-bottom: var(--group-gap);
+    text-align: left;
 }
 
 /* ============================================================================
    Input Fields
    ============================================================================ */
-
-.loginInputGroup {
-    margin-bottom: clamp(18px, 4vw, 20px);
-    text-align: left;
-}
 
 .passwordWrapper {
     position: relative;
@@ -197,40 +187,41 @@
 .loginInput {
     box-sizing: border-box;
     width: 100%;
-    padding: 20px 40px 12px 4px;
+    padding: var(--input-padding-y) 36px 10px 2px;
     background-color: transparent;
     border: none;
     border-bottom: 1px solid var(--color-just-black);
     outline: none;
     color: var(--color-just-black);
     font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(17px, 3.8vw, 18px);
+    font-size: var(--input-size);
     font-weight: 600;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
 .loginInput:focus {
-    border-bottom: 1px solid var(--color-just-black);
+    border-bottom-color: var(--color-just-black);
     transform: translateY(-2px);
 }
 
 .loginInput:focus::placeholder {
     opacity: 0.5;
-    transform: translateX(5px);
 }
 
 .loginInput::placeholder {
-    font-size: clamp(16px, 3.5vw, 18px);
+    font-size: var(--input-size);
+    transition: opacity 0.2s ease;
 }
 
 .togglePasswordBtn {
     position: absolute;
     top: 50%;
     right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 4px;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     background: transparent;
     border: none;
     color: #888;
@@ -240,27 +231,27 @@
 }
 
 .togglePasswordBtn:hover {
-    color: var(--color-just-black);
+    color: #f5f5f5;
 }
 
 /* ============================================================================
-   Links & Buttons
+   Links & Actions
    ============================================================================ */
 
 .forgotPasswordWrapper {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .forgotPasswordLink {
-    padding: 0;
+    padding: 4px 0;
     background: none;
     border: none;
     color: var(--color-shockingly-green);
     font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(13px, 3.2vw, 14px);
+    font-size: var(--small-text);
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
@@ -272,16 +263,17 @@
 }
 
 .loginButton {
-    width: 60%;
-    min-width: 150px;
-    margin-top: 10px;
-    padding: clamp(0.5rem, 2vw, 0.6rem) 0.3rem;
+    width: var(--button-width);
+    min-width: var(--button-min-width);
+    min-height: 40px;
+    margin-top: 8px;
+    padding: 10px 16px;
     background: var(--gradient-macha);
     border: none;
-    border-radius: 30px;
+    border-radius: 24px;
     color: var(--color-just-black);
     font-family: "MuseoModerno", sans-serif;
-    font-size: clamp(17px, 3.8vw, 18px);
+    font-size: var(--button-size);
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -289,9 +281,26 @@
     overflow: hidden;
 }
 
+.loginButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.loginButton:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
 .loginButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(144, 187, 60, 0.4);
+    box-shadow: 0 6px 16px rgba(144, 187, 60, 0.4);
 }
 
 .loginButton:active {
@@ -299,9 +308,9 @@
 }
 
 .loginLinkText {
-    margin-top: clamp(20px, 5vw, 24px);
-    color: #666;
-    font-size: clamp(13px, 3.2vw, 14px);
+    margin-top: 16px;
+    color: #aaa;
+    font-size: var(--small-text);
     text-align: center;
 }
 
@@ -312,12 +321,11 @@
     border: none;
     color: var(--color-shockingly-green);
     font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(13px, 3.2vw, 14px);
+    font-size: var(--small-text);
     font-weight: 900;
     text-decoration: none;
     cursor: pointer;
     transition: opacity 0.2s ease, transform 0.2s ease;
-    display: inline-block;
 }
 
 .loginLink:hover {
@@ -326,144 +334,62 @@
 }
 
 /* ============================================================================
-   Responsive Design - Desktop/Large Tablet
+   Responsive - Small Mobile
    ============================================================================ */
 
-@media (min-width: 769px) {
-    .modalContainer {
-        max-width: 420px;
+@media (max-width: 400px) {
+    :root {
+        --modal-padding: 12px;
+        --form-padding: 28px 28px;
+        --form-max-width: 320px;
+        --form-border-radius: 32px;
+        --group-gap: 14px;
+        --button-width: 65%;
     }
 
-    .loginFormWrapper {
-        padding: 40px 50px;
+    .closeModalBtn {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
     }
 }
 
 /* ============================================================================
-   Responsive Design - Tablet
+   Responsive - Tiny Screens
    ============================================================================ */
 
-@media (max-width: 768px) and (min-width: 481px) {
-    .modalContainer {
-        max-width: 480px;
-        padding: 0 20px;
-    }
-
-    .loginFormWrapper {
-        padding: 35px 40px;
-        border-radius: 40px;
-    }
-
-    .loginButton {
-        width: 65%;
-        min-width: 160px;
+@media (max-width: 320px) {
+    :root {
+        --modal-padding: 8px;
+        --form-padding: 24px 20px;
+        --form-border-radius: 28px;
+        --button-width: 75%;
+        --button-min-width: 120px;
     }
 }
 
 /* ============================================================================
-   Responsive Design - Mobile
+   Landscape Orientation
    ============================================================================ */
 
-@media (max-width: 480px) and (min-width: 361px) {
+@media (max-height: 480px) and (orientation: landscape) {
+    :root {
+        --form-padding: 20px 28px;
+        --group-gap: 12px;
+        --input-padding-y: 12px;
+    }
+
+    .modalOverlay {
+        align-items: flex-start;
+        padding: 8px;
+    }
+
     .modalContainer {
-        max-width: 100%;
-        max-height: 100vh;
-        padding: 0 15px;
-    }
-
-    .loginFormWrapper {
-        padding: 25px 30px;
-        border-radius: 35px;
-    }
-
-    .closeButton {
-        width: 36px;
-        height: 36px;
+        margin: 8px auto;
     }
 
     .loginTitle {
-        margin-bottom: 18px;
-    }
-
-    .loginInput {
-        padding: 18px 40px 11px 0;
-    }
-
-    .loginButton {
-        width: 70%;
-        min-width: 160px;
-        margin-top: 10px;
-    }
-}
-
-/* ============================================================================
-   Responsive Design - Extra Small
-   ============================================================================ */
-
-@media (max-width: 360px) {
-    .modalContainer {
-        max-width: 100%;
-        max-height: 100vh;
-        padding: 0 10px;
-    }
-
-    .loginFormWrapper {
-        padding: 20px 25px;
-        border-radius: 30px;
-    }
-
-    .closeButton {
-        width: 34px;
-        height: 34px;
-        top: 8px;
-        right: 8px;
-    }
-
-    .loginTitle {
-        font-size: clamp(28px, 8vw, 34px);
-        margin-bottom: 16px;
-    }
-
-    .loginInputGroup {
-        margin-bottom: 16px;
-    }
-
-    .loginButton {
-        width: 75%;
-        min-width: 150px;
-    }
-}
-
-/* ============================================================================
-   Responsive Design - Landscape Mobile
-   ============================================================================ */
-
-@media (max-height: 600px) and (orientation: landscape) {
-    .modalContainer {
-        max-height: 95vh;
-        padding: 10px;
-    }
-
-    .loginFormWrapper {
-        padding: 20px 30px;
-        border-radius: 25px;
-    }
-
-    .loginTitle {
-        font-size: clamp(24px, 5vw, 32px);
-        margin-bottom: 12px;
-    }
-
-    .loginInputGroup {
-        margin-bottom: 12px;
-    }
-
-    .loginInput {
-        padding: 14px 40px 10px 0;
-    }
-
-    .loginButton {
-        margin-top: 8px;
+        margin-bottom: 10px;
     }
 
     .loginLinkText {
@@ -472,22 +398,36 @@
 }
 
 /* ============================================================================
-   Touch Device Optimizations
+   Touch Device Optimization
    ============================================================================ */
 
 @media (hover: none) and (pointer: coarse) {
     .loginButton,
     .forgotPasswordLink,
-    .loginLink,
-    .closeButton {
-        min-height: 44px;
+    .loginLink {
+        min-height: var(--touch-target);
         display: inline-flex;
         align-items: center;
         justify-content: center;
     }
 
     .togglePasswordBtn {
-        min-width: 44px;
-        min-height: 44px;
+        width: var(--touch-target);
+        height: var(--touch-target);
     }
 }
+
+/* ============================================================================
+   Accessibility
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+

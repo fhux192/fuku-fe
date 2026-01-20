@@ -17,7 +17,7 @@ import KanaReference from './pages/KanaReference/KanaReference';
 import CoursePage from './pages/CoursePage/CoursePage';
 
 // Layouts
-import HomeLayout from './layouts/AuthLayout/HomeLayout';
+import HomeLayout from './layouts/HomeLayout/HomeLayout';
 import DashboardLayout from './layouts/DashboardLayout/DashboardLayout';
 
 import './App.css';

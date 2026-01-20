@@ -3,6 +3,7 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
+import { useModalClose } from '../../../layouts/HomeLayout/HomeLayout';
 import styles from './Login.module.css';
 
 interface LordIconElement extends HTMLElement {
@@ -122,6 +123,10 @@ const Login: React.FC = () => {
     const isIconDefined = useRef<boolean>(false);
     const avatarIconRef = useRef<LordIconElement>(null);
 
+    // Get onClose from outlet context if available (mobile mode)
+    const context = useModalClose();
+    const onClose = context?.onClose;
+
     // Removed auto-redirect check - users can access login page even when already authenticated
     // This allows re-authentication or switching accounts without forced redirects
 
@@ -200,6 +205,16 @@ const Login: React.FC = () => {
 
     return (
         <div className={styles.loginFormWrapper}>
+            {onClose && (
+                <button
+                    className={styles.closeModalBtn}
+                    onClick={onClose}
+                    aria-label="Close login form"
+                >
+                    ✕
+                </button>
+            )}
+
             <div className={styles.loginFormBackground} aria-hidden="true" />
             <div className={styles.loginFormOverlay} aria-hidden="true" />
 

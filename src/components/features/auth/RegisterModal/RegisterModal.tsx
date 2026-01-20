@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
 import styles from './RegisterModal.module.css';
@@ -109,6 +108,7 @@ class CustomTrigger {
     }
 
     onDisconnected(): void {
+        // FIXED: Added missing loop to define 'event'
         for (const event of CLICK_EVENTS) {
             this.targetElement.removeEventListener(event.name, this.onClick);
         }
@@ -157,7 +157,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-    const navigate = useNavigate();
     const isIconDefined = useRef<boolean>(false);
     const avatarIconRef = useRef<LordIconElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -304,16 +303,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                     confirmPassword: ''
                 });
 
-                // Trigger success callback
-                if (onRegisterSuccess) {
-                    onRegisterSuccess();
-                }
-
-                // Auto-close and redirect after success message
+                // Trigger success callback after delay to show success message
                 setTimeout(() => {
-                    onClose();
-                    navigate('/login');
-                }, 3000);
+                    if (onRegisterSuccess) {
+                        onRegisterSuccess();
+                    }
+                }, 2000);
             } else if (responseText.includes("Passwords do not match")) {
                 setError(UI_CONFIG.MESSAGES.PASSWORD_MISMATCH);
             } else {
@@ -329,11 +324,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     // ------------------------------------------------------------------------
 
     const handleLoginClick = (): void => {
-        onClose();
         if (onSwitchToLogin) {
             onSwitchToLogin();
-        } else {
-            navigate('/login');
         }
     };
 
@@ -346,21 +338,13 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
     return (
         <div className={styles.modalOverlay}>
             <div className={styles.modalContainer} ref={modalRef}>
-                {/* Close button */}
+                {/* Close button - Identical to LoginModal */}
                 <button
-                    className={styles.closeButton}
+                    className={styles.closeModalBtn}
                     onClick={onClose}
                     aria-label="Đóng modal đăng ký"
                 >
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path
-                            d="M18 6L6 18M6 6L18 18"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        />
-                    </svg>
+                    ✕
                 </button>
 
                 {/* Register form wrapper */}

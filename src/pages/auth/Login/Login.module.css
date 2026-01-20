@@ -1,4 +1,10 @@
+/* Login.module.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+/* ============================================================================
+   Form Container
+   ============================================================================ */
 
 .loginFormWrapper {
     position: relative;
@@ -8,8 +14,7 @@
     max-height: 100vh;
     margin: auto;
     padding: 20px 0px 20px 0px;
-    overflow: hidden;
-    border-radius: 510px;
+    border-radius: 50px;
     animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -22,6 +27,32 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* Close button positioned relative to form wrapper */
+.closeModalBtn {
+    position: absolute;
+    top: -35px;
+    right: -35px;
+    z-index: 201;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-just-black);
+    border: 4px solid rgb(255, 255, 255);
+    border-radius: 100%;
+    color: var(--color-torch-red-dark);
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.closeModalBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
 }
 
 .loginFormBackground {
@@ -42,7 +73,10 @@
     align-items: center;
 }
 
-/* Staggered animation for form elements */
+/* ============================================================================
+   Content Animation
+   ============================================================================ */
+
 .loginFormContent > * {
     animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
 }
@@ -70,6 +104,10 @@
     }
 }
 
+/* ============================================================================
+   Typography
+   ============================================================================ */
+
 .loginTitle {
     margin-top: 0;
     margin-bottom: 20px;
@@ -79,6 +117,10 @@
     font-weight: 900;
     text-align: center;
 }
+
+/* ============================================================================
+   Form Elements
+   ============================================================================ */
 
 .loginForm {
     width: 100%;
@@ -120,6 +162,10 @@
     font-size: clamp(13px, 3.2vw, 14px);
     font-weight: 600;
 }
+
+/* ============================================================================
+   Input Fields
+   ============================================================================ */
 
 .passwordWrapper {
     position: relative;
@@ -175,6 +221,10 @@
 .togglePasswordBtn:hover {
     color: #f5f5f5;
 }
+
+/* ============================================================================
+   Links & Actions
+   ============================================================================ */
 
 .forgotPasswordWrapper {
     display: flex;
@@ -263,7 +313,10 @@
     transform: scale(1.05);
 }
 
-/* Tablet devices */
+/* ============================================================================
+   Tablet Breakpoint
+   ============================================================================ */
+
 @media (max-width: 768px) {
     .loginFormWrapper {
         max-width: 90%;
@@ -277,7 +330,10 @@
     }
 }
 
-/* Mobile devices */
+/* ============================================================================
+   Mobile Breakpoint
+   ============================================================================ */
+
 @media (max-width: 480px) {
     .loginFormWrapper {
         max-width: 100%;
@@ -305,7 +361,10 @@
     }
 }
 
-/* Extra small devices */
+/* ============================================================================
+   Extra Small Breakpoint
+   ============================================================================ */
+
 @media (max-width: 360px) {
     .loginFormWrapper {
         max-width: 94%;
@@ -327,7 +386,10 @@
     }
 }
 
-/* Landscape orientation on mobile */
+/* ============================================================================
+   Landscape Orientation
+   ============================================================================ */
+
 @media (max-height: 600px) and (orientation: landscape) {
     .loginFormWrapper {
         padding: 14px 0px 18px;
@@ -357,7 +419,10 @@
     }
 }
 
-/* Touch device optimizations */
+/* ============================================================================
+   Touch Device Optimizations
+   ============================================================================ */
+
 @media (hover: none) and (pointer: coarse) {
     .loginButton,
     .forgotPasswordLink,
@@ -374,7 +439,10 @@
     }
 }
 
-/* Very small screens protection */
+/* ============================================================================
+   Very Small Screen Protection
+   ============================================================================ */
+
 @media (max-width: 320px) {
     .loginFormWrapper {
         max-width: 96%;

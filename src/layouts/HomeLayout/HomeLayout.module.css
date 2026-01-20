@@ -26,6 +26,10 @@
     cursor: default;
 }
 
+/* ============================================================================
+   Banner Section
+   ============================================================================ */
+
 .webflowBanner {
     position: fixed;
     top: 0;
@@ -43,6 +47,10 @@
     font-weight: 600;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+
+/* ============================================================================
+   Logo Section
+   ============================================================================ */
 
 .desktopLogo {
     display: none;
@@ -88,6 +96,10 @@
     transform: scale(1.05);
 }
 
+/* ============================================================================
+   Left Side Section
+   ============================================================================ */
+
 .leftSideWrapper {
     position: relative;
     z-index: 10;
@@ -110,6 +122,10 @@
     background-color: var(--color-just-black);
     border-radius: 0;
 }
+
+/* ============================================================================
+   Decorative Elements
+   ============================================================================ */
 
 .decorativeElements {
     position: absolute;
@@ -170,6 +186,10 @@
     pointer-events: none;
 }
 
+/* ============================================================================
+   Hero Content Section
+   ============================================================================ */
+
 .leftSideContent {
     z-index: 10;
     display: flex;
@@ -217,6 +237,10 @@
     text-align: center;
     letter-spacing: 0.5px;
 }
+
+/* ============================================================================
+   Button Section
+   ============================================================================ */
 
 .btnWrapper {
     display: flex;
@@ -283,6 +307,10 @@
     transform: scale(1);
 }
 
+/* ============================================================================
+   Right Side Modal (Mobile)
+   ============================================================================ */
+
 .rightSide {
     display: none;
     position: fixed;
@@ -303,6 +331,17 @@
 
 .showModal {
     display: flex;
+}
+
+/* Wrapper for close button positioning context */
+.drawerContainer {
+    position: relative;
+    width: 100%;
+    max-width: 395px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .rightSideContent {
@@ -327,20 +366,21 @@
     }
 }
 
+/* Button positioned outside content area, aligned to container edge */
 .closeModalBtn {
     position: absolute;
-    top: 2px;
-    right: 6px;
+    top: 10px;
+    right: 10px;
     z-index: 201;
     width: 50px;
     height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0);
+    background: rgba(0, 0, 0, 0.8);
     border: 4px solid rgb(255, 255, 255);
     border-radius: 100%;
-    color: var( --color-torch-red-dark);
+    color: var(--color-torch-red-dark);
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
@@ -352,10 +392,17 @@
     transform: scale(1.1);
 }
 
-/* Desktop Right Side - ẩn hoàn toàn trên mobile */
+/* ============================================================================
+   Right Side Desktop
+   ============================================================================ */
+
 .rightSideDesktop {
     display: none;
 }
+
+/* ============================================================================
+   Tablet Breakpoint
+   ============================================================================ */
 
 @media (min-width: 768px) {
     .leftSide {
@@ -391,6 +438,10 @@
         flex: 0 1 auto;
     }
 }
+
+/* ============================================================================
+   Desktop Breakpoint
+   ============================================================================ */
 
 @media (min-width: 1050px) {
     .authContainer {
@@ -434,6 +485,7 @@
         min-height: calc(100vh - 40px);
     }
 
+    /* Hide mobile modal and close button on desktop */
     .rightSide,
     .closeModalBtn {
         display: none !important;
@@ -506,6 +558,10 @@
     }
 }
 
+/* ============================================================================
+   Large Desktop Breakpoint
+   ============================================================================ */
+
 @media (min-width: 1440px) {
     .authContainer {
         grid-template-columns: 2.5fr 1fr;
@@ -523,6 +579,10 @@
         max-width: 700px;
     }
 }
+
+/* ============================================================================
+   Small Mobile Breakpoint
+   ============================================================================ */
 
 @media (max-width: 375px) {
     .authContainer {
@@ -543,7 +603,6 @@
         padding: var(--spacing-md);
     }
 
-    /* --- CẬP NHẬT MOBILE NHỎ --- */
     .btnWrapper {
         width: 100%;
         justify-content: center;
