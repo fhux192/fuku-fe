@@ -133,7 +133,7 @@ function ForgotPassword() {
 
                 <h1 className={styles.forgotPasswordTitle}>Quên mật khẩu</h1>
                 <p className={styles.forgotPasswordSubtitle}>
-                    Nhập email của bạn để lấy lại mật khẩu
+                    Nhập email bạn muốn lấy lại mật khẩu
                 </p>
 
                 <form onSubmit={handleSubmit} className={styles.forgotPasswordForm} autoComplete="off">

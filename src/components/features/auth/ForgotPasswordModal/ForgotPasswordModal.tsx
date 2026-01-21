@@ -194,7 +194,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                     onClick={onClose}
                     aria-label="Đóng modal"
                 >
-                    ✕
+                    X
                 </button>
 
                 <div className={styles.forgotPasswordFormWrapper}>
@@ -211,7 +211,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
 
                         <h1 className={styles.forgotPasswordTitle}>Quên mật khẩu</h1>
                         <p className={styles.forgotPasswordSubtitle}>
-                            Nhập email của bạn để lấy lại mật khẩu
+                            Nhập email bạn muốn lấy lại mật khẩu
                         </p>
 
                         <form onSubmit={handleSubmit} className={styles.forgotPasswordForm} autoComplete="off">

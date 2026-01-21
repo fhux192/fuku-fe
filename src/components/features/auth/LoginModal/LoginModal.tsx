@@ -330,7 +330,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                     onClick={onClose}
                     aria-label="Close login form"
                 >
-                    ✕
+                    X
                 </button>
 
                 {/* Login form wrapper */}

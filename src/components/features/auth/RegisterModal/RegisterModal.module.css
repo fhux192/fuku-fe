@@ -89,8 +89,9 @@
     border: 3px solid rgb(255, 255, 255);
     border-radius: 50%;
     color: var(--color-torch-red-dark);
-    font-size: 1.25rem;
-    font-weight: bold;
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
 }
@@ -236,7 +237,7 @@
     width: var(--button-width);
     min-width: var(--button-min-width);
     min-height: 40px;
-    margin: 16px auto 0;
+    margin: 32px auto 0;
     display: block;
     padding: 10px 16px;
     background: var(--gradient-macha);
@@ -295,12 +296,6 @@
         --form-border-radius: 32px;
         --group-gap: 14px;
         --button-width: 65%;
-    }
-
-    .closeModalBtn {
-        width: 42px;
-        height: 42px;
-        font-size: 1.1rem;
     }
 }
 

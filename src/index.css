@@ -86,14 +86,14 @@
     --form-border-radius: 40px;
 
     --title-size: clamp(1.5rem, 4vw + 0.5rem, 1.875rem);
-    --input-size: 0.8rem;
-    --small-text: 0.7125rem;
-    --button-size: 0.9rem;
+    --input-size: 0.9rem;
+    --small-text: 0.8rem;
+    --button-size: 1rem;
 
     --group-gap: 16px;
     --input-padding-y: 14px;
 
-    --button-width: 55%;
+    --button-width: 65%;
     --button-min-width: 130px;
 
     --touch-target: 44px;

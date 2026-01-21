@@ -344,7 +344,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                     onClick={onClose}
                     aria-label="Đóng modal đăng ký"
                 >
-                    ✕
+                    X
                 </button>
 
                 {/* Register form wrapper */}
