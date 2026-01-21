@@ -5,10 +5,10 @@ import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 import logo from '../../assets/images/logo192.png';
 
-// Import các Modal
 import LoginModal from '../../components/features/auth/LoginModal/LoginModal';
 import RegisterModal from '../../components/features/auth/RegisterModal/RegisterModal';
 import ForgotPasswordModal from '../../components/features/auth/ForgotPasswordModal/ForgotPasswordModal';
+import Toast from '../../components/common/Toast/Toast';
 
 // ============================================================================
 // Types
@@ -54,10 +54,11 @@ const NAV_ITEMS: NavItem[] = [
 ];
 
 const UI_ICONS = {
-    AVATAR_DYNAMO: "https://cdn.lordicon.com/kthelypq.json", // LordIcon Avatar
+    AVATAR_DYNAMO: "https://cdn.lordicon.com/kthelypq.json",
     LOGOUT: "https://cdn.lordicon.com/moscxhgh.json",
     SETTINGS: "https://cdn.lordicon.com/hwuyqzpw.json"
 };
+
 const MOBILE_BREAKPOINT = 650;
 const TABLET_BREAKPOINT = 1024;
 
@@ -124,13 +125,25 @@ const DashboardLayout: React.FC = () => {
     const [userName, setUserName] = useState<string>('K');
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-    // Modal states
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false);
-    useRef<number>(0);
-    useRef<boolean>(false);
-// ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    // Toast State
+    // ------------------------------------------------------------------------
+
+    const [toastConfig, setToastConfig] = useState<{
+        isVisible: boolean;
+        message: string;
+        type: 'success' | 'error' | 'info';
+    }>({
+        isVisible: false,
+        message: '',
+        type: 'success'
+    });
+
+    // ------------------------------------------------------------------------
     // Initialization & Auth Sync
     // ------------------------------------------------------------------------
 
@@ -153,7 +166,6 @@ const DashboardLayout: React.FC = () => {
         return () => clearInterval(timer);
     }, [syncUserData]);
 
-    // Check screen size
     useEffect(() => {
         const checkScreenSize = () => {
             const width = window.innerWidth;
@@ -166,7 +178,26 @@ const DashboardLayout: React.FC = () => {
     }, []);
 
     // ------------------------------------------------------------------------
-    // Modal Handlers (Switching Logic)
+    // Toast Helper
+    // ------------------------------------------------------------------------
+
+    const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
+        setToastConfig({
+            isVisible: true,
+            message,
+            type
+        });
+    }, []);
+
+    const hideToast = useCallback(() => {
+        setToastConfig(prev => ({
+            ...prev,
+            isVisible: false
+        }));
+    }, []);
+
+    // ------------------------------------------------------------------------
+    // Modal Handlers
     // ------------------------------------------------------------------------
 
     const handleSwitchToRegister = useCallback(() => {
@@ -190,7 +221,8 @@ const DashboardLayout: React.FC = () => {
     const handleLoginSuccess = useCallback(() => {
         setIsLoginModalOpen(false);
         syncUserData();
-    }, [syncUserData]);
+        showToast('Đăng nhập thành công!', 'success');
+    }, [syncUserData, showToast]);
 
     const handleRegisterSuccess = useCallback(() => {
         setIsRegisterModalOpen(false);
@@ -202,18 +234,11 @@ const DashboardLayout: React.FC = () => {
     // ------------------------------------------------------------------------
 
     const handleLogout = (): void => {
-        // 1. Xóa Token
         localStorage.removeItem('authToken');
-
-        // 2. Cập nhật state (Sync dữ liệu về trạng thái Khách)
         syncUserData();
-
-        // 3. Đóng các menu đang mở
         setIsDropdownOpen(false);
         setIsMobileMenuOpen(false);
-
-        // 4. KHÔNG dùng navigate() để ở lại trang hiện tại
-        console.log("Đã đăng xuất. Người dùng vẫn ở lại trang:", location.pathname);
+        showToast('Đăng xuất thành công!', 'success');
     };
 
     const handleUserProfileClick = (): void => {
@@ -240,6 +265,15 @@ const DashboardLayout: React.FC = () => {
 
     return (
         <div className={styles.dashboardLayout}>
+            {/* Toast Notification */}
+            <Toast
+                message={toastConfig.message}
+                type={toastConfig.type}
+                isVisible={toastConfig.isVisible}
+                onClose={hideToast}
+                duration={3000}
+            />
+
             {/* Sidebar */}
             <aside className={`${styles.sidebar} ${isMobile && !isNavVisible ? styles.sidebarHidden : ''}`}>
                 <div className={styles.logoArea}>
