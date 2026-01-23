@@ -1,22 +1,23 @@
 /* pages/RoadmapPage/RoadmapPage.module.css */
 
 /* =============================================================================
-   Design Tokens
-   Restricted to brand colors only - no shadows, glows, or blur effects
+   Design Tokens - Soft modern theme
    ============================================================================= */
 
 :root {
+    /* Color palette */
+    --color-primary-dark: #1a1a2e;
     --color-surface-white: #ffffff;
-    --color-surface75: rgba(255, 255, 255, 0.3);
-    --color-just-black: #0e100f;
-    --color-lt-green: #bfff00;
-    --color-shockingly-green: #95d600;
+    --color-accent: #4ade80;
+    --color-accent-dark: #22c55e;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-surface75: rgba(255, 255, 255, 0.75);
 
     /* Derived colors for UI states */
-    --color-border: rgba(14, 16, 15, 0.1);
-    --color-border-strong: rgba(14, 16, 15, 0.2);
-    --color-text-muted: rgba(14, 16, 15, 0.5);
-    --color-bg-subtle: rgba(14, 16, 15, 0.03);
+    --color-border: rgba(26, 26, 46, 0.08);
+    --color-border-strong: rgba(26, 26, 46, 0.15);
+    --color-bg-subtle: rgba(26, 26, 46, 0.03);
 
     /* Spacing */
     --space-xs: 4px;
@@ -58,12 +59,12 @@
 }
 
 /* =============================================================================
-   Header
+   Header - Dark themed top section
    ============================================================================= */
 
 .header {
     flex-shrink: 0;
-    background: var(--color-just-black);
+    background: var(--color-primary-dark);
     padding: var(--space-lg);
 }
 
@@ -95,7 +96,7 @@
 }
 
 .titleIcon {
-    color: var(--color-lt-green);
+    color: var(--color-accent);
 }
 
 .subtitle {
@@ -124,7 +125,7 @@
 }
 
 /* =============================================================================
-   Stats Row
+   Stats Row - Metric cards
    ============================================================================= */
 
 .statsRow {
@@ -147,8 +148,8 @@
     width: 32px;
     height: 32px;
     border-radius: var(--radius-sm);
-    background: var(--color-lt-green);
-    color: var(--color-just-black);
+    background: var(--color-accent);
+    color: var(--color-text-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -163,13 +164,13 @@
 .statValue {
     font-size: 1rem;
     font-weight: 700;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     line-height: 1.2;
 }
 
 .statLabel {
     font-size: 0.65rem;
-    color: var(--color-just-black);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-weight: 600;
@@ -192,7 +193,7 @@
 
 .progressFill {
     height: 100%;
-    background: var(--color-lt-green);
+    background: var(--color-accent);
     border-radius: 2px;
     transition: width 300ms ease;
 }
@@ -207,7 +208,7 @@
 }
 
 /* =============================================================================
-   Content Area
+   Content Area - Scrollable roadmap
    ============================================================================= */
 
 .content {
@@ -215,7 +216,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     padding: var(--space-xl) var(--space-lg);
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .content::-webkit-scrollbar {
@@ -237,8 +238,7 @@
 }
 
 /* =============================================================================
-   Level Rows with Connection Paths
-   Zigzag layout: odd rows left-to-right, even rows right-to-left
+   Level Rows - Zigzag layout
    ============================================================================= */
 
 .levelRow {
@@ -255,8 +255,7 @@
 }
 
 /* =============================================================================
-   Level Card
-   Flat design with clear information hierarchy
+   Level Card - Flat design
    ============================================================================= */
 
 .card {
@@ -266,17 +265,17 @@
     border-radius: var(--radius-lg);
     padding: var(--space-md);
     cursor: pointer;
-    transition: border-color 150ms ease;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
     position: relative;
     z-index: 1;
     flex-shrink: 0;
 }
 
 .card:hover:not(.cardLocked) {
-    border-color: var(--color-lt-green);
+    border-color: var(--color-accent);
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.1);
 }
 
-/* Card header */
 .cardHeader {
     display: flex;
     align-items: center;
@@ -288,8 +287,8 @@
     display: inline-flex;
     align-items: center;
     padding: var(--space-xs) var(--space-sm);
-    background: var(--color-just-black);
-    color: var(--color-lt-green);
+    background: var(--color-primary-dark);
+    color: var(--color-accent);
     border-radius: var(--radius-sm);
     font-size: 0.7rem;
     font-weight: 700;
@@ -307,13 +306,13 @@
 }
 
 .statusCompleted {
-    background: var(--color-lt-green);
-    color: var(--color-just-black);
+    background: var(--color-accent);
+    color: var(--color-text-dark);
 }
 
 .statusCurrent {
-    background: var(--color-just-black);
-    color: var(--color-lt-green);
+    background: var(--color-primary-dark);
+    color: var(--color-accent);
 }
 
 .statusUnlocked {
@@ -326,11 +325,10 @@
     color: var(--color-text-muted);
 }
 
-/* Card title */
 .cardTitle {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     margin: 0 0 var(--space-sm) 0;
     line-height: 1.4;
     display: -webkit-box;
@@ -356,7 +354,6 @@
     color: var(--color-text-muted);
 }
 
-/* Card footer */
 .cardFooter {
     display: flex;
     align-items: center;
@@ -371,7 +368,7 @@
     gap: var(--space-xs);
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--color-shockingly-green);
+    color: var(--color-accent-dark);
 }
 
 .typeBadge {
@@ -392,23 +389,22 @@
 }
 
 .typeBoss {
-    background: var(--color-just-black);
-    color: var(--color-lt-green);
+    background: var(--color-primary-dark);
+    color: var(--color-accent);
 }
 
 .typeBonus {
-    background: var(--color-lt-green);
-    color: var(--color-just-black);
+    background: var(--color-accent);
+    color: var(--color-text-dark);
 }
 
-/* Stars for completed */
 .starsRow {
     display: flex;
     gap: 2px;
 }
 
 .starFilled {
-    color: var(--color-lt-green);
+    color: var(--color-accent);
 }
 
 /* =============================================================================
@@ -426,27 +422,28 @@
 }
 
 .cardCompleted {
-    border-color: var(--color-lt-green);
+    border-color: var(--color-accent);
 }
 
 .cardCompleted .levelBadge {
-    background: var(--color-lt-green);
-    color: var(--color-just-black);
+    background: var(--color-accent);
+    color: var(--color-text-dark);
 }
 
 .cardCurrent {
-    border-color: var(--color-just-black);
+    border-color: var(--color-primary-dark);
     border-width: 2px;
 }
 
 /* =============================================================================
-   Modal
+   Modal - Level detail popup
    ============================================================================= */
 
 .modalOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(14, 16, 15, 0.8);
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -462,6 +459,7 @@
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
+    box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
 }
 
 .modalClose {
@@ -473,7 +471,7 @@
     border-radius: 50%;
     background: var(--color-bg-subtle);
     border: none;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -493,8 +491,8 @@
 .modalLevelBadge {
     display: inline-flex;
     padding: var(--space-xs) var(--space-md);
-    background: var(--color-just-black);
-    color: var(--color-lt-green);
+    background: var(--color-primary-dark);
+    color: var(--color-accent);
     border-radius: 20px;
     font-size: 0.75rem;
     font-weight: 700;
@@ -504,7 +502,7 @@
 .modalTitle {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     margin: 0 0 var(--space-md) 0;
     padding-right: var(--space-xl);
 }
@@ -521,7 +519,7 @@
     gap: var(--space-xs);
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--color-shockingly-green);
+    color: var(--color-accent-dark);
 }
 
 .modalType {
@@ -570,13 +568,13 @@
     background: var(--color-bg-subtle);
     border-radius: var(--radius-sm);
     font-size: 0.875rem;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
 }
 
 .topicDot {
     width: 6px;
     height: 6px;
-    background: var(--color-lt-green);
+    background: var(--color-accent);
     border-radius: 50%;
     flex-shrink: 0;
 }
@@ -586,11 +584,11 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-md);
-    background: var(--color-just-black);
+    background: var(--color-primary-dark);
     border-radius: var(--radius-md);
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-lt-green);
+    color: var(--color-accent);
 }
 
 .modalFooter {
@@ -608,18 +606,19 @@
     justify-content: center;
     gap: var(--space-sm);
     cursor: pointer;
-    transition: opacity 150ms ease;
+    transition: opacity 150ms ease, box-shadow 150ms ease;
     border: none;
     font-family: inherit;
 }
 
 .startBtnPrimary {
-    background: var(--color-just-black);
-    color: var(--color-lt-green);
+    background: var(--color-primary-dark);
+    color: var(--color-accent);
 }
 
 .startBtnPrimary:hover:not(:disabled) {
     opacity: 0.9;
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.2);
 }
 
 .startBtnPrimary:disabled {
@@ -628,15 +627,15 @@
 }
 
 .startBtnCompleted {
-    background: var(--color-lt-green);
-    color: var(--color-just-black);
+    background: var(--color-accent);
+    color: var(--color-text-dark);
 }
 
 .spinner {
     width: 16px;
     height: 16px;
     border: 2px solid var(--color-surface75);
-    border-top-color: var(--color-lt-green);
+    border-top-color: var(--color-accent);
     border-radius: 50%;
     animation: spin 600ms linear infinite;
 }
@@ -662,7 +661,6 @@
 
 /* =============================================================================
    Responsive - Mobile
-   Single column layout with vertical path
    ============================================================================= */
 
 @media (max-width: 640px) {
@@ -692,7 +690,6 @@
         height: 32px;
     }
 
-    /* Stack stats 2x2 grid */
     .statsRow {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -716,12 +713,10 @@
         font-size: 0.6rem;
     }
 
-    /* Content */
     .content {
         padding: var(--space-lg) var(--space-md);
     }
 
-    /* Single column - all rows same direction */
     .levelRow {
         flex-direction: column !important;
         gap: var(--space-md);
@@ -729,11 +724,6 @@
         padding-bottom: var(--space-md);
     }
 
-    /* Hide horizontal path on mobile */
-    .levelRow::before {
-    }
-
-    /* Vertical path centered */
     .levelRow:not(:last-child)::after {
         left: 50% !important;
         right: auto !important;
@@ -742,7 +732,6 @@
         height: var(--space-md);
     }
 
-    /* Card full width */
     .card {
         width: 100%;
     }
@@ -755,7 +744,7 @@
         margin-bottom: var(--space-sm);
     }
 
-    /* Modal bottom sheet style */
+    /* Bottom sheet modal */
     .modalOverlay {
         padding: 0;
         align-items: flex-end;
@@ -797,7 +786,6 @@
         flex-direction: row;
         justify-content: flex-start;
     }
-
 
     .cardFooter {
         flex-wrap: wrap;

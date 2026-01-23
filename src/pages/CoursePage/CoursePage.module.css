@@ -1,13 +1,32 @@
 /* pages/CoursePage/CoursePage.module.css */
 
+/* =============================================================================
+   Design Tokens
+   ============================================================================= */
+
+:root {
+    --color-primary-dark: #1a1a2e;
+    --color-surface-white: #ffffff;
+    --color-accent: #4ade80;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+}
+
+/* =============================================================================
+   Page Container
+   ============================================================================= */
+
 .pageContainer {
     width: 100%;
     min-height: 100%;
     font-family: "Google Sans Flex", sans-serif;
-    color: white;
+    color: var(--color-text-dark);
 }
 
-/* --- Header --- */
+/* =============================================================================
+   Header Section
+   ============================================================================= */
+
 .pageHeader {
     margin-bottom: 32px;
 }
@@ -15,26 +34,32 @@
 .pageTitle {
     font-size: 2.5rem;
     font-weight: 800;
-    color: #000;
+    color: var(--color-text-dark);
     margin-bottom: 4px;
     letter-spacing: -1px;
 }
 
 .pageSubtitle {
     font-size: 1rem;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--color-text-muted);
     font-weight: 500;
 }
 
-/* --- Section Heading --- */
+/* =============================================================================
+   Section Heading
+   ============================================================================= */
+
 .sectionHeading {
     font-size: 1.5rem;
-    color: black;
+    color: var(--color-text-dark);
     margin-bottom: 20px;
     font-weight: 800;
 }
 
-/* --- Course Grid --- */
+/* =============================================================================
+   Course Grid - Responsive card layout
+   ============================================================================= */
+
 .courseGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -42,7 +67,10 @@
     padding-bottom: 40px;
 }
 
-/* --- Ranking Section --- */
+/* =============================================================================
+   Ranking Section
+   ============================================================================= */
+
 .rankSection {
     margin-bottom: 40px;
 }
@@ -53,13 +81,19 @@
     gap: 24px;
 }
 
+/* =============================================================================
+   Responsive - Mobile (< 650px)
+   ============================================================================= */
+
 @media (max-width: 650px) {
     .rankContainer {
         grid-template-columns: 1fr;
     }
+
     .pageTitle {
         font-size: 2rem;
     }
+
     .courseGrid {
         grid-template-columns: 1fr;
     }

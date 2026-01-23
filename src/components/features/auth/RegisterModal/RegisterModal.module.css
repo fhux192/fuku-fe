@@ -1,8 +1,54 @@
+/* RegisterModal.module.css */
+
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
-/* ============================================================================
+/* =============================================================================
+   CSS Variables - Design tokens
+   ============================================================================= */
+
+:root {
+    /* Colors */
+    --color-primary-dark: #1a1a2e;
+    --color-primary-darker: #16162a;
+    --color-surface-white: #ffffff;
+    --color-accent: #4ade80;
+    --color-accent-light: #86efac;
+    --color-accent-dark: #22c55e;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-error: #dc2626;
+    --color-error-bg: rgba(254, 242, 242, 1);
+    --color-error-border: rgba(248, 113, 113, 0.3);
+    --color-success: #16a34a;
+    --color-success-bg: rgba(240, 253, 244, 1);
+    --color-success-border: rgba(74, 222, 128, 0.3);
+    --gradient-accent: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
+
+    /* Layout */
+    --modal-padding: 16px;
+    --form-padding: 32px;
+    --form-max-width: 380px;
+    --form-border-radius: 40px;
+    --group-gap: 18px;
+    --input-padding-y: 16px;
+
+    /* Typography */
+    --title-size: clamp(28px, 6vw, 36px);
+    --input-size: clamp(16px, 3.5vw, 17px);
+    --button-size: clamp(16px, 3.5vw, 17px);
+    --small-text: clamp(13px, 3vw, 14px);
+
+    /* Button */
+    --button-width: 60%;
+    --button-min-width: 140px;
+
+    /* Touch targets */
+    --touch-target: 44px;
+}
+
+/* =============================================================================
    Modal Overlay & Container
-   ============================================================================ */
+   ============================================================================= */
 
 .modalOverlay {
     position: fixed;
@@ -11,8 +57,8 @@
     display: grid;
     place-items: center;
     padding: var(--modal-padding);
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
     animation: fadeIn 0.3s ease-out;
     overflow-y: auto;
 }
@@ -39,9 +85,9 @@
     }
 }
 
-/* ============================================================================
+/* =============================================================================
    Form Wrapper
-   ============================================================================ */
+   ============================================================================= */
 
 .registerFormWrapper {
     position: relative;
@@ -50,6 +96,7 @@
     padding: var(--form-padding);
     background-color: var(--color-surface-white);
     border-radius: var(--form-border-radius);
+    box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
     animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
@@ -72,37 +119,38 @@
     align-items: center;
 }
 
-/* ============================================================================
-   Close Button (Đồng bộ hoàn toàn kiểu dáng Login)
-   ============================================================================ */
+/* =============================================================================
+   Close Button - Navy background with mint accent
+   ============================================================================= */
 
 .closeModalBtn {
     position: absolute;
     top: -8px;
     right: -8px;
     z-index: 201;
-    width: 55px;
-    height: 55px;
+    width: 50px;
+    height: 50px;
     display: grid;
     place-items: center;
-    background: var(--color-just-black);
-    border: 3px solid rgb(255, 255, 255);
+    background: var(--color-primary-dark);
+    border: 3px solid var(--color-surface-white);
     border-radius: 50%;
-    color: var(--color-torch-red-dark);
+    color: var(--color-accent);
     font-family: "Google Sans Flex", sans-serif;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 900;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .closeModalBtn:hover {
+    background: var(--color-primary-darker);
     transform: scale(1.1);
 }
 
-/* ============================================================================
+/* =============================================================================
    Content Stagger Animation
-   ============================================================================ */
+   ============================================================================= */
 
 .registerFormContent > * {
     animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
@@ -124,13 +172,13 @@
     }
 }
 
-/* ============================================================================
+/* =============================================================================
    Typography & Messages
-   ============================================================================ */
+   ============================================================================= */
 
 .registerTitle {
     margin: 0 0 var(--group-gap);
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "Google Sans Flex", sans-serif;
     font-size: var(--title-size);
     font-weight: 900;
@@ -142,28 +190,42 @@
     width: 100%;
 }
 
+/* Error message with soft styling */
 .registerError {
     margin-bottom: 12px;
     padding: 10px 12px;
-    background-color: rgba(47, 27, 29, 1);
-    border: 1px solid rgba(255, 138, 138, 0.3);
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
     border-radius: 10px;
-    color: #ff4d4d;
+    color: var(--color-error);
     font-size: var(--small-text);
     word-break: break-word;
     animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
+/* Success message with soft green styling */
 .registerMessage {
     margin-bottom: 12px;
     padding: 10px 12px;
-    background-color: rgba(27, 47, 29, 1);
-    border: 1px solid rgba(138, 255, 145, 0.3);
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
     border-radius: 10px;
-    color: #8aff91;
+    color: var(--color-success);
     font-size: var(--small-text);
     text-align: center;
     word-break: break-word;
+    animation: slideInDown 0.4s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes shakeError {
@@ -172,13 +234,21 @@
     20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
 
-/* ============================================================================
+/* =============================================================================
    Input Fields
-   ============================================================================ */
+   ============================================================================= */
 
 .registerInputGroup {
     margin-bottom: var(--group-gap);
     text-align: left;
+}
+
+.registerLabel {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--color-text-dark);
+    font-size: var(--small-text);
+    font-weight: 600;
 }
 
 .passwordWrapper {
@@ -190,26 +260,32 @@
 .registerInput {
     box-sizing: border-box;
     width: 100%;
-    padding: var(--input-padding-y) 36px 10px 2px;
+    padding: var(--input-padding-y) 40px 10px 2px;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid var(--color-just-black);
+    border-bottom: 2px solid rgba(26, 26, 46, 0.2);
     outline: none;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "Google Sans Flex", sans-serif;
     font-size: var(--input-size);
     font-weight: 600;
     transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
+/* Accent border on focus */
 .registerInput:focus {
-    border-bottom-color: var(--color-just-black);
+    border-bottom-color: var(--color-accent);
     transform: translateY(-2px);
 }
 
 .registerInput::placeholder {
+    color: var(--color-text-muted);
     font-size: var(--input-size);
     transition: opacity 0.2s ease;
+}
+
+.registerInput:focus::placeholder {
+    opacity: 0.5;
 }
 
 .togglePasswordBtn {
@@ -223,27 +299,31 @@
     padding: 0;
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--color-text-muted);
     transform: translateY(-50%);
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
-/* ============================================================================
+.togglePasswordBtn:hover {
+    color: var(--color-text-dark);
+}
+
+/* =============================================================================
    Buttons & Links
-   ============================================================================ */
+   ============================================================================= */
 
 .registerButton {
     width: var(--button-width);
     min-width: var(--button-min-width);
-    min-height: 40px;
-    margin: 32px auto 0;
+    min-height: 44px;
+    margin: 24px auto 0;
     display: block;
-    padding: 10px 16px;
-    background: var(--gradient-macha);
+    padding: 12px 20px;
+    background: var(--gradient-accent);
     border: none;
     border-radius: 24px;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "MuseoModerno", sans-serif;
     font-size: var(--button-size);
     font-weight: 700;
@@ -253,14 +333,29 @@
     overflow: hidden;
 }
 
+/* Accent shadow on hover */
 .registerButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(144, 187, 60, 0.4);
+    box-shadow: 0 6px 20px rgba(74, 222, 128, 0.35);
+}
+
+.registerButton:active {
+    transform: translateY(0);
+}
+
+.registerButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.registerButton:disabled:hover {
+    transform: none;
+    box-shadow: none;
 }
 
 .registerLinkText {
     margin-top: 16px;
-    color: #aaa;
+    color: var(--color-text-muted);
     font-size: var(--small-text);
     text-align: center;
 }
@@ -270,7 +365,7 @@
     padding: 0;
     background: none;
     border: none;
-    color: var(--color-shockingly-green);
+    color: var(--color-accent);
     font-family: "Google Sans Flex", sans-serif;
     font-size: var(--small-text);
     font-weight: 900;
@@ -282,47 +377,144 @@
 .registerLink:hover {
     opacity: 0.8;
     transform: scale(1.05);
+    color: var(--color-accent-dark);
 }
 
-/* ============================================================================
-   Responsive Design
-   ============================================================================ */
+/* =============================================================================
+   Responsive - Tablet (768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    :root {
+        --form-padding: 28px;
+        --form-border-radius: 36px;
+    }
+
+    .closeModalBtn {
+        width: 46px;
+        height: 46px;
+        font-size: 1.125rem;
+    }
+}
+
+/* =============================================================================
+   Responsive - Small Mobile (400px)
+   ============================================================================= */
 
 @media (max-width: 400px) {
     :root {
         --modal-padding: 12px;
-        --form-padding: 28px 28px;
+        --form-padding: 24px;
         --form-max-width: 320px;
         --form-border-radius: 32px;
         --group-gap: 14px;
         --button-width: 65%;
     }
+
+    .closeModalBtn {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+        top: -6px;
+        right: -6px;
+    }
+
+    .registerButton {
+        margin-top: 20px;
+    }
 }
+
+/* =============================================================================
+   Responsive - Tiny Screens (320px)
+   ============================================================================= */
+
+@media (max-width: 320px) {
+    :root {
+        --modal-padding: 8px;
+        --form-padding: 20px 16px;
+        --form-border-radius: 28px;
+        --button-width: 75%;
+        --button-min-width: 120px;
+    }
+
+    .closeModalBtn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+}
+
+/* =============================================================================
+   Landscape Orientation
+   ============================================================================= */
 
 @media (max-height: 480px) and (orientation: landscape) {
     :root {
         --form-padding: 16px 28px;
         --group-gap: 12px;
+        --input-padding-y: 12px;
     }
 
-    .modalOverlay { align-items: flex-start; padding: 8px; }
-    .modalContainer { margin: 8px auto; }
+    .modalOverlay {
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .modalContainer {
+        margin: 8px auto;
+    }
+
+    .registerTitle {
+        margin-bottom: 10px;
+        font-size: 24px;
+    }
+
+    .registerButton {
+        margin-top: 16px;
+        min-height: 40px;
+        padding: 10px 16px;
+    }
+
+    .registerLinkText {
+        margin-top: 12px;
+    }
 }
 
-/* Touch Device Optimization */
+/* =============================================================================
+   Touch Device Optimization
+   ============================================================================= */
+
 @media (hover: none) and (pointer: coarse) {
-    .registerButton, .registerLink {
+    .registerButton,
+    .registerLink {
         min-height: var(--touch-target);
         display: inline-flex;
         align-items: center;
         justify-content: center;
     }
-    .togglePasswordBtn { width: var(--touch-target); height: var(--touch-target); }
+
+    .togglePasswordBtn {
+        width: var(--touch-target);
+        height: var(--touch-target);
+    }
+
+    .registerButton:hover {
+        transform: none;
+    }
+
+    .registerButton:active {
+        transform: scale(0.98);
+    }
 }
 
-/* Accessibility */
+/* =============================================================================
+   Accessibility - Reduced Motion
+   ============================================================================= */
+
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;

@@ -1,18 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
+/* ============================================================================
+   CSS Variables - Centralized design tokens for consistent theming
+   ============================================================================ */
+
 :root {
+    /* Spacing Scale */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 1rem;
+
+    /* Border Radius Scale */
     --border-radius-sm: 0.5rem;
     --border-radius-md: 1rem;
     --border-radius-lg: 1.875rem;
     --border-radius-full: 6.25rem;
+
+    /* Transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
     --transition-bouncy: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Color Palette - Soft modern theme */
+    --color-primary-dark: #1a1a2e;
+    --color-primary-darker: #16162a;
+    --color-surface: #fafafa;
+    --color-surface-alt: #f5f5f5;
+    --color-accent: #4ade80;
+    --color-accent-light: #86efac;
+    --color-accent-subtle: #dcfce7;
+    --color-text-light: #ffffff;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: rgba(255, 255, 255, 0.7);
+
+    /* Gradients */
+    --gradient-accent: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
+    --gradient-subtle: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(134, 239, 172, 0.05) 100%);
 }
+
+/* ============================================================================
+   Base Container
+   ============================================================================ */
 
 .authContainer {
     position: relative;
@@ -24,10 +53,11 @@
     overflow-x: hidden;
     font-family: "Google Sans Flex", sans-serif;
     cursor: default;
+    background-color: var(--color-surface);
 }
 
 /* ============================================================================
-   Banner Section
+   Banner Section - Top notification bar
    ============================================================================ */
 
 .webflowBanner {
@@ -40,16 +70,16 @@
     align-items: center;
     width: 100%;
     height: 40px;
-    background: var(--gradient-macha);
-    color: var(--color-just-black);
+    background: var(--gradient-accent);
+    color: var(--color-text-dark);
     font-family: "MuseoModerno", sans-serif;
     font-size: clamp(0.775rem, 2vw, 1.125rem);
     font-weight: 600;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(74, 222, 128, 0.2);
 }
 
 /* ============================================================================
-   Logo Section
+   Logo Section - Desktop and mobile variants
    ============================================================================ */
 
 .desktopLogo {
@@ -97,7 +127,7 @@
 }
 
 /* ============================================================================
-   Left Side Section
+   Left Side Section - Main hero area wrapper
    ============================================================================ */
 
 .leftSideWrapper {
@@ -106,7 +136,7 @@
     width: 100%;
     min-height: calc(100vh - 40px);
     box-sizing: border-box;
-    background-color: var(--color-surface-white);
+    background-color: var(--color-surface);
 }
 
 .leftSide {
@@ -119,12 +149,12 @@
     min-height: calc(100vh - 40px);
     padding: var(--spacing-lg) var(--spacing-sm);
     overflow: hidden;
-    background-color: var(--color-just-black);
+    background-color: var(--color-primary-dark);
     border-radius: 0;
 }
 
 /* ============================================================================
-   Decorative Elements
+   Decorative Elements - Floating kanji and overlays
    ============================================================================ */
 
 .decorativeElements {
@@ -143,15 +173,15 @@
     font-weight: 900;
     line-height: 1;
     user-select: none;
-    opacity: 0.2;
-    animation: float 5s ease-in-out infinite;
+    opacity: 0.06;
+    animation: float 6s ease-in-out infinite;
     will-change: transform, opacity;
 }
 
 .kanji1 {
     bottom: 5%;
     left: 5%;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.08);
     font-size: clamp(10rem, 15vw, 10rem);
     animation-delay: 0s;
 }
@@ -159,7 +189,7 @@
 .kanji2 {
     top: 10%;
     right: 5%;
-    color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.08);
     font-size: clamp(10rem, 15vw, 10rem);
     animation-delay: 2s;
 }
@@ -167,14 +197,15 @@
 @keyframes float {
     0%, 100% {
         transform: translateY(0) rotate(0deg);
-        opacity: 0.2;
+        opacity: 0.06;
     }
     50% {
-        transform: translateY(-20px) rotate(2deg);
-        opacity: 0.15;
+        transform: translateY(-15px) rotate(1deg);
+        opacity: 0.04;
     }
 }
 
+/* Subtle radial highlight for depth */
 .overlayGradient {
     position: absolute;
     top: 0;
@@ -182,12 +213,12 @@
     z-index: 2;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    background: radial-gradient(circle at 30% 50%, rgba(74, 222, 128, 0.03) 0%, transparent 50%);
     pointer-events: none;
 }
 
 /* ============================================================================
-   Hero Content Section
+   Hero Content Section - Main text and CTA area
    ============================================================================ */
 
 .leftSideContent {
@@ -203,7 +234,7 @@
 
 .leftSideTitle {
     margin: 0 0 var(--spacing-md) 0;
-    color: var(--color-surface-white);
+    color: var(--color-text-light);
     font-family: 'Noto Sans JP', sans-serif;
     font-size: clamp(2rem, 5vw, 3.5rem);
     font-weight: 900;
@@ -212,9 +243,10 @@
     letter-spacing: -1px;
 }
 
+/* Accent text with gradient fill */
 .highlightText {
     display: inline-block;
-    background: var(--gradient-macha);
+    background: var(--gradient-accent);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -222,7 +254,7 @@
 
 .leftSideSubtitle {
     margin-bottom: var(--spacing-lg);
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-text-muted);
     font-size: clamp(0.9rem, 2vw, 1rem);
     line-height: 1.6;
     text-align: center;
@@ -231,7 +263,7 @@
 .leftSideSubtitle strong {
     display: block;
     margin-top: var(--spacing-xs);
-    color: var(--color-surface-white);
+    color: var(--color-text-light);
     font-size: clamp(1rem, 2.5vw, 1.3rem);
     font-weight: 600;
     text-align: center;
@@ -239,7 +271,7 @@
 }
 
 /* ============================================================================
-   Button Section
+   Button Section - CTA buttons with hover states
    ============================================================================ */
 
 .btnWrapper {
@@ -270,45 +302,50 @@
     transform: translateY(0);
 }
 
+/* Primary CTA - Solid accent color */
 .ctaButton {
-    background-color: var(--color-lt-green);
+    background-color: var(--color-accent);
     border: 2px solid transparent;
-    color: var(--color-just-black);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    color: var(--color-text-dark);
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.25);
 }
 
 .ctaButton:hover {
+    background-color: var(--color-accent-light);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 16px rgba(74, 222, 128, 0.35);
 }
 
 .ctaButton:active {
     transform: translateY(0);
 }
 
+/* Secondary CTA - Ghost button with border */
 .ctaInfoButton {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6px;
-    background: linear-gradient(var(--color-just-black), var(--color-just-black)) padding-box,
-    var(--gradient-macha) border-box;
-    border: 2px solid transparent;
-    color: var(--color-surface-white);
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: var(--color-text-light);
 }
 
 .ctaInfoButton:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
     transform: translateY(-2px);
 }
 
 .ctaInfoButton.toggled {
-    background: var(--color-surface-white);
-    color: var(--color-just-black);
+    background: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text-dark);
     transform: scale(1);
 }
 
 /* ============================================================================
-   Right Side Modal (Mobile)
+   Right Side Modal (Mobile) - Slide-up drawer
    ============================================================================ */
 
 .rightSide {
@@ -321,6 +358,8 @@
     align-items: center;
     width: 100vw;
     height: 100vh;
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
     animation: fadeIn 0.3s ease;
 }
 
@@ -333,7 +372,6 @@
     display: flex;
 }
 
-/* Wrapper for close button positioning context */
 .drawerContainer {
     position: relative;
     width: 100%;
@@ -350,8 +388,9 @@
     max-width: 345px;
     max-height: 100vh;
     padding: 25px;
-    background-color: var(--color-surface-white);
+    background-color: var(--color-surface);
     border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
     animation: slideUp 0.3s ease;
 }
 
@@ -366,7 +405,7 @@
     }
 }
 
-/* Button positioned outside content area, aligned to container edge */
+/* Close button - Positioned outside content */
 .closeModalBtn {
     position: absolute;
     top: 10px;
@@ -377,10 +416,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.8);
-    border: 4px solid rgb(255, 255, 255);
+    background: var(--color-primary-dark);
+    border: 3px solid var(--color-surface);
     border-radius: 100%;
-    color: var(--color-torch-red-dark);
+    color: var(--color-accent);
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
@@ -388,12 +427,12 @@
 }
 
 .closeModalBtn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--color-primary-darker);
     transform: scale(1.1);
 }
 
 /* ============================================================================
-   Right Side Desktop
+   Right Side Desktop - Persistent sidebar
    ============================================================================ */
 
 .rightSideDesktop {
@@ -401,7 +440,7 @@
 }
 
 /* ============================================================================
-   Tablet Breakpoint
+   Tablet Breakpoint (768px+)
    ============================================================================ */
 
 @media (min-width: 768px) {
@@ -440,7 +479,7 @@
 }
 
 /* ============================================================================
-   Desktop Breakpoint
+   Desktop Breakpoint (1050px+)
    ============================================================================ */
 
 @media (min-width: 1050px) {
@@ -485,7 +524,7 @@
         min-height: calc(100vh - 40px);
     }
 
-    /* Hide mobile modal and close button on desktop */
+    /* Hide mobile-only elements on desktop */
     .rightSide,
     .closeModalBtn {
         display: none !important;
@@ -534,7 +573,7 @@
         align-items: center;
         width: 100%;
         height: calc(100vh - 40px);
-        background-color: var(--color-surface-white);
+        background-color: var(--color-surface);
         backdrop-filter: none;
         overflow: hidden;
         transition: var(--transition-smooth);
@@ -559,7 +598,7 @@
 }
 
 /* ============================================================================
-   Large Desktop Breakpoint
+   Large Desktop Breakpoint (1440px+)
    ============================================================================ */
 
 @media (min-width: 1440px) {
@@ -581,7 +620,7 @@
 }
 
 /* ============================================================================
-   Small Mobile Breakpoint
+   Small Mobile Breakpoint (375px and below)
    ============================================================================ */
 
 @media (max-width: 375px) {
@@ -605,6 +644,7 @@
 
     .btnWrapper {
         width: 100%;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         gap: var(--spacing-sm);

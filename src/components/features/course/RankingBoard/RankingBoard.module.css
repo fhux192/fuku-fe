@@ -1,17 +1,38 @@
 /* components/RankingBoard/RankingBoard.module.css */
 
+/* =============================================================================
+   CSS Variables - Design tokens
+   ============================================================================= */
+
+:root {
+    --color-primary-dark: #1a1a2e;
+    --color-primary-darker: #16162a;
+    --color-surface-white: #ffffff;
+    --color-accent: #4ade80;
+    --color-accent-light: #86efac;
+    --color-text-light: #ffffff;
+    --color-text-muted: rgba(255, 255, 255, 0.5);
+    --color-border-subtle: rgba(255, 255, 255, 0.08);
+}
+
+/* =============================================================================
+   Board Container
+   ============================================================================= */
+
 .rankBoard {
-    background: #121212;
+    background: var(--color-primary-dark);
     border-radius: 20px;
     padding: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(26, 26, 46, 0.15);
     position: relative;
     overflow: hidden;
+    height: 100%;
+    min-height: 380px;
 }
 
-/* Glow effect header */
+/* Subtle glow effect at top */
 .rankBoard::before {
     content: '';
     position: absolute;
@@ -20,11 +41,15 @@
     transform: translateX(-50%);
     width: 150px;
     height: 100px;
-    background: var(--color-lt-green);
+    background: var(--color-accent);
     filter: blur(80px);
-    opacity: 0.15;
+    opacity: 0.1;
     pointer-events: none;
 }
+
+/* =============================================================================
+   Board Header
+   ============================================================================= */
 
 .boardHeader {
     display: flex;
@@ -41,17 +66,22 @@
     gap: 12px;
 }
 
+.titleText {
+    display: flex;
+    flex-direction: column;
+}
+
 .boardTitle h3 {
     margin: 0;
     font-size: 1.125rem;
     font-weight: 700;
-    color: white;
+    color: var(--color-text-light);
 }
 
 .boardTitle p {
     margin: 0;
     font-size: 0.75rem;
-    color: rgba(255,255,255,0.5);
+    color: var(--color-text-muted);
 }
 
 .iconBox {
@@ -61,10 +91,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--color-accent);
+    flex-shrink: 0;
 }
 
-/* TABLE GRID LAYOUT */
-.tableHeader, .rankItem {
+/* View all link */
+.viewAllLink {
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.viewAllLink:hover {
+    opacity: 0.8;
+}
+
+/* =============================================================================
+   Table Grid Layout
+   ============================================================================= */
+
+.tableHeader,
+.rankItem {
     display: grid;
     grid-template-columns: 40px 1fr 80px;
     align-items: center;
@@ -73,44 +123,96 @@
 
 .tableHeader {
     padding: 0 12px 10px 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.4);
+    border-bottom: 1px solid var(--color-border-subtle);
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
     text-transform: uppercase;
     font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.colRank {
+    text-align: center;
 }
 
 .colScore {
     text-align: right;
 }
 
+/* =============================================================================
+   Scrollable List
+   ============================================================================= */
+
 .scrollList {
-    max-height: 280px;
+    flex: 1;
     overflow-y: auto;
     padding-top: 8px;
     scrollbar-width: thin;
-    scrollbar-color: #333 transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
+
+/* Custom scrollbar */
+.scrollList::-webkit-scrollbar {
+    width: 4px;
+}
+
+.scrollList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollList::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.scrollList::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* =============================================================================
+   Rank Item
+   ============================================================================= */
 
 .rankItem {
     padding: 10px 12px;
     border-radius: 12px;
     margin-bottom: 4px;
     background: transparent;
-    transition: background 0.2s;
+    transition: background 0.2s ease;
+}
+
+.rankItem:last-child {
+    margin-bottom: 0;
 }
 
 .rankItem:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 
-/* Top 1 Highlight */
+/* Top 1 highlight */
 .top1 {
-    background: rgba(191,255,0,0.1);
-    border: 1px solid rgba(191,255,0,0.2);
+    background: rgba(74, 222, 128, 0.08);
+    border: 1px solid rgba(74, 222, 128, 0.15);
 }
 
-/* Avatar & Info */
+.top1:hover {
+    background: rgba(74, 222, 128, 0.12);
+}
+
+/* Top 2 subtle highlight */
+.top2 {
+    background: rgba(226, 232, 240, 0.05);
+}
+
+/* Top 3 subtle highlight */
+.top3 {
+    background: rgba(214, 164, 122, 0.05);
+}
+
+/* =============================================================================
+   Avatar & User Info
+   ============================================================================= */
+
 .colName {
     display: flex;
     align-items: center;
@@ -121,27 +223,50 @@
 .avatar {
     width: 36px;
     height: 36px;
-    background: #2a2a2a;
+    background: var(--color-primary-darker);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 0.875rem;
-    color: #fff;
+    color: var(--color-text-light);
     flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Top 1 avatar */
+.top1 .avatar {
+    background: var(--color-accent);
+    color: var(--color-primary-dark);
+    border-color: var(--color-accent);
+}
+
+/* Top 2 avatar */
+.top2 .avatar {
+    background: #e2e8f0;
+    color: var(--color-primary-dark);
+    border-color: #e2e8f0;
+}
+
+/* Top 3 avatar */
+.top3 .avatar {
+    background: #d6a47a;
+    color: var(--color-primary-dark);
+    border-color: #d6a47a;
 }
 
 .info {
     display: flex;
     flex-direction: column;
+    align-items: start;
     min-width: 0;
 }
 
 .uName {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: white;
+    color: var(--color-text-light);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -149,42 +274,370 @@
 
 .uSub {
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.5);
+    color: var(--color-text-muted);
 }
 
-/* Scores */
+/* =============================================================================
+   Scores
+   ============================================================================= */
+
+.scoreWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
 .scoreVal {
     font-family: "MuseoModerno", sans-serif;
     font-weight: 700;
-    font-size: 1rem;
-    color: #fff;
+    font-size: 0.95rem;
+    color: var(--color-text-light);
 }
 
 .scoreBadge {
-    display: inline-block;
-    background: rgba(191,255,0,0.1);
-    color: var(--color-lt-green);
+    display: inline-flex;
+    align-items: center;
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--color-accent);
     padding: 4px 8px;
     border-radius: 6px;
     font-weight: 700;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-family: "MuseoModerno", sans-serif;
 }
 
 .trendIcon {
-    color: #4ade80;
-    margin-left: 4px;
+    color: var(--color-accent);
+    width: 14px;
+    height: 14px;
 }
 
-/* Rank Badges */
-.badge1, .badge2, .badge3, .badgeNormal {
+.trendDown {
+    color: #f87171;
+    transform: rotate(180deg);
+}
+
+/* =============================================================================
+   Rank Badges
+   ============================================================================= */
+
+.badgeWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.badge1,
+.badge2,
+.badge3,
+.badgeNormal {
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 0.8rem;
 }
 
-.badge1 { color: var(--color-lt-green); }
-.badge2 { color: #e2e8f0; }
-.badge3 { color: #d6a47a; }
-.badgeNormal { color: #666; font-size: 0.875rem; }
+.badge1 {
+    color: var(--color-primary-dark);
+    background: var(--color-accent);
+}
+
+.badge2 {
+    color: var(--color-primary-dark);
+    background: #e2e8f0;
+}
+
+.badge3 {
+    color: var(--color-primary-dark);
+    background: #d6a47a;
+}
+
+.badgeNormal {
+    color: var(--color-text-muted);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* =============================================================================
+   Empty State
+   ============================================================================= */
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--color-text-muted);
+}
+
+.emptyState svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+}
+
+.emptyState p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* =============================================================================
+   Responsive - Tablet (768px - 1024px)
+   ============================================================================= */
+
+@media (max-width: 1024px) {
+    .rankBoard {
+        padding: 18px;
+        min-height: 350px;
+    }
+
+    .boardTitle h3 {
+        font-size: 1rem;
+    }
+
+    .iconBox {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* =============================================================================
+   Responsive - Mobile (< 768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    .rankBoard {
+        padding: 16px;
+        border-radius: 16px;
+        min-height: 320px;
+    }
+
+    .boardHeader {
+        margin-bottom: 16px;
+    }
+
+    .boardTitle {
+        gap: 10px;
+    }
+
+    .boardTitle h3 {
+        font-size: 0.95rem;
+    }
+
+    .boardTitle p {
+        font-size: 0.65rem;
+    }
+
+    .iconBox {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+    }
+
+    .tableHeader,
+    .rankItem {
+        grid-template-columns: 36px 1fr 70px;
+        gap: 10px;
+    }
+
+    .tableHeader {
+        font-size: 0.65rem;
+        padding: 0 10px 8px 10px;
+    }
+
+    .rankItem {
+        padding: 8px 10px;
+        border-radius: 10px;
+    }
+
+    .avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+    }
+
+    .colName {
+        gap: 10px;
+    }
+
+    .uName {
+        font-size: 0.8rem;
+    }
+
+    .uSub {
+        font-size: 0.6rem;
+    }
+
+    .scoreVal {
+        font-size: 0.85rem;
+    }
+
+    .scoreBadge {
+        padding: 3px 6px;
+        font-size: 0.75rem;
+    }
+
+    .badge1,
+    .badge2,
+    .badge3,
+    .badgeNormal {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+        border-radius: 6px;
+    }
+}
+
+/* =============================================================================
+   Responsive - Small Mobile (< 480px)
+   ============================================================================= */
+
+@media (max-width: 480px) {
+    .rankBoard {
+        padding: 14px;
+        border-radius: 14px;
+        min-height: 280px;
+    }
+
+    .rankBoard::before {
+        width: 100px;
+        height: 60px;
+        filter: blur(60px);
+    }
+
+    .boardTitle {
+        gap: 8px;
+    }
+
+    .boardTitle h3 {
+        font-size: 0.9rem;
+    }
+
+    .iconBox {
+        width: 28px;
+        height: 28px;
+    }
+
+    .viewAllLink {
+        font-size: 0.7rem;
+    }
+
+    .tableHeader,
+    .rankItem {
+        grid-template-columns: 30px 1fr 60px;
+        gap: 8px;
+    }
+
+    .tableHeader {
+        font-size: 0.6rem;
+        padding: 0 8px 6px 8px;
+    }
+
+    .rankItem {
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 2px;
+    }
+
+    .avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+        border-width: 1px;
+    }
+
+    .colName {
+        gap: 8px;
+    }
+
+    .uName {
+        font-size: 0.75rem;
+    }
+
+    .uSub {
+        display: none;
+    }
+
+    .scoreVal {
+        font-size: 0.8rem;
+    }
+
+    .scoreBadge {
+        padding: 2px 5px;
+        font-size: 0.7rem;
+    }
+
+    .badge1,
+    .badge2,
+    .badge3,
+    .badgeNormal {
+        width: 22px;
+        height: 22px;
+        font-size: 0.7rem;
+    }
+}
+
+/* =============================================================================
+   Responsive - Extra Small (< 360px)
+   ============================================================================= */
+
+@media (max-width: 360px) {
+    .rankBoard {
+        padding: 12px;
+    }
+
+    .tableHeader,
+    .rankItem {
+        grid-template-columns: 26px 1fr 50px;
+        gap: 6px;
+    }
+
+    .avatar {
+        width: 24px;
+        height: 24px;
+        font-size: 0.65rem;
+    }
+
+    .uName {
+        font-size: 0.7rem;
+    }
+
+    .scoreVal {
+        font-size: 0.75rem;
+    }
+
+    .badge1,
+    .badge2,
+    .badge3,
+    .badgeNormal {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+    }
+}
+
+/* =============================================================================
+   Responsive - Landscape Mobile
+   ============================================================================= */
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .rankBoard {
+        padding: 12px 16px;
+        min-height: auto;
+    }
+
+    .boardHeader {
+        margin-bottom: 12px;
+    }
+
+    .rankItem {
+        padding: 6px 10px;
+        margin-bottom: 2px;
+    }
+}

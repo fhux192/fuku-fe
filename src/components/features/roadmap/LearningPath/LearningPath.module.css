@@ -1,63 +1,342 @@
 /* components/LearningPath/LearningPath.module.css */
 
-.pathSection {
-    background: #ffffff;
-    border: 1px solid rgba(0,0,0,0.05);
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+/* =============================================================================
+   1. Design Tokens & Variables
+   ============================================================================= */
+
+:root {
+    --lp-bg-surface: #ffffff;
+    --lp-primary: #1a1a2e;       /* Màu tối chủ đạo */
+    --lp-accent: #4ade80;        /* Màu xanh lá active */
+    --lp-accent-glow: rgba(74, 222, 128, 0.5);
+    --lp-locked: #e2e8f0;        /* Màu xám cho node bị khóa */
+    --lp-text-main: #1e293b;
+    --lp-text-sub: #64748b;
+    --lp-line-height: 4px;
+    --lp-node-size: 60px;
+    --lp-node-size-mobile: 50px;
 }
 
+/* =============================================================================
+   2. Main Container
+   ============================================================================= */
+
+.pathContainer {
+    background: var(--lp-bg-surface);
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Header styling */
 .pathHeader {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    color: #000;
-    font-weight: 700;
+    margin-bottom: 32px;
 }
 
-.pathTrack {
+.headerTitle {
     display: flex;
     align-items: center;
-    overflow-x: auto;
-    padding-bottom: 8px;
+    gap: 12px;
 }
 
-.pathNode {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.pathKanji {
-    width: 50px;
-    height: 50px;
-    background: #000;
+.iconBox {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: var(--color-lt-green);
-    font-family: "Noto Sans JP", sans-serif;
+    color: var(--lp-accent);
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.2);
 }
 
-.pathLabel {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: #000;
-    font-family: "MuseoModerno", sans-serif;
+.headerTitle h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--lp-text-main);
+    margin: 0;
 }
 
-.pathLine {
-    width: 40px;
-    height: 2px;
-    background: #000;
+.headerTitle p {
+    font-size: 0.875rem;
+    color: var(--lp-text-sub);
+    margin: 4px 0 0 0;
+}
+
+.currentBadge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(74, 222, 128, 0.1);
+    color: #15803d;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* =============================================================================
+   3. The Scrollable Track (Horizontal)
+   ============================================================================= */
+
+.trackWrapper {
+    position: relative;
+    /* Tạo hiệu ứng mờ 2 bên để báo hiệu có thể cuộn */
+}
+
+.trackScroll {
+    display: flex;
+    align-items: center;
+    gap: 0; /* Gap xử lý bằng connector */
+    overflow-x: auto;
+    padding: 20px 0; /* Padding để không bị cắt shadow */
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none; /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+.trackScroll::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+/* =============================================================================
+   4. Node & Connector Items
+   ============================================================================= */
+
+/* --- Item Wrapper --- */
+.pathItem {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    margin: 0 4px 18px 4px;
+    position: relative;
+}
+
+/* --- Connector Line (Đường nối) --- */
+.connector {
+    width: 60px; /* Độ dài đường nối */
+    height: var(--lp-line-height);
+    background: var(--lp-locked);
+    border-radius: 2px;
+    margin: 0 8px; /* Khoảng cách an toàn với node */
+    position: relative;
+    transition: all 0.4s ease;
+}
+
+.connectorActive {
+    background: var(--lp-accent);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+}
+
+/* --- Node (Hình tròn + Text) --- */
+.nodeWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    scroll-snap-align: center; /* Quan trọng: Snap vào giữa màn hình */
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nodeWrapper:hover {
+    transform: translateY(-5px);
+}
+
+/* --- Circle Design --- */
+.nodeCircle {
+    width: var(--lp-node-size);
+    height: var(--lp-node-size);
+    border-radius: 50%;
+    background: var(--lp-bg-surface);
+    border: 3px solid var(--lp-locked);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--lp-text-sub);
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* --- Node States --- */
+
+/* 1. Completed */
+.statusCompleted .nodeCircle {
+    background: var(--lp-accent);
+    border-color: var(--lp-accent);
+    color: var(--lp-primary);
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+}
+
+/* 2. Locked */
+.statusLocked {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+.statusLocked .nodeWrapper:hover {
+    transform: none;
+}
+
+/* 3. Current (Active) - Hiệu ứng đẹp nhất */
+.statusCurrent .nodeCircle {
+    background: var(--lp-primary);
+    border-color: var(--lp-accent);
+    color: var(--lp-accent);
+    box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.2), 0 8px 20px rgba(26, 26, 46, 0.25);
+    transform: scale(1.1); /* To hơn một chút */
+}
+
+/* Vòng xoay nhẹ cho current */
+.statusCurrent .nodeCircle::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px dashed var(--lp-accent);
+    animation: spin 10s linear infinite;
+    opacity: 0.5;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Node Info (Text dưới) --- */
+.nodeInfo {
+    text-align: center;
+    width: 100px; /* Giới hạn chiều rộng text để không bị tràn */
+}
+
+.nodeLabel {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--lp-text-main);
+    margin-bottom: 2px;
+}
+
+.nodeSub {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--lp-text-sub);
+}
+
+.statusCurrent .nodeLabel {
+    color: var(--lp-primary);
+    font-weight: 800;
+}
+
+.statusCompleted .nodeLabel {
+    color: #15803d;
+}
+
+/* =============================================================================
+   5. Navigation Buttons (Desktop)
+   ============================================================================= */
+
+.navBtn {
+    position: absolute;
+    top: 55%; /* Canh giữa theo chiều dọc track */
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--lp-bg-surface);
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.pathContainer:hover .navBtn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.navBtn:hover {
+    background: var(--lp-primary);
+    color: var(--lp-accent);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.navPrev { left: 16px; }
+.navNext { right: 16px; }
+
+/* =============================================================================
+   6. Responsive Design
+   ============================================================================= */
+
+/* Tablet & Mobile */
+@media (max-width: 1024px) {
+    .pathContainer {
+        padding: 24px 16px;
+    }
+
+    .connector {
+        width: 40px; /* Thu ngắn đường nối */
+    }
+
+    .nodeInfo {
+        width: 80px;
+    }
+}
+
+/* Mobile (< 650px) */
+@media (max-width: 650px) {
+    .pathHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .headerTitle h2 {
+        font-size: 1.1rem;
+    }
+
+    /* Ẩn nút nav trên mobile, dùng touch swipe */
+    .navBtn {
+        display: none !important;
+    }
+
+    /* Tăng vùng chạm cho mobile */
+    .nodeCircle {
+        width: var(--lp-node-size-mobile);
+        height: var(--lp-node-size-mobile);
+        font-size: 1rem;
+    }
+
+    .connector {
+        width: 30px;
+    }
+
+    .nodeLabel {
+        font-size: 0.75rem;
+    }
+
+    /* Mask gradient hẹp hơn trên mobile để thấy nhiều nội dung hơn */
+    .trackWrapper {
+        mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+    }
 }

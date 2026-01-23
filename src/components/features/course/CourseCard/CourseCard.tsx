@@ -80,7 +80,7 @@ const CourseStat: React.FC<CourseStatProps> = React.memo(({ iconSrc, value, labe
         <lord-icon
             src={iconSrc}
             trigger="hover"
-            colors="primary:#bfff00"
+            colors="primary:#4ade80"
             style={{ width: '16px', height: '16px' }}
             aria-hidden="true"
         />

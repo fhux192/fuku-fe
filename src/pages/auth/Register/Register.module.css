@@ -3,7 +3,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
 /* ============================================================================
-   Form Container
+   CSS Variables - Local overrides for register-specific colors
+   ============================================================================ */
+
+:root {
+    --color-primary-dark: #1a1a2e;
+    --color-surface: #fafafa;
+    --color-accent: #4ade80;
+    --color-accent-light: #86efac;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-error: #f87171;
+    --color-error-bg: rgba(254, 242, 242, 1);
+    --color-error-border: rgba(248, 113, 113, 0.3);
+    --color-success: #4ade80;
+    --color-success-bg: rgba(240, 253, 244, 1);
+    --color-success-border: rgba(74, 222, 128, 0.3);
+    --gradient-accent: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
+}
+
+/* ============================================================================
+   Form Container - Main wrapper with entry animation
    ============================================================================ */
 
 .registerFormWrapper {
@@ -29,7 +49,7 @@
     }
 }
 
-/* Close button positioned relative to form wrapper */
+/* Close button - Consistent with Auth layout styling */
 .closeModalBtn {
     position: absolute;
     top: -35px;
@@ -40,10 +60,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--color-just-black);
-    border: 4px solid rgb(255, 255, 255);
+    background: var(--color-primary-dark);
+    border: 3px solid var(--color-surface);
     border-radius: 100%;
-    color: var(--color-torch-red-dark);
+    color: var(--color-accent);
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
@@ -51,7 +71,7 @@
 }
 
 .closeModalBtn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #16162a;
     transform: scale(1.1);
 }
 
@@ -74,7 +94,7 @@
 }
 
 /* ============================================================================
-   Content Animation
+   Content Animation - Staggered entrance for child elements
    ============================================================================ */
 
 .registerFormContent > * {
@@ -105,13 +125,13 @@
 }
 
 /* ============================================================================
-   Typography
+   Typography - Form title
    ============================================================================ */
 
 .registerTitle {
     margin-top: 0;
     margin-bottom: 20px;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "Google Sans Flex", sans-serif;
     font-size: clamp(32px, 7vw, 40px);
     font-weight: 900;
@@ -119,20 +139,21 @@
 }
 
 /* ============================================================================
-   Form Elements
+   Form Elements - Error, success messages, labels, and input groups
    ============================================================================ */
 
 .registerForm {
     width: 100%;
 }
 
+/* Softer error styling with light background */
 .registerError {
     margin-bottom: 16px;
     padding: 12px;
-    background-color: rgba(47, 27, 29, 1);
-    border: 1px solid rgba(255, 138, 138, 0.3);
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
     border-radius: 12px;
-    color: #ff4d4d;
+    color: #dc2626;
     font-size: clamp(13px, 3.2vw, 14px);
     word-break: break-word;
     animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
@@ -150,13 +171,14 @@
     }
 }
 
+/* Success message with soft green background */
 .registerMessage {
     margin-bottom: 16px;
     padding: 12px;
-    background-color: rgba(27, 47, 29, 1);
-    border: 1px solid rgba(138, 255, 145, 0.3);
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
     border-radius: 12px;
-    color: #8aff91;
+    color: #16a34a;
     font-size: clamp(13px, 3.2vw, 14px);
     word-break: break-word;
     animation: slideInDown 0.5s cubic-bezier(0.23, 1, 0.32, 1);
@@ -181,13 +203,13 @@
 .registerLabel {
     display: block;
     margin-bottom: 8px;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-size: clamp(13px, 3.2vw, 14px);
     font-weight: 600;
 }
 
 /* ============================================================================
-   Input Fields
+   Input Fields - Underline style with focus states
    ============================================================================ */
 
 .passwordWrapper {
@@ -202,17 +224,18 @@
     padding: 20px 40px 12px 4px;
     background-color: transparent;
     border: none;
-    border-bottom: 1px solid var(--color-just-black);
+    border-bottom: 2px solid rgba(26, 26, 46, 0.2);
     outline: none;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "Google Sans Flex", sans-serif;
     font-size: clamp(17px, 3.8vw, 18px);
     font-weight: 600;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
+/* Accent color on focus for visual feedback */
 .registerInput:focus {
-    border-bottom: 1px solid var(--color-just-black);
+    border-bottom: 2px solid var(--color-accent);
     transform: translateY(-2px);
 }
 
@@ -222,6 +245,7 @@
 }
 
 .registerInput::placeholder {
+    color: var(--color-text-muted);
     font-size: clamp(16px, 3.5vw, 18px);
 }
 
@@ -235,29 +259,30 @@
     padding: 4px;
     background: transparent;
     border: none;
-    color: #888;
+    color: var(--color-text-muted);
     transform: translateY(-50%);
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .togglePasswordBtn:hover {
-    color: #f5f5f5;
+    color: var(--color-text-dark);
 }
 
 /* ============================================================================
-   Button & Links
+   Button & Links - Submit button and navigation links
    ============================================================================ */
 
+/* Primary submit button with accent gradient */
 .registerButton {
     width: 60%;
     min-width: 150px;
     margin-top: 10px;
     padding: clamp(0.5rem, 2vw, 0.6rem) 0.3rem;
-    background: var(--gradient-macha);
+    background: var(--gradient-accent);
     border: none;
     border-radius: 30px;
-    color: var(--color-just-black);
+    color: var(--color-text-dark);
     font-family: "MuseoModerno", sans-serif;
     font-size: clamp(17px, 3.8vw, 18px);
     font-weight: 700;
@@ -283,9 +308,10 @@
     height: 300px;
 }
 
+/* Accent-colored shadow on hover */
 .registerButton:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(144, 187, 60, 0.4);
+    box-shadow: 0 8px 20px rgba(74, 222, 128, 0.35);
 }
 
 .registerButton:active {
@@ -294,14 +320,14 @@
 
 .registerLinkText {
     margin-top: clamp(20px, 5vw, 24px);
-    color: #aaa;
+    color: var(--color-text-muted);
     font-size: clamp(13px, 3.2vw, 14px);
     text-align: center;
 }
 
 .registerLink {
     margin-left: 2px;
-    color: var(--color-shockingly-green);
+    color: var(--color-accent);
     font-family: "Google Sans Flex", sans-serif;
     font-weight: 900;
     text-decoration: none;
@@ -312,10 +338,11 @@
 .registerLink:hover {
     opacity: 0.8;
     transform: scale(1.05);
+    color: #22c55e;
 }
 
 /* ============================================================================
-   Tablet Breakpoint
+   Tablet Breakpoint (768px)
    ============================================================================ */
 
 @media (max-width: 768px) {
@@ -332,7 +359,7 @@
 }
 
 /* ============================================================================
-   Mobile Breakpoint
+   Mobile Breakpoint (480px)
    ============================================================================ */
 
 @media (max-width: 480px) {
@@ -359,7 +386,7 @@
 }
 
 /* ============================================================================
-   Extra Small Breakpoint
+   Extra Small Breakpoint (360px)
    ============================================================================ */
 
 @media (max-width: 360px) {
@@ -384,7 +411,7 @@
 }
 
 /* ============================================================================
-   Landscape Orientation
+   Landscape Orientation - Compact layout for horizontal screens
    ============================================================================ */
 
 @media (max-height: 600px) and (orientation: landscape) {
@@ -417,7 +444,7 @@
 }
 
 /* ============================================================================
-   Touch Device Optimizations
+   Touch Device Optimizations - Minimum tap targets for accessibility
    ============================================================================ */
 
 @media (hover: none) and (pointer: coarse) {
@@ -436,7 +463,7 @@
 }
 
 /* ============================================================================
-   Very Small Screen Protection
+   Very Small Screen Protection (320px) - Prevent layout breaking
    ============================================================================ */
 
 @media (max-width: 320px) {

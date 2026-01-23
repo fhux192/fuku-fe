@@ -1,3 +1,5 @@
+/* DashboardLayout.tsx */
+
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import styles from './DashboardLayout.module.css';
@@ -23,9 +25,9 @@ interface NavItem {
 
 interface DecodedToken {
     name: string;
-    sub: string;  // email
-    iat: number;  // issued at
-    exp: number;  // expiration
+    sub: string;
+    iat: number;
+    exp: number;
 }
 
 // ============================================================================
@@ -61,6 +63,7 @@ const UI_ICONS = {
 
 const MOBILE_BREAKPOINT = 650;
 const TABLET_BREAKPOINT = 1024;
+const SCROLL_THRESHOLD = 50; // Khoảng cách cuộn tối thiểu để kích hoạt ẩn/hiện
 
 // ============================================================================
 // Utility Functions
@@ -106,13 +109,15 @@ const DashboardLayout: React.FC = () => {
     const location = useLocation();
     const dropdownRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
+    const mainContentRef = useRef<HTMLDivElement>(null); // Ref cho vùng nội dung chính
+    const lastScrollY = useRef<number>(0); // Lưu vị trí cuộn trước đó
 
     // ------------------------------------------------------------------------
     // UI & Screen State
     // ------------------------------------------------------------------------
 
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
-    const [isNavVisible] = useState<boolean>(true);
+    const [isNavVisible, setIsNavVisible] = useState<boolean>(true); // Quản lý ẩn hiện navbar
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isTablet, setIsTablet] = useState<boolean>(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
@@ -124,7 +129,6 @@ const DashboardLayout: React.FC = () => {
 
     const [userName, setUserName] = useState<string>('K');
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false);
@@ -144,7 +148,7 @@ const DashboardLayout: React.FC = () => {
     });
 
     // ------------------------------------------------------------------------
-    // Initialization & Auth Sync
+    // Initialization & Event Listeners
     // ------------------------------------------------------------------------
 
     const syncUserData = useCallback(() => {
@@ -161,7 +165,6 @@ const DashboardLayout: React.FC = () => {
     useEffect(() => {
         syncUserData();
         defineElement(lottie.loadAnimation);
-
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, [syncUserData]);
@@ -171,6 +174,11 @@ const DashboardLayout: React.FC = () => {
             const width = window.innerWidth;
             setIsMobile(width < MOBILE_BREAKPOINT);
             setIsTablet(width >= MOBILE_BREAKPOINT && width <= TABLET_BREAKPOINT);
+
+            // Luôn hiện nav khi chuyển về desktop/tablet
+            if (width >= MOBILE_BREAKPOINT) {
+                setIsNavVisible(true);
+            }
         };
         checkScreenSize();
         window.addEventListener('resize', checkScreenSize);
@@ -178,60 +186,61 @@ const DashboardLayout: React.FC = () => {
     }, []);
 
     // ------------------------------------------------------------------------
-    // Toast Helper
+    // Scroll Handler (Logic ẩn hiện Navbar)
+    // ------------------------------------------------------------------------
+
+    const handleMainContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (!isMobile) return; // Chỉ chạy logic này trên mobile
+
+        const currentScrollY = e.currentTarget.scrollTop;
+        const scrollDiff = currentScrollY - lastScrollY.current;
+
+        // Nếu cuộn đủ khoảng cách threshold
+        if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
+            // Scroll Down (dương) -> Ẩn navbar
+            if (scrollDiff > 0) {
+                setIsNavVisible(false);
+                setIsMobileMenuOpen(false); // Đóng menu popup nếu đang mở
+            }
+            // Scroll Up (âm) -> Hiện navbar
+            else {
+                setIsNavVisible(true);
+            }
+            lastScrollY.current = currentScrollY;
+        }
+    };
+
+    // ------------------------------------------------------------------------
+    // Handlers
     // ------------------------------------------------------------------------
 
     const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
-        setToastConfig({
-            isVisible: true,
-            message,
-            type
-        });
+        setToastConfig({ isVisible: true, message, type });
     }, []);
 
     const hideToast = useCallback(() => {
-        setToastConfig(prev => ({
-            ...prev,
-            isVisible: false
-        }));
+        setToastConfig(prev => ({ ...prev, isVisible: false }));
     }, []);
 
-    // ------------------------------------------------------------------------
-    // Modal Handlers
-    // ------------------------------------------------------------------------
-
     const handleSwitchToRegister = useCallback(() => {
-        setIsLoginModalOpen(false);
-        setIsForgotPasswordModalOpen(false);
-        setIsRegisterModalOpen(true);
+        setIsLoginModalOpen(false); setIsForgotPasswordModalOpen(false); setIsRegisterModalOpen(true);
     }, []);
 
     const handleSwitchToLogin = useCallback(() => {
-        setIsRegisterModalOpen(false);
-        setIsForgotPasswordModalOpen(false);
-        setIsLoginModalOpen(true);
+        setIsRegisterModalOpen(false); setIsForgotPasswordModalOpen(false); setIsLoginModalOpen(true);
     }, []);
 
     const handleSwitchToForgotPass = useCallback(() => {
-        setIsLoginModalOpen(false);
-        setIsRegisterModalOpen(false);
-        setIsForgotPasswordModalOpen(true);
+        setIsLoginModalOpen(false); setIsRegisterModalOpen(false); setIsForgotPasswordModalOpen(true);
     }, []);
 
     const handleLoginSuccess = useCallback(() => {
-        setIsLoginModalOpen(false);
-        syncUserData();
-        showToast('Đăng nhập thành công!', 'success');
+        setIsLoginModalOpen(false); syncUserData(); showToast('Đăng nhập thành công!', 'success');
     }, [syncUserData, showToast]);
 
     const handleRegisterSuccess = useCallback(() => {
-        setIsRegisterModalOpen(false);
-        setIsLoginModalOpen(true);
+        setIsRegisterModalOpen(false); setIsLoginModalOpen(true);
     }, []);
-
-    // ------------------------------------------------------------------------
-    // Core Handlers
-    // ------------------------------------------------------------------------
 
     const handleLogout = (): void => {
         localStorage.removeItem('authToken');
@@ -255,27 +264,16 @@ const DashboardLayout: React.FC = () => {
         if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     };
 
-    // ------------------------------------------------------------------------
-    // Helper Renders
-    // ------------------------------------------------------------------------
-
     const formatTime = (date: Date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const formatDate = (date: Date) => date.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const isActive = (path: string) => location.pathname === path;
 
     return (
         <div className={styles.dashboardLayout}>
-            {/* Toast Notification */}
-            <Toast
-                message={toastConfig.message}
-                type={toastConfig.type}
-                isVisible={toastConfig.isVisible}
-                onClose={hideToast}
-                duration={3000}
-            />
+            <Toast message={toastConfig.message} type={toastConfig.type} isVisible={toastConfig.isVisible} onClose={hideToast} duration={3000} />
 
-            {/* Sidebar */}
-            <aside className={`${styles.sidebar} ${isMobile && !isNavVisible ? styles.sidebarHidden : ''}`}>
+            {/* Sidebar with Visible/Hidden Classes */}
+            <aside className={`${styles.sidebar} ${isMobile ? (isNavVisible ? styles.sidebarVisible : styles.sidebarHidden) : ''}`}>
                 <div className={styles.logoArea}>
                     <img src={logo} alt="Fuku Logo" className={styles.logoImage} onClick={() => navigate('/home')} style={{cursor: 'pointer'}} />
                 </div>
@@ -295,29 +293,17 @@ const DashboardLayout: React.FC = () => {
                             tabIndex={0}
                         >
                             {/* @ts-ignore */}
-                            <lord-icon
-                                src={icon}
-                                trigger="morph"
-                                colors="primary:#ffffff"
-                                style={{ width: '30px', height: '30px' }}
-                            />
+                            <lord-icon src={icon} trigger="morph" colors="primary:#ffffff" style={{ width: '30px', height: '30px' }} />
                             <span>{label}</span>
                         </div>
                     ))}
 
-                    {/* Mobile/Tablet Avatar Item */}
                     {(isMobile || isTablet) && (
                         <div className={styles.navUserProfileContainer} ref={mobileMenuRef}>
                             <div className={`${styles.navItem} ${styles.navUserProfile}`} onClick={handleUserProfileClick}>
                                 <div className={styles.navUserAvatar}>
                                     {/* @ts-ignore */}
-                                    <lord-icon
-                                        src={UI_ICONS.AVATAR_DYNAMO}
-                                        trigger="hover"
-                                        state="hover-looking-around"
-                                        colors="primary:#1e293b"
-                                        style={{ width: '100%', height: '100%' }}
-                                    />
+                                    <lord-icon src={UI_ICONS.AVATAR_DYNAMO} trigger="hover" state="hover-looking-around" colors="primary:#1e293b" style={{ width: '100%', height: '100%' }} />
                                 </div>
                                 <span>{userName}</span>
                             </div>
@@ -340,79 +326,42 @@ const DashboardLayout: React.FC = () => {
                     )}
                 </nav>
 
-                {/* Sidebar Footer - Desktop only */}
                 <div className={styles.sidebarFooter}>
                     <div className={styles.quickStats}>
-                        <div className={styles.statBox}>
-                            <div className={styles.statNumber}>5</div>
-                            <div className={styles.statLabel}>Khóa học</div>
-                        </div>
-                        <div className={styles.statBox}>
-                            <div className={styles.statNumber}>127</div>
-                            <div className={styles.statLabel}>Bài học</div>
-                        </div>
+                        <div className={styles.statBox}><div className={styles.statNumber}>5</div><div className={styles.statLabel}>Khóa học</div></div>
+                        <div className={styles.statBox}><div className={styles.statNumber}>127</div><div className={styles.statLabel}>Bài học</div></div>
                     </div>
-
                     <div className={styles.userProfileContainer} ref={dropdownRef}>
                         <div className={styles.userProfile} onClick={handleUserProfileClick}>
                             <div className={styles.userAvatar}>
                                 {/* @ts-ignore */}
-                                <lord-icon
-                                    src={UI_ICONS.AVATAR_DYNAMO}
-                                    trigger="hover"
-                                    state="hover-looking-around"
-                                    colors="primary:#1e293b"
-                                    style={{ width: '100%', height: '100%' }}
-                                />
+                                <lord-icon src={UI_ICONS.AVATAR_DYNAMO} trigger="hover" state="hover-looking-around" colors="primary:#1e293b" style={{ width: '100%', height: '100%' }} />
                             </div>
-                            <div className={styles.userInfo}>
-                                <div className={styles.userName}>{userName}</div>
-                                <div className={styles.userStatus}>Đang hoạt động</div>
-                            </div>
+                            <div className={styles.userInfo}><div className={styles.userName}>{userName}</div><div className={styles.userStatus}>Đang hoạt động</div></div>
                         </div>
-
-                        {/* Desktop Dropdown */}
                         {isDropdownOpen && isAuthenticated && (
                             <div className={styles.dropdownMenu}>
-                                <button className={styles.dropdownItem} onClick={() => setIsDropdownOpen(false)}>
-                                    <span>Hồ sơ cá nhân</span>
-                                </button>
+                                <button className={styles.dropdownItem} onClick={() => setIsDropdownOpen(false)}><span>Hồ sơ cá nhân</span></button>
                                 <div className={styles.dropdownDivider} />
-                                <button className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`} onClick={handleLogout}>
-                                    <span>Đăng xuất</span>
-                                </button>
+                                <button className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`} onClick={handleLogout}><span>Đăng xuất</span></button>
                             </div>
                         )}
                     </div>
                 </div>
             </aside>
 
-            {/* Main Content Area */}
-            <main className={styles.mainDisplay}>
+            {/* Main Content Area with Scroll Event */}
+            <main
+                className={styles.mainDisplay}
+                onScroll={handleMainContentScroll}
+                ref={mainContentRef}
+            >
                 <Outlet />
             </main>
 
-            {/* Auth Modals */}
-            <LoginModal
-                isOpen={isLoginModalOpen}
-                onClose={() => setIsLoginModalOpen(false)}
-                onLoginSuccess={handleLoginSuccess}
-                onSwitchToRegister={handleSwitchToRegister}
-                onSwitchToForgotPass={handleSwitchToForgotPass}
-            />
-
-            <RegisterModal
-                isOpen={isRegisterModalOpen}
-                onClose={() => setIsRegisterModalOpen(false)}
-                onRegisterSuccess={handleRegisterSuccess}
-                onSwitchToLogin={handleSwitchToLogin}
-            />
-
-            <ForgotPasswordModal
-                isOpen={isForgotPasswordModalOpen}
-                onClose={() => setIsForgotPasswordModalOpen(false)}
-                onSwitchToLogin={handleSwitchToLogin}
-            />
+            <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={handleLoginSuccess} onSwitchToRegister={handleSwitchToRegister} onSwitchToForgotPass={handleSwitchToForgotPass} />
+            <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} onRegisterSuccess={handleRegisterSuccess} onSwitchToLogin={handleSwitchToLogin} />
+            <ForgotPasswordModal isOpen={isForgotPasswordModalOpen} onClose={() => setIsForgotPasswordModalOpen(false)} onSwitchToLogin={handleSwitchToLogin} />
         </div>
     );
 };

@@ -4,7 +4,7 @@ import {defineElement} from '@lordicon/element';
 import RankingBoard from '../../components/features/course/RankingBoard/RankingBoard';
 import CourseCard from '../../components/features/course/CourseCard/CourseCard';
 import LearningPath from '../../components/features/roadmap/LearningPath/LearningPath';
-import RoadmapPage from '../RoadmapPage/RoadmapPage'; // Import RoadmapPage
+import RoadmapPage from '../RoadmapPage/RoadmapPage';
 import {useCourseSelection} from '../../hooks/useCourseSelection';
 import {
     COURSES_DATA,
@@ -49,15 +49,12 @@ const CoursePage: React.FC = () => {
             {/* Main Course Page - Hidden when roadmap is open */}
             {!showRoadmap && (
                 <div className={styles.pageContainer}>
-                    <header className={styles.pageHeader}>
-                        <h1 className={styles.pageTitle}>Khóa Học JLPT</h1>
-                        <p className={styles.pageSubtitle}>Chinh phục tiếng Nhật từ con số 0 đến N1</p>
-                    </header>
+
 
                     <LearningPath courses={COURSES_DATA}/>
 
                     <section className={styles.rankSection} aria-labelledby="ranking-title">
-                        <h2 id="ranking-title" className="sr-only">Bảng xếp hạng</h2>
+                        <h2 id="ranking-title" className={styles.sectionHeading}>Bảng xếp hạng</h2>
                         <div className={styles.rankContainer}>
                             <RankingBoard
                                 type="hardworking"

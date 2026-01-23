@@ -76,13 +76,12 @@ interface RankingItemProps {
 }
 
 const RankingItem: React.FC<RankingItemProps> = React.memo(({ user, isTopScorer, renderRankBadge }) => {
-    // Computed styles to avoid inline style objects recreating on every render
     const avatarStyle = isTopScorer && user.rank === 1
-        ? { background: '#bfff00', color: 'black' }
+        ? { background: '#4ade80', color: 'black' }
         : undefined;
 
     const subStyle = isTopScorer
-        ? { color: '#bfff00' }
+        ? { color: '#4ade80' }
         : undefined;
 
     return (
