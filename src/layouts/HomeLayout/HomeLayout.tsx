@@ -25,7 +25,9 @@ interface UIConfig {
         BANNER_POST: string;
         MAIN_TITLE_JP: string;
         MAIN_TITLE_HIGHLIGHT: string;
-        SUBTITLE: string;
+        SUBTITLE_PRE: string;
+        SUBTITLE_INTERACTIVE: string;
+        SUBTITLE_POST: string;
         BTN_START: string;
         BTN_LOGIN: string;
         BTN_CLOSE: string;
@@ -35,6 +37,7 @@ interface UIConfig {
         FORGOT_PASS: string;
         KANA: string;
         COURSE: string;
+        GAMIFICATION_INFO: string;
     };
     BREAKPOINTS: {
         DESKTOP: number;
@@ -45,6 +48,7 @@ interface HeroSectionProps {
     onNavigate: (path: string) => void;
     onOpenToggleRightSide: () => void;
     isRightSideOpen: boolean;
+    onGamificationClick: () => void;
 }
 
 type OutletContextType = {
@@ -66,7 +70,9 @@ const UI_CONFIG: UIConfig = {
         BANNER_POST: ' cho tất cả mọi người',
         MAIN_TITLE_JP: '日本語を',
         MAIN_TITLE_HIGHLIGHT: '学びましょう',
-        SUBTITLE: 'Fuku - Hệ thống học từ vựng tiếng Nhật thông minh miễn phí',
+        SUBTITLE_PRE: 'Fuku - Nền tảng học tiếng Nhật được ',
+        SUBTITLE_INTERACTIVE: 'game hoá',
+        SUBTITLE_POST: ' thông minh miễn phí.',
         BTN_START: 'Bắt đầu ngay',
         BTN_LOGIN: 'Đăng nhập',
         BTN_CLOSE: 'Quay lại'
@@ -75,7 +81,8 @@ const UI_CONFIG: UIConfig = {
         LOGIN: '/login',
         FORGOT_PASS: '/forgot-password',
         KANA: '/home/course',
-        COURSE: '/home/course'
+        COURSE: '/home/course',
+        GAMIFICATION_INFO: '/about/gamification'
     },
     BREAKPOINTS: {
         DESKTOP: 1050
@@ -90,9 +97,6 @@ export const useModalClose = () => {
     return useOutletContext<OutletContextType>();
 };
 
-/**
- * Tracks viewport width to determine mobile vs desktop layout
- */
 const useIsMobile = (breakpoint: number): boolean => {
     const [isMobile, setIsMobile] = useState<boolean>(
         typeof window !== 'undefined' ? window.innerWidth < breakpoint : false
@@ -140,7 +144,7 @@ const FloatingDecorations = memo(() => (
 
 FloatingDecorations.displayName = 'FloatingDecorations';
 
-const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide, isRightSideOpen }) => (
+const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide, isRightSideOpen, onGamificationClick }) => (
     <div className={styles.leftSideContent}>
         <section className={styles.glassCard}>
             <h1 className={styles.leftSideTitle}>
@@ -150,7 +154,19 @@ const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide,
                 </span>
             </h1>
             <p className={styles.leftSideSubtitle}>
-                <strong>{UI_CONFIG.TEXT.SUBTITLE}</strong>
+                <strong>
+                    {UI_CONFIG.TEXT.SUBTITLE_PRE}
+                    <span
+                        className={styles.gamifiedTerm}
+                        onClick={onGamificationClick}
+                        title="Tìm hiểu về phương pháp Game hoá"
+                        role="button"
+                        tabIndex={0}
+                    >
+                        {UI_CONFIG.TEXT.SUBTITLE_INTERACTIVE}
+                    </span>
+                    {UI_CONFIG.TEXT.SUBTITLE_POST}
+                </strong>
             </p>
             <div className={styles.btnWrapper}>
                 <button
@@ -180,22 +196,14 @@ const HomeLayout: React.FC = () => {
     const [isRightSideOpen, setIsRightSideOpen] = useState<boolean>(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
-    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false); // State mới
+    const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false);
     const navigate = useNavigate();
     const isMobile = useIsMobile(UI_CONFIG.BREAKPOINTS.DESKTOP);
-
-    // ------------------------------------------------------------------------
-    // Navigation handlers
-    // ------------------------------------------------------------------------
 
     const handleNavigation = useCallback((path: string): void => {
         navigate(path);
     }, [navigate]);
 
-    /**
-     * Mobile: open LoginModal
-     * Desktop: toggle rightside panel and navigate to login route
-     */
     const handleToggleRightSide = useCallback((): void => {
         if (isMobile) {
             setIsLoginModalOpen(prev => !prev);
@@ -218,9 +226,9 @@ const HomeLayout: React.FC = () => {
         }
     };
 
-    // ------------------------------------------------------------------------
-    // Modal handlers
-    // ------------------------------------------------------------------------
+    const handleGamificationClick = useCallback((): void => {
+        navigate(UI_CONFIG.ROUTES.GAMIFICATION_INFO);
+    }, [navigate]);
 
     const handleCloseLoginModal = useCallback((): void => {
         setIsLoginModalOpen(false);
@@ -239,17 +247,11 @@ const HomeLayout: React.FC = () => {
         navigate(UI_CONFIG.ROUTES.COURSE);
     }, [navigate]);
 
-    /**
-     * After successful registration, switch to LoginModal
-     */
     const handleRegisterSuccess = useCallback((): void => {
         setIsRegisterModalOpen(false);
         setIsLoginModalOpen(true);
     }, []);
 
-    /**
-     * Chuyển đổi giữa các Modal (Dành cho Mobile)
-     */
     const handleSwitchToRegister = useCallback((): void => {
         setIsLoginModalOpen(false);
         setIsForgotPasswordModalOpen(false);
@@ -301,22 +303,21 @@ const HomeLayout: React.FC = () => {
                         onNavigate={handleNavigation}
                         onOpenToggleRightSide={handleToggleRightSide}
                         isRightSideOpen={isMobile ? (isLoginModalOpen || isRegisterModalOpen || isForgotPasswordModalOpen) : isRightSideOpen}
+                        onGamificationClick={handleGamificationClick}
                     />
 
                     <div className={styles.overlayGradient} />
                 </div>
             </main>
 
-            {/* Mobile: LoginModal */}
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={handleCloseLoginModal}
                 onLoginSuccess={handleLoginSuccess}
                 onSwitchToRegister={handleSwitchToRegister}
-                onSwitchToForgotPass={handleSwitchToForgotPass} // Truyền callback chuyển sang Quên MK
+                onSwitchToForgotPass={handleSwitchToForgotPass}
             />
 
-            {/* Mobile: RegisterModal */}
             <RegisterModal
                 isOpen={isRegisterModalOpen}
                 onClose={handleCloseRegisterModal}
@@ -324,14 +325,12 @@ const HomeLayout: React.FC = () => {
                 onSwitchToLogin={handleSwitchToLogin}
             />
 
-            {/* Mobile: ForgotPasswordModal */}
             <ForgotPasswordModal
                 isOpen={isForgotPasswordModalOpen}
                 onClose={handleCloseForgotPasswordModal}
-                onSwitchToLogin={handleSwitchToLogin} // Truyền callback quay lại Đăng nhập
+                onSwitchToLogin={handleSwitchToLogin}
             />
 
-            {/* Desktop: Rightside panel */}
             <aside className={`${styles.rightSideDesktop} ${!isRightSideOpen ? styles.hidden : ''}`}>
                 <div className={styles.rightSideContent}>
                     <Outlet />

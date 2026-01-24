@@ -21,7 +21,7 @@ interface LoginModalProps {
     onClose: () => void;
     onLoginSuccess?: () => void;
     onSwitchToRegister?: () => void;
-    onSwitchToForgotPass?: () => void; // Thêm prop này
+    onSwitchToForgotPass?: () => void;
 }
 
 interface FormData {
@@ -57,6 +57,22 @@ interface PlayerInstance {
     isPlaying: boolean;
 }
 
+// Response types matching backend ApiResponse<LoginResponse>
+interface LoginResponseData {
+    accessToken: string;
+    tokenType: string;
+    expiresIn?: number;
+    email?: string;
+    name?: string;
+}
+
+interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+    error?: string;
+}
+
 // ============================================================================
 // Constants
 // ============================================================================
@@ -73,8 +89,8 @@ const UI_CONFIG: UIConfig = {
         EYE: 'https://cdn.lordicon.com/ntfnmkcn.json'
     },
     MESSAGES: {
-        LOGIN_FAIL: 'ログインに失敗しました。(Đăng nhập thất bại.)',
-        ERROR: 'エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)'
+        LOGIN_FAIL: 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.',
+        ERROR: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'
     }
 };
 
@@ -119,7 +135,6 @@ class CustomTrigger {
     }
 
     onComplete(): void {
-        // Reverse direction for toggle effect
         this.direction = -this.direction;
         this.player.direction = this.direction;
     }
@@ -148,6 +163,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
     const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
     const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const navigate = useNavigate();
     const isIconDefined = useRef<boolean>(false);
@@ -165,14 +181,12 @@ const LoginModal: React.FC<LoginModalProps> = ({
                 defineElement(lottie.loadAnimation);
                 isIconDefined.current = true;
             } catch (e) {
-                // Definition already exists from previous mount
                 console.warn('LordIcon definitions already exist');
             }
         }
     }, []);
 
     useEffect(() => {
-        // Delay prevents race condition with icon rendering
         const timer = setTimeout(() => {
             if (avatarIconRef.current && isOpen) {
                 const player = avatarIconRef.current.playerInstance;
@@ -211,7 +225,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
             }
         };
 
-        // Delay prevents immediate close when modal opens
         const timer = setTimeout(() => {
             document.addEventListener('mousedown', handleBackdropClick);
         }, 100);
@@ -223,7 +236,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
     }, [isOpen, onClose]);
 
     useEffect(() => {
-        // Prevent body scroll when modal is open for better UX
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
@@ -242,7 +254,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        // Clear error immediately for better UX
         if (error) setError('');
     }, [error]);
 
@@ -252,7 +263,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
     const handleButtonMouseEnter = useCallback((): void => {
         if (avatarIconRef.current) {
-            // Programmatically trigger avatar animation for visual feedback
             const hoverEvent = new MouseEvent('mouseenter', {
                 bubbles: true,
                 cancelable: true,
@@ -265,6 +275,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
 
         try {
             const response = await fetch(UI_CONFIG.API.LOGIN, {
@@ -273,25 +284,38 @@ const LoginModal: React.FC<LoginModalProps> = ({
                 body: JSON.stringify(formData),
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('authToken', data.token);
+            const result: ApiResponse<LoginResponseData> = await response.json();
 
-                // Reset form state
-                setFormData({ email: '', password: '' });
+            if (response.ok && result.success) {
+                // ===== Read token from correct path =====
+                const token = result.data?.accessToken;
 
-                // Trigger success callback to refresh user data in parent
-                if (onLoginSuccess) {
-                    onLoginSuccess();
+                if (token) {
+                    localStorage.setItem('authToken', token);
+
+                    // Reset form state
+                    setFormData({ email: '', password: '' });
+
+                    // Trigger success callback
+                    if (onLoginSuccess) {
+                        onLoginSuccess();
+                    }
+
+                    onClose();
+                } else {
+                    // Token missing in response
+                    setError('Không nhận được token từ server.');
                 }
-
-                onClose();
             } else {
-                const errorText = await response.text();
-                setError(errorText || UI_CONFIG.MESSAGES.LOGIN_FAIL);
+                // Handle error response
+                const errorMessage = result.error || result.message || UI_CONFIG.MESSAGES.LOGIN_FAIL;
+                setError(errorMessage);
             }
         } catch (err) {
+            console.error('Login error:', err);
             setError(UI_CONFIG.MESSAGES.ERROR);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -306,7 +330,6 @@ const LoginModal: React.FC<LoginModalProps> = ({
     };
 
     const handleForgotPasswordClick = (): void => {
-        // Nếu có truyền handler mở modal thì gọi nó, ngược lại thì dùng navigate mặc định
         if (onSwitchToForgotPass) {
             onSwitchToForgotPass();
         } else {
@@ -329,6 +352,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                     className={styles.closeModalBtn}
                     onClick={onClose}
                     aria-label="Close login form"
+                    disabled={isLoading}
                 >
                     X
                 </button>
@@ -373,6 +397,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                     onChange={handleInputChange}
                                     autoComplete="email"
                                     required
+                                    disabled={isLoading}
                                     aria-label="Email Address"
                                 />
                             </div>
@@ -390,6 +415,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                         onChange={handleInputChange}
                                         autoComplete="current-password"
                                         required
+                                        disabled={isLoading}
                                         aria-label="Password"
                                     />
                                     <button
@@ -397,6 +423,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                         onClick={togglePasswordVisibility}
                                         className={styles.togglePasswordBtn}
                                         tabIndex={-1}
+                                        disabled={isLoading}
                                         aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                                     >
                                         {/* @ts-ignore */}
@@ -416,6 +443,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                     type="button"
                                     onClick={handleForgotPasswordClick}
                                     className={styles.forgotPasswordLink}
+                                    disabled={isLoading}
                                 >
                                     Quên mật khẩu?
                                 </button>
@@ -426,8 +454,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                 type="submit"
                                 className={styles.loginButton}
                                 onMouseEnter={handleButtonMouseEnter}
+                                disabled={isLoading}
                             >
-                                Đăng nhập
+                                {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
                             </button>
 
                             {/* Register link */}
@@ -437,6 +466,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                     type="button"
                                     onClick={handleRegisterClick}
                                     className={styles.loginLink}
+                                    disabled={isLoading}
                                 >
                                     Đăng ký
                                 </button>

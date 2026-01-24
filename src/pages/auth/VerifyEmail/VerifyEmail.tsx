@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import styles from './VerifyEmail.module.css';
+import styles from './VerifyEmail.module.css'; // Đảm bảo tên file CSS khớp với file bạn đã lưu
 
-function VerifyEmail() {
-    const [verificationStatus, setVerificationStatus] = useState('確認中... (Verifying, please wait...)');
-    const [statusType, setStatusType] = useState('loading');
+// Định nghĩa kiểu dữ liệu cho trạng thái
+type StatusType = 'loading' | 'success' | 'error';
+
+const VerifyEmail: React.FC = () => {
+    const [verificationStatus, setVerificationStatus] = useState<string>('Đang xác thực... Vui lòng đợi.');
+    const [statusType, setStatusType] = useState<StatusType>('loading');
     const location = useLocation();
 
     useEffect(() => {
@@ -13,26 +16,28 @@ function VerifyEmail() {
             const token = params.get('token');
 
             if (!token) {
-                setVerificationStatus('トークンが無効です。(Invalid verification link.)');
+                setVerificationStatus('Liên kết xác thực không hợp lệ hoặc bị thiếu.');
                 setStatusType('error');
                 return;
             }
 
             try {
+                // Giả lập độ trễ nhỏ để UI không bị giật (flash) nếu mạng quá nhanh
                 await new Promise(r => setTimeout(r, 800));
 
                 const response = await fetch(`http://localhost:8080/api/auth/verify-email?token=${token}`);
                 const responseText = await response.text();
 
                 if (response.ok) {
-                    setVerificationStatus(responseText || 'メール認証が完了しました。(Email verified successfully.)');
+                    setVerificationStatus(responseText || 'Xác thực email thành công! Tài khoản của bạn đã được kích hoạt.');
                     setStatusType('success');
                 } else {
-                    setVerificationStatus(`エラー: ${responseText} (Error: ${responseText})`);
+                    setVerificationStatus(`Lỗi xác thực: ${responseText}`);
                     setStatusType('error');
                 }
             } catch (err) {
-                setVerificationStatus('エラーが発生しました。(An error occurred.)');
+                console.error(err);
+                setVerificationStatus('Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.');
                 setStatusType('error');
             }
         };
@@ -40,6 +45,7 @@ function VerifyEmail() {
         verify();
     }, [location]);
 
+    // Hàm helper để lấy class CSS dựa trên trạng thái
     const getStatusClass = () => {
         if (statusType === 'success') return styles.verifySuccess;
         if (statusType === 'error') return styles.verifyError;
@@ -49,24 +55,29 @@ function VerifyEmail() {
     return (
         <div className={styles.verifyContainer}>
             <div className={styles.verifyWrapper}>
+                {/* Các lớp background/overlay giữ nguyên hiệu ứng hình ảnh */}
                 <div className={styles.verifyBackground}></div>
                 <div className={styles.verifyOverlay}></div>
 
                 <div className={styles.verifyContent}>
-                    <h2 className={styles.verifyTitle}>メール認証 (Email Verification)</h2>
+                    <h2 className={styles.verifyTitle}>Xác thực Email</h2>
 
                     <div className={`${styles.verifyBox} ${getStatusClass()}`}>
-                        {statusType === 'loading' && <span className={styles.spinner}>⏳</span>}
+                        {/* Nếu đang loading thì hiện spinner (vòng xoay từ CSS) */}
+                        {statusType === 'loading' && <span className={styles.spinner}></span>}
                         {verificationStatus}
                     </div>
 
+                    {/* Chỉ hiện nút đăng nhập khi quá trình loading kết thúc */}
                     {statusType !== 'loading' && (
-                        <div className={styles.verifyFooter}>
+                        <div>
                             <p className={styles.verifyText}>
-                                アカウントにサインインしてください。<br/>(Please sign in to your account.)
+                                {statusType === 'success'
+                                    ? 'Bạn có thể đăng nhập vào hệ thống ngay bây giờ.'
+                                    : 'Vui lòng kiểm tra lại đường dẫn hoặc liên hệ hỗ trợ.'}
                             </p>
                             <Link to="/login" className={styles.verifyButton}>
-                                ログイン (Login)
+                                {statusType === 'success' ? 'Đăng nhập ngay' : 'Quay về trang chủ'}
                             </Link>
                         </div>
                     )}

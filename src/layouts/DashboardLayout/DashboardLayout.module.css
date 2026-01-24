@@ -2,17 +2,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
-/* ============================================================================
-   CSS Variables - Centralized design tokens
-   ============================================================================ */
-
 :root {
-    /* Layout dimensions */
     --sidebar-width: 280px;
     --sidebar-mini-width: 80px;
     --mobile-nav-height: 70px;
-
-    /* Color palette - Soft modern theme */
     --color-primary-dark: #1a1a2e;
     --color-primary-darker: #16162a;
     --color-surface: #fafafa;
@@ -24,34 +17,21 @@
     --color-text-subtle: rgba(255, 255, 255, 0.6);
     --color-text-muted: #6b7280;
     --color-error: #dc2626;
-
-    /* Spacing */
     --spacing-unit: 8px;
-
-    /* Border radius */
     --border-radius-lg: 24px;
     --border-radius-md: 16px;
     --border-radius-sm: 12px;
-
-    /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-nav: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-
-    /* Avatar sizing */
     --avatar-desktop: 34px;
     --avatar-tablet: 34px;
     --avatar-mobile: 30px;
     --avatar-mobile-small: 30px;
-
     --avatar-font-desktop: 0.7rem;
     --avatar-font-tablet: 0.9rem;
     --avatar-font-mobile: 0.8rem;
     --avatar-font-mobile-small: 0.75rem;
 }
-
-/* ============================================================================
-   Base Styles
-   ============================================================================ */
 
 * {
     margin: 0;
@@ -64,10 +44,6 @@ body {
     color: var(--color-text-dark);
 }
 
-/* ============================================================================
-   Layout
-   ============================================================================ */
-
 .dashboardLayout {
     display: flex;
     width: 100%;
@@ -77,10 +53,6 @@ body {
     overflow: hidden;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
-
-/* ============================================================================
-   Sidebar (Desktop Base)
-   ============================================================================ */
 
 .sidebar {
     width: var(--sidebar-width);
@@ -121,10 +93,6 @@ body {
 .logoImage:active {
     transform: scale(0.95);
 }
-
-/* ============================================================================
-   Navigation Items
-   ============================================================================ */
 
 .navGroup {
     display: flex;
@@ -170,7 +138,7 @@ body {
 }
 
 .navItem span {
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.2s, transform 0.2s, color 0.3s ease;
     opacity: 1;
 }
 
@@ -211,10 +179,6 @@ body {
     50% { opacity: 0.8; }
 }
 
-/* ============================================================================
-   User Profile & Dropdowns
-   ============================================================================ */
-
 .navUserProfileContainer {
     position: relative;
     margin-top: 12px;
@@ -248,7 +212,6 @@ body {
     transform: scale(1.05);
 }
 
-/* Mobile Menu Dropdown */
 .mobileMenuDropdown {
     position: absolute;
     bottom: calc(100% + 12px);
@@ -304,9 +267,133 @@ body {
     color: #b91c1c;
 }
 
-/* ============================================================================
-   Main Content Area
-   ============================================================================ */
+.levelInfoContainer {
+    padding: 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 4px;
+}
+
+.levelHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.levelIcon {
+    font-size: 2rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.levelDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.levelRankName {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.levelPosition {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.xpProgressContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.xpText {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.xpCurrent {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    font-family: "MuseoModerno", sans-serif;
+}
+
+.xpNext {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
+.progressBarContainer {
+    width: 100%;
+    height: 8px;
+    background: rgba(26, 26, 46, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progressBar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.progressBar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.3) 50%,
+            transparent 100%
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.xpRemaining {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.xpRemaining strong {
+    color: var(--color-text-dark);
+}
+
+.maxLevelBadge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 8px;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    color: #1a1a2e;
+    border-radius: 8px;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+}
 
 .mainDisplay {
     flex-grow: 1;
@@ -318,19 +405,13 @@ body {
     position: relative;
     box-shadow: 0 4px 24px rgba(26, 26, 46, 0.04);
     transition: padding 0.3s ease;
-    /* Kích hoạt scroll mượt */
     scroll-behavior: smooth;
 }
 
-/* Custom Scrollbar */
 .mainDisplay::-webkit-scrollbar { width: 8px; }
 .mainDisplay::-webkit-scrollbar-track { background: transparent; }
 .mainDisplay::-webkit-scrollbar-thumb { background: rgba(26, 26, 46, 0.1); border-radius: 4px; }
 .mainDisplay::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 46, 0.15); }
-
-/* ============================================================================
-   Sidebar Footer & Desktop Profile
-   ============================================================================ */
 
 .timeDisplay {
     margin-bottom: 32px;
@@ -386,7 +467,9 @@ body {
     margin-top: 4px;
 }
 
-.userProfileContainer { position: relative; }
+.userProfileContainer {
+    position: relative;
+}
 
 .userProfile {
     display: flex;
@@ -399,7 +482,9 @@ body {
     transition: var(--transition-smooth);
 }
 
-.userProfile:hover { background: rgba(255, 255, 255, 0.1); }
+.userProfile:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
 
 .userAvatar {
     width: var(--avatar-desktop);
@@ -415,17 +500,38 @@ body {
     flex-shrink: 0;
 }
 
-.userInfo { flex: 1; min-width: 0; }
-.userName { font-size: 0.9rem; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.userStatus { font-size: 0.75rem; color: var(--color-text-subtle); }
+.userInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.userName {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+}
+
+.userStatus {
+    font-size: 0.75rem;
+    text-align: center;
+    color: var(--color-text-subtle);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
 
 .dropdownMenu {
     position: absolute;
     left: calc(100% + 24px);
     bottom: -4px;
     right: 0;
-    min-width: 280px;
-    max-width: 320px;
+    min-width: 300px;
+    max-width: 340px;
     background: white;
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius-md);
@@ -457,35 +563,104 @@ body {
     text-align: left;
 }
 
-.dropdownItem:hover { background: rgba(26, 26, 46, 0.05); }
-.dropdownDivider { height: 1px; background: rgba(26, 26, 46, 0.08); margin: 4px 0; }
-.dropdownItemDanger { color: var(--color-error); }
-.dropdownItemDanger:hover { background: rgba(220, 38, 38, 0.08); color: #b91c1c; }
-
-/* ============================================================================
-   Tablet - Mini Sidebar (650px - 1024px)
-   ============================================================================ */
-
-@media (min-width: 650px) and (max-width: 1024px) {
-    .dashboardLayout { padding: 16px; gap: 16px; }
-    .sidebar { width: var(--sidebar-mini-width); padding: 24px 12px; align-items: center; }
-    .logoArea { width: 100%; margin-bottom: 32px; padding: 0; }
-    .logoImage { width: 50px; height: 50px; }
-    .timeDisplay, .sidebarFooter { display: none; }
-    .navItem:not(.navUserProfile) { justify-content: center; width: 56px; height: 56px; padding: 12px; margin: 0 auto; }
-    .navItem:not(.navUserProfile)::before { display: none; }
-    .navItem:not(.navUserProfile) span { display: none; }
-    .navUserProfileContainer { width: 100%; margin-top: 16px; }
-    .navUserProfile { width: 56px; height: 56px; padding: 8px; justify-content: center; }
-    .navUserProfile span { display: none; }
-    .navUserAvatar { margin-right: 0; width: var(--avatar-tablet); height: var(--avatar-tablet); font-size: var(--avatar-font-tablet); }
-    .mobileMenuDropdown { left: calc(100% + 16px); right: auto; bottom: auto; top: 0; animation: dropdownSlideRight 0.2s ease-out; }
-    .mainDisplay { padding: 32px; }
+.dropdownItem:hover {
+    background: rgba(26, 26, 46, 0.05);
 }
 
-/* ============================================================================
-   Mobile - Bottom Navigation (< 650px)
-   ============================================================================ */
+.dropdownDivider {
+    height: 1px;
+    background: rgba(26, 26, 46, 0.08);
+    margin: 4px 0;
+}
+
+.dropdownItemDanger {
+    color: var(--color-error);
+}
+
+.dropdownItemDanger:hover {
+    background: rgba(220, 38, 38, 0.08);
+    color: #b91c1c;
+}
+
+@media (min-width: 650px) and (max-width: 1024px) {
+    .dashboardLayout {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .sidebar {
+        width: var(--sidebar-mini-width);
+        padding: 24px 12px;
+        align-items: center;
+    }
+
+    .logoArea {
+        width: 100%;
+        margin-bottom: 32px;
+        padding: 0;
+    }
+
+    .logoImage {
+        width: 50px;
+        height: 50px;
+    }
+
+    .timeDisplay, .sidebarFooter {
+        display: none;
+    }
+
+    .navItem:not(.navUserProfile) {
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        padding: 12px;
+        margin: 0 auto;
+    }
+
+    .navItem:not(.navUserProfile)::before {
+        display: none;
+    }
+
+    .navItem:not(.navUserProfile) span {
+        display: none;
+    }
+
+    .navUserProfileContainer {
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .navUserProfile {
+        width: 56px;
+        height: 56px;
+        padding: 8px;
+        justify-content: center;
+    }
+
+    .navUserProfile span {
+        display: none;
+    }
+
+    .navUserAvatar {
+        margin-right: 0;
+        width: var(--avatar-tablet);
+        height: var(--avatar-tablet);
+        font-size: var(--avatar-font-tablet);
+    }
+
+    .mobileMenuDropdown {
+        left: calc(100% + 16px);
+        right: auto;
+        bottom: auto;
+        top: 0;
+        min-width: 280px;
+        animation: dropdownSlideRight 0.2s ease-out;
+    }
+
+    .mainDisplay {
+        padding: 32px;
+    }
+}
 
 @media (max-width: 649px) {
     .dashboardLayout {
@@ -508,14 +683,13 @@ body {
         align-items: center;
         margin: auto;
         border-radius: 35px;
-        border:  rgba(255, 255, 255, 0.1) 2px solid;
+        border: rgba(255, 255, 255, 0.1) 2px solid;
         padding: 0px 20px;
-        padding-bottom:4px;
+        padding-bottom: 4px;
         background: var(--color-primary-dark);
         z-index: 999;
-
         transform-origin: center bottom;
-        transition: var(--transition-nav); /* Animation mượt mà */
+        transition: var(--transition-nav);
     }
 
     .sidebarVisible {
@@ -526,13 +700,15 @@ body {
     }
 
     .sidebarHidden {
-        transform: scaleX(0.2) translateY(50px); /* Thu nhỏ và đẩy xuống một chút */
+        transform: scaleX(0.2) translateY(50px);
         opacity: 0;
         visibility: hidden;
-        pointer-events: none; /* Không chặn touch khi ẩn */
+        pointer-events: none;
     }
 
-    .logoArea, .timeDisplay, .sidebarFooter { display: none; }
+    .logoArea, .timeDisplay, .sidebarFooter {
+        display: none;
+    }
 
     .navGroup {
         flex-direction: row;
@@ -555,8 +731,15 @@ body {
         flex: 1;
     }
 
-    .navItem:not(.navUserProfile)::before { display: none; }
-    .navIcon { margin-right: 0; width: 24px !important; height: 24px !important; }
+    .navItem:not(.navUserProfile)::before {
+        display: none;
+    }
+
+    .navIcon {
+        margin-right: 0;
+        width: 24px !important;
+        height: 24px !important;
+    }
 
     .navItem:not(.navUserProfile) span {
         display: block;
@@ -566,9 +749,11 @@ body {
         font-weight: 500;
     }
 
-    .activeNavItem:not(.navUserProfile) span { color: var(--color-accent); font-weight: 700; }
+    .activeNavItem:not(.navUserProfile) span {
+        color: var(--color-accent);
+        font-weight: 700;
+    }
 
-    /* Indicator dot */
     .activeNavItem:not(.navUserProfile)::after {
         content: '';
         display: block;
@@ -582,9 +767,26 @@ body {
         box-shadow: 0 2px 8px rgba(74, 222, 128, 0.4);
     }
 
-    .navUserProfileContainer { margin-top: 0; flex: 1; min-width: 60px; }
-    .navUserProfile { width: auto; padding: 8px 12px; flex-direction: column; gap: 4px; background: transparent !important; }
-    .navUserAvatar { margin-right: 0; width: var(--avatar-mobile); height: var(--avatar-mobile); font-size: var(--avatar-font-mobile); }
+    .navUserProfileContainer {
+        margin-top: 0;
+        flex: 1;
+        min-width: 60px;
+    }
+
+    .navUserProfile {
+        width: auto;
+        padding: 8px 12px;
+        flex-direction: column;
+        gap: 4px;
+        background: transparent !important;
+    }
+
+    .navUserAvatar {
+        margin-right: 0;
+        width: var(--avatar-mobile);
+        height: var(--avatar-mobile);
+        font-size: var(--avatar-font-mobile);
+    }
 
     .mobileMenuDropdown {
         position: fixed;
@@ -600,5 +802,21 @@ body {
         border-radius: 0;
         padding: 20px 16px calc(80px + env(safe-area-inset-bottom)) 16px;
         box-shadow: none;
+    }
+
+    .levelInfoContainer {
+        padding: 10px;
+    }
+
+    .levelIcon {
+        font-size: 1.5rem;
+    }
+
+    .levelRankName {
+        font-size: 0.9rem;
+    }
+
+    .xpCurrent {
+        font-size: 1rem;
     }
 }

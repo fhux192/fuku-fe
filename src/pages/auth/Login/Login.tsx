@@ -6,6 +6,10 @@ import { defineElement, Element } from '@lordicon/element';
 import { useModalClose } from '../../../layouts/HomeLayout/HomeLayout';
 import styles from './Login.module.css';
 
+// ============================================================================
+// Types
+// ============================================================================
+
 interface LordIconElement extends HTMLElement {
     playerInstance?: {
         play: () => void;
@@ -48,6 +52,26 @@ interface PlayerInstance {
     isPlaying: boolean;
 }
 
+// Response types matching backend ApiResponse<LoginResponse>
+interface LoginResponseData {
+    accessToken: string;
+    tokenType: string;
+    expiresIn?: number;
+    email?: string;
+    name?: string;
+}
+
+interface ApiResponse<T> {
+    success: boolean;
+    message: string;
+    data: T;
+    error?: string;
+}
+
+// ============================================================================
+// Constants
+// ============================================================================
+
 const UI_CONFIG: UIConfig = {
     API: {
         LOGIN: 'http://localhost:8080/api/auth/login'
@@ -62,8 +86,8 @@ const UI_CONFIG: UIConfig = {
         EYE: 'https://cdn.lordicon.com/ntfnmkcn.json'
     },
     MESSAGES: {
-        LOGIN_FAIL: 'ログインに失敗しました。(Đăng nhập thất bại.)',
-        ERROR: 'エラーが発生しました。後でもう一度お試しください。(Đã xảy ra lỗi. Vui lòng thử lại sau.)'
+        LOGIN_FAIL: 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.',
+        ERROR: 'Đã xảy ra lỗi. Vui lòng thử lại sau.'
     }
 };
 
@@ -71,6 +95,10 @@ const CLICK_EVENTS: ClickEvent[] = [
     { name: 'mousedown' },
     { name: 'touchstart', options: { passive: true } },
 ];
+
+// ============================================================================
+// Custom Trigger Class
+// ============================================================================
 
 class CustomTrigger {
     player: PlayerInstance;
@@ -115,9 +143,18 @@ class CustomTrigger {
     }
 }
 
+// ============================================================================
+// Main Component
+// ============================================================================
+
 const Login: React.FC = () => {
+    // ------------------------------------------------------------------------
+    // State
+    // ------------------------------------------------------------------------
+
     const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
     const [error, setError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const navigate = useNavigate();
     const isIconDefined = useRef<boolean>(false);
@@ -127,8 +164,9 @@ const Login: React.FC = () => {
     const context = useModalClose();
     const onClose = context?.onClose;
 
-    // Removed auto-redirect check - users can access login page even when already authenticated
-    // This allows re-authentication or switching accounts without forced redirects
+    // ------------------------------------------------------------------------
+    // Icon Initialization
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
         if (!isIconDefined.current) {
@@ -156,10 +194,13 @@ const Login: React.FC = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    // ------------------------------------------------------------------------
+    // Form Handlers
+    // ------------------------------------------------------------------------
+
     const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>): void => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        // Clear error immediately for better UX
         if (error) setError('');
     }, [error]);
 
@@ -169,7 +210,6 @@ const Login: React.FC = () => {
 
     const handleButtonMouseEnter = useCallback((): void => {
         if (avatarIconRef.current) {
-            // Programmatically trigger avatar animation for visual feedback
             const hoverEvent = new MouseEvent('mouseenter', {
                 bubbles: true,
                 cancelable: true,
@@ -182,6 +222,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
 
         try {
             const response = await fetch(UI_CONFIG.API.LOGIN, {
@@ -190,18 +231,34 @@ const Login: React.FC = () => {
                 body: JSON.stringify(formData),
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('authToken', data.token);
-                navigate(UI_CONFIG.ROUTES.HOME, { replace: true });
+            const result: ApiResponse<LoginResponseData> = await response.json();
+
+            if (response.ok && result.success) {
+                // ===== Read token from correct path =====
+                const token = result.data?.accessToken;
+
+                if (token) {
+                    localStorage.setItem('authToken', token);
+                    navigate(UI_CONFIG.ROUTES.HOME, { replace: true });
+                } else {
+                    setError('Không nhận được token từ server.');
+                }
             } else {
-                const errorText = await response.text();
-                setError(errorText || UI_CONFIG.MESSAGES.LOGIN_FAIL);
+                // Handle error response from ApiResponse wrapper
+                const errorMessage = result.error || result.message || UI_CONFIG.MESSAGES.LOGIN_FAIL;
+                setError(errorMessage);
             }
         } catch (err) {
+            console.error('Login error:', err);
             setError(UI_CONFIG.MESSAGES.ERROR);
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    // ------------------------------------------------------------------------
+    // Render
+    // ------------------------------------------------------------------------
 
     return (
         <div className={styles.loginFormWrapper}>
@@ -210,6 +267,7 @@ const Login: React.FC = () => {
                     className={styles.closeModalBtn}
                     onClick={onClose}
                     aria-label="Close login form"
+                    disabled={isLoading}
                 >
                     ✕
                 </button>
@@ -231,12 +289,14 @@ const Login: React.FC = () => {
                 <h1 className={styles.loginTitle}>Đăng nhập</h1>
 
                 <form onSubmit={handleSubmit} className={styles.loginForm} autoComplete="off">
+                    {/* Error message */}
                     {error && (
                         <div className={styles.loginError} role="alert">
                             {error}
                         </div>
                     )}
 
+                    {/* Email input */}
                     <div className={styles.loginInputGroup}>
                         <input
                             className={styles.loginInput}
@@ -248,10 +308,12 @@ const Login: React.FC = () => {
                             onChange={handleInputChange}
                             autoComplete="email"
                             required
+                            disabled={isLoading}
                             aria-label="Email Address"
                         />
                     </div>
 
+                    {/* Password input */}
                     <div className={styles.loginInputGroup}>
                         <div className={styles.passwordWrapper}>
                             <input
@@ -264,6 +326,7 @@ const Login: React.FC = () => {
                                 onChange={handleInputChange}
                                 autoComplete="current-password"
                                 required
+                                disabled={isLoading}
                                 aria-label="Password"
                             />
                             <button
@@ -271,6 +334,7 @@ const Login: React.FC = () => {
                                 onClick={togglePasswordVisibility}
                                 className={styles.togglePasswordBtn}
                                 tabIndex={-1}
+                                disabled={isLoading}
                                 aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                             >
                                 {/* @ts-ignore */}
@@ -284,23 +348,35 @@ const Login: React.FC = () => {
                         </div>
                     </div>
 
+                    {/* Forgot password link */}
                     <div className={styles.forgotPasswordWrapper}>
-                        <Link to={UI_CONFIG.ROUTES.FORGOT_PASS} className={styles.forgotPasswordLink}>
+                        <Link
+                            to={UI_CONFIG.ROUTES.FORGOT_PASS}
+                            className={styles.forgotPasswordLink}
+                            tabIndex={isLoading ? -1 : 0}
+                        >
                             Quên mật khẩu?
                         </Link>
                     </div>
 
+                    {/* Submit button */}
                     <button
                         type="submit"
                         className={styles.loginButton}
                         onMouseEnter={handleButtonMouseEnter}
+                        disabled={isLoading}
                     >
-                        Đăng nhập
+                        {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
                     </button>
 
+                    {/* Register link */}
                     <p className={styles.loginLinkText}>
                         Chưa có tài khoản?{' '}
-                        <Link to={UI_CONFIG.ROUTES.REGISTER} className={styles.loginLink}>
+                        <Link
+                            to={UI_CONFIG.ROUTES.REGISTER}
+                            className={styles.loginLink}
+                            tabIndex={isLoading ? -1 : 0}
+                        >
                             Đăng ký
                         </Link>
                     </p>

@@ -9,7 +9,7 @@
 :root {
     --color-primary-dark: #1a1a2e;
     --color-surface: #fafafa;
-    --color-accent: #4ade80;
+    --color-accent: #de4a4a;
     --color-accent-light: #86efac;
     --color-text-dark: #1a1a2e;
     --color-text-muted: #6b7280;
@@ -44,32 +44,6 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
-}
-
-/* Close button - Consistent with Auth layout styling */
-.closeModalBtn {
-    position: absolute;
-    top: -35px;
-    right: -35px;
-    z-index: 201;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--color-primary-dark);
-    border: 3px solid var(--color-surface);
-    border-radius: 100%;
-    color: var(--color-accent);
-    font-size: 1.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.closeModalBtn:hover {
-    background: #16162a;
-    transform: scale(1.1);
 }
 
 .loginFormBackground {
