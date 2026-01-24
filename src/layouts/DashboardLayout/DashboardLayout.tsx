@@ -538,7 +538,7 @@ const DashboardLayout: React.FC = () => {
                                 src={icon}
                                 trigger="hover"
                                 colors="primary:#ffffff"
-                                style={{ width: '30px', height: '30px' }}
+                                style={{ width: '25px', height: '25px' }}
                             />
                             <span>{label}</span>
                         </div>
@@ -556,7 +556,7 @@ const DashboardLayout: React.FC = () => {
                                         src="https://cdn.lordicon.com/bushiqea.json"
                                         trigger="hover"
                                         colors="primary:#1a1a2e"
-                                        style={{ width: '30px', height: '30px' }}
+                                        style={{ width: '25px', height: '25px' }}
                                     />
                                 </div>
                                 <span

@@ -25,7 +25,7 @@
     --transition-nav: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     --avatar-desktop: 34px;
     --avatar-tablet: 34px;
-    --avatar-mobile: 30px;
+    --avatar-mobile: 25px;
     --avatar-mobile-small: 30px;
     --avatar-font-desktop: 0.7rem;
     --avatar-font-tablet: 0.9rem;
@@ -204,7 +204,6 @@ body {
     font-weight: 600;
     font-size: var(--avatar-font-desktop);
     flex-shrink: 0;
-    margin-right: 16px;
     transition: transform 0.2s ease;
 }
 
@@ -684,7 +683,7 @@ body {
         margin: auto;
         border-radius: 35px;
         border: rgba(255, 255, 255, 0.1) 2px solid;
-        padding: 0px 20px;
+        padding: 0 20px;
         padding-bottom: 4px;
         background: var(--color-primary-dark);
         z-index: 999;

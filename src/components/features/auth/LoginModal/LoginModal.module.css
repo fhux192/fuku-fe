@@ -57,9 +57,12 @@
     display: grid;
     place-items: center;
     padding: var(--modal-padding);
-    background-color: rgba(26, 26, 46, 0.3);
+    background-color: rgba(26, 26, 46, 0.6);
     backdrop-filter: blur(8px);
     overflow-y: auto;
+
+    /* Animation Fade In */
+    animation: fadeIn 0.3s ease-out forwards;
 }
 
 @keyframes fadeIn {
