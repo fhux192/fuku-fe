@@ -1,0 +1,546 @@
+/* DailyLoginModal.module.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* =============================================================================
+   CSS Variables - Matching LoginModal exactly
+   ============================================================================= */
+
+:root {
+    /* Colors */
+    --color-primary-dark: #1a1a2e;
+    --color-primary-darker: #16162a;
+    --color-surface-white: #ffffff;
+    --color-accent: #4ade80;
+    --color-accent-light: #86efac;
+    --color-accent-dark: #22c55e;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-gold: #fbbf24;
+    --color-gold-dark: #f59e0b;
+    --gradient-accent: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
+    --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+
+    /* Layout */
+    --modal-padding: 16px;
+    --content-padding: 32px;
+    --modal-max-width: 420px;
+    --modal-border-radius: 40px;
+    --group-gap: 18px;
+
+    /* Typography */
+    --title-size: clamp(24px, 5vw, 28px);
+    --text-size: clamp(14px, 3.5vw, 16px);
+    --small-text: clamp(13px, 3vw, 14px);
+
+    /* Button */
+    --button-width: 100%;
+    --button-min-width: 140px;
+
+    /* Touch targets */
+    --touch-target: 44px;
+
+    /* Animation - Bouncy physics from LoginModal */
+    --ease-bouncy: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* =============================================================================
+   Modal Overlay - Same as LoginModal
+   ============================================================================= */
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+    padding: var(--modal-padding);
+    background-color: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* =============================================================================
+   Modal Container - Bouncy Animation from LoginModal
+   ============================================================================= */
+
+.modalContainer {
+    position: relative;
+    width: min(100%, var(--modal-max-width));
+    animation: bounceIn 0.6s var(--ease-bouncy) forwards;
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.6) translateY(50px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* =============================================================================
+   Modal Wrapper - White card with shadow
+   ============================================================================= */
+
+.modalWrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: var(--content-padding);
+    background-color: var(--color-surface-white);
+    border-radius: var(--modal-border-radius);
+    box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
+}
+
+.modalBackground {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-position: center;
+}
+
+.modalContent {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* =============================================================================
+   Close Button - Exact match with LoginModal
+   ============================================================================= */
+
+.closeModalBtn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    z-index: 201;
+    width: 50px;
+    height: 50px;
+    display: grid;
+    place-items: center;
+    background: var(--color-primary-dark);
+    border: 3px solid var(--color-surface-white);
+    border-radius: 50%;
+    color: #DE4A4AFF;
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.closeModalBtn:hover {
+    background: var(--color-primary-darker);
+    transform: scale(1.1);
+}
+
+/* =============================================================================
+   Content Stagger Animation - Same timing as LoginModal
+   ============================================================================= */
+
+.modalContent > * {
+    animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+.modalContent > *:nth-child(1) { animation-delay: 0.2s; }
+.modalContent > *:nth-child(2) { animation-delay: 0.25s; }
+.modalContent > *:nth-child(3) { animation-delay: 0.3s; }
+.modalContent > *:nth-child(4) { animation-delay: 0.35s; }
+.modalContent > *:nth-child(5) { animation-delay: 0.4s; }
+.modalContent > *:nth-child(6) { animation-delay: 0.45s; }
+.modalContent > *:nth-child(7) { animation-delay: 0.5s; }
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   Icon Section with Glow Effect
+   ============================================================================= */
+
+.iconWrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.iconGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    animation: glowPulse 2s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+}
+
+/* =============================================================================
+   Typography - Matching LoginModal fonts
+   ============================================================================= */
+
+.modalTitle {
+    margin: 0 0 10px;
+    color: var(--color-text-dark);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: var(--title-size);
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.modalDescription {
+    margin: 0 0 var(--group-gap);
+    color: var(--color-text-muted);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: var(--text-size);
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* =============================================================================
+   Stats Grid - Two column layout
+   ============================================================================= */
+
+.statsGrid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    padding: 20px;
+    margin-bottom: var(--group-gap);
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 20px;
+}
+
+.statCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.statValue {
+    color: var(--color-text-dark);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(28px, 6vw, 36px);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.statLabel {
+    color: var(--color-text-muted);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: var(--small-text);
+    font-weight: 500;
+}
+
+.statDivider {
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(
+            180deg,
+            transparent 0%,
+            rgba(26, 26, 46, 0.15) 50%,
+            transparent 100%
+    );
+}
+
+/* =============================================================================
+   Level Up Badge - Gold gradient
+   ============================================================================= */
+
+.levelUpBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 20px;
+    margin-bottom: var(--group-gap);
+    background: var(--gradient-gold);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(251, 191, 36, 0.35);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% {
+        box-shadow: 0 8px 24px rgba(251, 191, 36, 0.35);
+    }
+    50% {
+        box-shadow: 0 12px 32px rgba(251, 191, 36, 0.5);
+    }
+}
+
+.badgeText {
+    color: var(--color-text-dark);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(16px, 4vw, 18px);
+    font-weight: 700;
+}
+
+/* =============================================================================
+   Milestone Banner - Accent gradient
+   ============================================================================= */
+
+.milestoneBanner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: var(--group-gap);
+    background: var(--gradient-accent);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(74, 222, 128, 0.35);
+}
+
+.milestoneText {
+    color: var(--color-text-dark);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: var(--text-size);
+    font-weight: 600;
+}
+
+/* =============================================================================
+   Continue Button - Same style as LoginModal button
+   ============================================================================= */
+
+.continueButton {
+    width: var(--button-width);
+    min-width: var(--button-min-width);
+    min-height: 44px;
+    padding: 14px 24px;
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: 24px;
+    color: var(--color-text-dark);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(16px, 3.5vw, 17px);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.continueButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 222, 128, 0.35);
+}
+
+.continueButton:active {
+    transform: translateY(0);
+}
+
+/* =============================================================================
+   Motivation Text
+   ============================================================================= */
+
+.motivationText {
+    margin-top: 16px;
+    color: var(--color-text-muted);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: var(--small-text);
+    font-weight: 500;
+    text-align: center;
+    font-style: italic;
+}
+
+/* =============================================================================
+   Responsive - Tablet (768px)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    :root {
+        --content-padding: 28px;
+        --modal-border-radius: 36px;
+    }
+
+    .closeModalBtn {
+        width: 46px;
+        height: 46px;
+        font-size: 1.125rem;
+    }
+}
+
+/* =============================================================================
+   Responsive - Small Mobile (400px)
+   ============================================================================= */
+
+@media (max-width: 400px) {
+    :root {
+        --modal-padding: 12px;
+        --content-padding: 24px;
+        --modal-max-width: 320px;
+        --modal-border-radius: 32px;
+        --group-gap: 14px;
+    }
+
+    .closeModalBtn {
+        width: 42px;
+        height: 42px;
+        font-size: 1rem;
+        top: -6px;
+        right: -6px;
+    }
+
+    .statsGrid {
+        gap: 16px;
+        padding: 16px;
+    }
+
+    .statDivider {
+        height: 50px;
+    }
+}
+
+/* =============================================================================
+   Responsive - Tiny Screens (320px)
+   ============================================================================= */
+
+@media (max-width: 320px) {
+    :root {
+        --modal-padding: 8px;
+        --content-padding: 20px 16px;
+        --modal-border-radius: 28px;
+    }
+
+    .closeModalBtn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+
+    .statsGrid {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .statDivider {
+        width: 60px;
+        height: 2px;
+    }
+}
+
+/* =============================================================================
+   Landscape Orientation
+   ============================================================================= */
+
+@media (max-height: 480px) and (orientation: landscape) {
+    :root {
+        --content-padding: 20px 28px;
+        --group-gap: 12px;
+    }
+
+    .modalOverlay {
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .modalContainer {
+        margin: 8px auto;
+    }
+
+    .iconWrapper {
+        margin-bottom: 12px;
+    }
+
+    .iconWrapper lord-icon {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .iconGlow {
+        width: 100px;
+        height: 100px;
+    }
+
+    .modalTitle {
+        font-size: 20px;
+        margin-bottom: 6px;
+    }
+
+    .modalDescription {
+        margin-bottom: 12px;
+    }
+
+    .statsGrid {
+        padding: 14px;
+    }
+
+    .continueButton {
+        min-height: 40px;
+        padding: 10px 16px;
+    }
+
+    .motivationText {
+        margin-top: 12px;
+    }
+}
+
+/* =============================================================================
+   Touch Device Optimization
+   ============================================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+    .continueButton {
+        min-height: var(--touch-target);
+    }
+
+    .continueButton:hover {
+        transform: none;
+    }
+
+    .continueButton:active {
+        transform: scale(0.98);
+    }
+}
+
+/* =============================================================================
+   Accessibility - Reduced Motion
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

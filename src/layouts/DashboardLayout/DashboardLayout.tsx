@@ -11,6 +11,11 @@ import LoginModal from '../../components/features/auth/LoginModal/LoginModal';
 import RegisterModal from '../../components/features/auth/RegisterModal/RegisterModal';
 import ForgotPasswordModal from '../../components/features/auth/ForgotPasswordModal/ForgotPasswordModal';
 import Toast from '../../components/common/Toast/Toast';
+import DailyLoginModal from '../../components/features/level/DailyLoginModal/DailyLoginModal';
+
+// ============================================================================
+// INTERFACES
+// ============================================================================
 
 interface NavItem {
     path: string;
@@ -43,13 +48,26 @@ interface UserLevelData {
     rankPosition: number;
 }
 
+interface DailyLoginData {
+    firstLoginToday: boolean;
+    loginDate: string;
+    currentStreak: number;
+    xpEarned: number;
+    leveledUp: boolean;
+    message: string;
+    levelInfo: UserLevelData;
+}
+
 interface LordIconElement extends HTMLElement {
     playerInstance?: {
         play: () => void;
-        goToFirstFrame: () => void;
         isPlaying: boolean;
     };
 }
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
 
 const NAV_ITEMS: NavItem[] = [
     {
@@ -71,6 +89,7 @@ const NAV_ITEMS: NavItem[] = [
         title: 'Lịch sử'
     }
 ];
+
 const MOBILE_BREAKPOINT = 650;
 const TABLET_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 50;
@@ -90,8 +109,13 @@ const STAGE_COLORS: Record<string, string> = {
 
 const API_CONFIG = {
     BASE_URL: 'http://localhost:8080/api',
-    LEVEL: '/levels/me'
+    LEVEL: '/levels/me',
+    DAILY_LOGIN: '/levels/daily-login'
 };
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
 
 const decodeJWT = (token: string): DecodedToken | null => {
     try {
@@ -148,14 +172,13 @@ const formatXp = (xp: number): string => {
 const triggerLordIcon = (element: LordIconElement | null) => {
     if (element?.playerInstance) {
         if (!element.playerInstance.isPlaying) {
-            element.playerInstance.goToFirstFrame();
             element.playerInstance.play();
         }
     }
 };
 
 const getAvatarInitials = (name: string): string => {
-    if (!name || name === 'Khách') return 'Khách';
+    if (!name || name === 'Khách') return '?';
 
     const cleanName = name.trim();
     const parts = cleanName.split(/\s+/);
@@ -170,6 +193,10 @@ const getAvatarInitials = (name: string): string => {
     return (firstInitial + lastInitial).toUpperCase();
 };
 
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
 const DashboardLayout: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -179,6 +206,10 @@ const DashboardLayout: React.FC = () => {
     const lastScrollY = useRef<number>(0);
 
     const navIconRefs = useRef<Record<string, LordIconElement | null>>({});
+
+    // =========================================================================
+    // STATE
+    // =========================================================================
 
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
     const [isNavVisible, setIsNavVisible] = useState<boolean>(true);
@@ -207,11 +238,47 @@ const DashboardLayout: React.FC = () => {
         type: 'success'
     });
 
+    const [dailyLoginModal, setDailyLoginModal] = useState<{
+        isOpen: boolean;
+        streak: number;
+        xpEarned: number;
+        leveledUp: boolean;
+        currentRank: string;
+        icon: string;
+        message: string;
+    }>({
+        isOpen: false,
+        streak: 0,
+        xpEarned: 0,
+        leveledUp: false,
+        currentRank: '',
+        icon: '🌱',
+        message: ''
+    });
+
+    // =========================================================================
+    // TOAST FUNCTIONS
+    // =========================================================================
+
+    const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
+        setToastConfig({ isVisible: true, message, type });
+    }, []);
+
+    const hideToast = useCallback(() => {
+        setToastConfig(prev => ({ ...prev, isVisible: false }));
+    }, []);
+
+    // =========================================================================
+    // API FUNCTIONS
+    // =========================================================================
+
     const fetchUserLevel = useCallback(async (uid: number) => {
         setIsLoadingLevel(true);
         try {
             const token = localStorage.getItem('authToken');
             const url = `${API_CONFIG.BASE_URL}${API_CONFIG.LEVEL}/${uid}`;
+
+            console.log('🔍 Fetching user level:', { url, userId: uid });
 
             const response = await fetch(url, {
                 method: 'GET',
@@ -221,8 +288,11 @@ const DashboardLayout: React.FC = () => {
                 }
             });
 
+            console.log('📡 Response status:', response.status);
+
             if (response.ok) {
                 const result = await response.json();
+                console.log('✅ User level data:', result);
 
                 if (result.success && result.data) {
                     setUserLevel(result.data);
@@ -230,11 +300,68 @@ const DashboardLayout: React.FC = () => {
                 else if (result.userId && result.totalXp !== undefined) {
                     setUserLevel(result as UserLevelData);
                 }
+            } else {
+                const errorText = await response.text();
+                console.error('❌ Error response:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: errorText
+                });
             }
         } catch (error) {
-            console.error('Lỗi fetch user level:', error);
+            console.error('❌ Fetch error:', error);
         } finally {
             setIsLoadingLevel(false);
+        }
+    }, []);
+
+    const claimDailyLoginBonus = useCallback(async (uid: number) => {
+        try {
+            const token = localStorage.getItem('authToken');
+            const url = `${API_CONFIG.BASE_URL}${API_CONFIG.DAILY_LOGIN}/${uid}`;
+
+            console.log('🎁 Claiming daily login bonus...');
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Daily login result:', result);
+
+                if (result.success && result.data) {
+                    const data: DailyLoginData = result.data;
+
+                    if (data.firstLoginToday) {
+                        // Update level info
+                        if (data.levelInfo) {
+                            setUserLevel(data.levelInfo);
+                        }
+
+                        // Show popup modal
+                        setDailyLoginModal({
+                            isOpen: true,
+                            streak: data.currentStreak,
+                            xpEarned: data.xpEarned,
+                            leveledUp: data.leveledUp,
+                            currentRank: data.levelInfo?.rankName || '',
+                            icon: data.levelInfo?.icon || '🌱',
+                            message: data.message
+                        });
+
+                        console.log(`🎉 Daily login: ${data.currentStreak} days, +${data.xpEarned} XP`);
+                    } else {
+                        console.log('ℹ️ Already claimed today');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('❌ Error claiming daily login:', error);
         }
     }, []);
 
@@ -248,6 +375,9 @@ const DashboardLayout: React.FC = () => {
             if (user.userId) {
                 setUserId(user.userId);
                 fetchUserLevel(user.userId);
+
+                // Auto-claim daily login bonus
+                claimDailyLoginBonus(user.userId);
             }
         } else {
             setUserName('Khách');
@@ -255,70 +385,11 @@ const DashboardLayout: React.FC = () => {
             setUserId(null);
             setUserLevel(null);
         }
-    }, [fetchUserLevel]);
+    }, [fetchUserLevel, claimDailyLoginBonus]);
 
-    useEffect(() => {
-        defineElement(lottie.loadAnimation);
-        syncUserData();
-
-        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, [syncUserData]);
-
-    useEffect(() => {
-        const checkScreenSize = () => {
-            const width = window.innerWidth;
-            setIsMobile(width < MOBILE_BREAKPOINT);
-            setIsTablet(width >= MOBILE_BREAKPOINT && width <= TABLET_BREAKPOINT);
-
-            if (width >= MOBILE_BREAKPOINT) {
-                setIsNavVisible(true);
-            }
-        };
-
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
-        return () => window.removeEventListener('resize', checkScreenSize);
-    }, []);
-
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-                setIsMobileMenuOpen(false);
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleMainContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        if (!isMobile) return;
-
-        const currentScrollY = e.currentTarget.scrollTop;
-        const scrollDiff = currentScrollY - lastScrollY.current;
-
-        if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
-            if (scrollDiff > 0) {
-                setIsNavVisible(false);
-                setIsMobileMenuOpen(false);
-            } else {
-                setIsNavVisible(true);
-            }
-            lastScrollY.current = currentScrollY;
-        }
-    };
-
-    const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
-        setToastConfig({ isVisible: true, message, type });
-    }, []);
-
-    const hideToast = useCallback(() => {
-        setToastConfig(prev => ({ ...prev, isVisible: false }));
-    }, []);
+    // =========================================================================
+    // MODAL HANDLERS
+    // =========================================================================
 
     const handleSwitchToRegister = useCallback(() => {
         setIsLoginModalOpen(false);
@@ -359,6 +430,69 @@ const DashboardLayout: React.FC = () => {
         showToast('Đăng xuất thành công!', 'success');
     };
 
+    // =========================================================================
+    // EFFECTS
+    // =========================================================================
+
+    useEffect(() => {
+        defineElement(lottie.loadAnimation);
+        syncUserData();
+
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, [syncUserData]);
+
+    useEffect(() => {
+        const checkScreenSize = () => {
+            const width = window.innerWidth;
+            setIsMobile(width < MOBILE_BREAKPOINT);
+            setIsTablet(width >= MOBILE_BREAKPOINT && width <= TABLET_BREAKPOINT);
+
+            if (width >= MOBILE_BREAKPOINT) {
+                setIsNavVisible(true);
+            }
+        };
+
+        checkScreenSize();
+        window.addEventListener('resize', checkScreenSize);
+        return () => window.removeEventListener('resize', checkScreenSize);
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    // =========================================================================
+    // EVENT HANDLERS
+    // =========================================================================
+
+    const handleMainContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        if (!isMobile) return;
+
+        const currentScrollY = e.currentTarget.scrollTop;
+        const scrollDiff = currentScrollY - lastScrollY.current;
+
+        if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
+            if (scrollDiff > 0) {
+                setIsNavVisible(false);
+                setIsMobileMenuOpen(false);
+            } else {
+                setIsNavVisible(true);
+            }
+            lastScrollY.current = currentScrollY;
+        }
+    };
+
     const handleUserProfileClick = (): void => {
         if (isAuthenticated) {
             if (isMobile || isTablet) {
@@ -381,6 +515,10 @@ const DashboardLayout: React.FC = () => {
         triggerLordIcon(iconRef);
     };
 
+    // =========================================================================
+    // HELPER FUNCTIONS
+    // =========================================================================
+
     const formatTime = (date: Date) => date.toLocaleTimeString('vi-VN', {
         hour: '2-digit',
         minute: '2-digit',
@@ -397,6 +535,10 @@ const DashboardLayout: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
 
     const userNameColor = userLevel ? getStageColor(userLevel.stage) : '#ffffff';
+
+    // =========================================================================
+    // RENDER FUNCTIONS
+    // =========================================================================
 
     const renderLevelInfo = () => {
         if (isLoadingLevel) {
@@ -497,6 +639,10 @@ const DashboardLayout: React.FC = () => {
         );
     };
 
+    // =========================================================================
+    // RENDER
+    // =========================================================================
+
     return (
         <div className={styles.dashboardLayout}>
             <Toast
@@ -505,6 +651,17 @@ const DashboardLayout: React.FC = () => {
                 isVisible={toastConfig.isVisible}
                 onClose={hideToast}
                 duration={3000}
+            />
+
+            <DailyLoginModal
+                isOpen={dailyLoginModal.isOpen}
+                onClose={() => setDailyLoginModal(prev => ({ ...prev, isOpen: false }))}
+                streak={dailyLoginModal.streak}
+                xpEarned={dailyLoginModal.xpEarned}
+                leveledUp={dailyLoginModal.leveledUp}
+                currentRank={dailyLoginModal.currentRank}
+                icon={dailyLoginModal.icon}
+                message={dailyLoginModal.message}
             />
 
             <aside className={`${styles.sidebar} ${isMobile ? (isNavVisible ? styles.sidebarVisible : styles.sidebarHidden) : ''}`}>
