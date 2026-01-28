@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import lottie from 'lottie-web';
 import {defineElement} from '@lordicon/element';
-import RankingBoard from '../../components/features/course/RankingBoard/RankingBoard';
-import CourseCard from '../../components/features/course/CourseCard/CourseCard';
-import LearningPath from '../../components/features/roadmap/LearningPath/LearningPath';
+import RankingBoard from '../../features/course/components/RankingBoard/RankingBoard';
+import CourseCard from '../../features/course/components/CourseCard/CourseCard';
+import LearningPath from '../../features/roadmap/components/LearningPath/LearningPath';
 import RoadmapPage from '../RoadmapPage/RoadmapPage';
-import {useCourseSelection} from '../../hooks/useCourseSelection';
+import {useCourseSelection} from '../../features/course/hooks/useCourseSelection';
 import {
     COURSES_DATA,
     HARD_WORKING_USERS,
     TOP_SCORERS,
     RANKING_CONFIG,
-} from '../../constants/course.constants';
+} from '../../features/course/course.constants';
 import styles from './CoursePage.module.css';
 
 const CoursePage: React.FC = () => {

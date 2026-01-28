@@ -18,13 +18,13 @@ import { defineElement } from '@lordicon/element';
 import {
     LEVELS_DATA,
     MOCK_USER_PROGRESS,
-} from '../../constants/roadmap.constant';
+} from '../../features/roadmap/roadmap.constant';
 import {
     LevelNode as LevelNodeType,
     UserProgress,
     LevelStatus,
     LevelType,
-} from '../../types/roadmap.types';
+} from '../../features/roadmap/roadmap.types';
 import styles from './RoadmapPage.module.css';
 
 // =============================================================================

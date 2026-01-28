@@ -1,0 +1,486 @@
+/* HomeLayout.module.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+/* ============================================================================
+   CSS Variables
+   ============================================================================ */
+
+:root {
+    /* Spacing Scale */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 1rem;
+
+    /* Border Radius Scale */
+    --border-radius-sm: 0.5rem;
+    --border-radius-md: 1rem;
+    --border-radius-lg: 1.875rem;
+    --border-radius-full: 6.25rem;
+
+    /* Transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-bouncy: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================================================
+   Base Container
+   ============================================================================ */
+
+.authContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 40px;
+    overflow-x: hidden;
+    font-family: "Google Sans Flex", sans-serif;
+    cursor: default;
+    background-color: var(--color-surface);
+}
+
+/* ============================================================================
+   Banner Section
+   ============================================================================ */
+
+.webflowBanner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    background: var(--gradient-accent);
+    color: var(--color-text-dark);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(0.775rem, 2vw, 1.125rem);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(74, 222, 128, 0.2);
+}
+
+/* ============================================================================
+   Logo Section
+   ============================================================================ */
+
+.desktopLogo {
+    display: none;
+    top: 70px;
+    left: 40px;
+    z-index: 50;
+    width: clamp(70px, 8vw, 80px);
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.desktopLogo:hover {
+    transform: scale(1.05);
+}
+
+.mobileHeader {
+    position: fixed;
+    top: 60px;
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-xs);
+}
+
+.logoContainerMobile {
+    display: flex;
+    align-items: center;
+}
+
+.logoImage {
+    width: clamp(40px, 10vw, 50px);
+    height: clamp(40px, 10vw, 50px);
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logoImage:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================================================
+   Left Side Section
+   ============================================================================ */
+
+.leftSideWrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    min-height: calc(100vh - 40px);
+    box-sizing: border-box;
+    background-color: var(--color-surface);
+}
+
+.leftSide {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 40px);
+    padding: var(--spacing-lg) var(--spacing-sm);
+    overflow: hidden;
+    background-color: var(--color-primary-dark);
+    border-radius: 0;
+}
+
+/* ============================================================================
+   Decorative Elements
+   ============================================================================ */
+
+.decorativeElements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.floatingKanji {
+    position: absolute;
+    font-weight: 900;
+    line-height: 1;
+    user-select: none;
+    opacity: 0.06;
+    animation: float 6s ease-in-out infinite;
+    will-change: transform, opacity;
+}
+
+.kanji1 {
+    bottom: 5%;
+    left: 5%;
+    color: rgba(255, 255, 255, 0.08);
+    font-size: clamp(10rem, 15vw, 10rem);
+    animation-delay: 0s;
+}
+
+.kanji2 {
+    top: 10%;
+    right: 5%;
+    color: rgba(255, 255, 255, 0.08);
+    font-size: clamp(10rem, 15vw, 10rem);
+    animation-delay: 2s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.06;
+    }
+    50% {
+        transform: translateY(-15px) rotate(1deg);
+        opacity: 0.04;
+    }
+}
+
+.overlayGradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 50%, rgba(74, 222, 128, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* ============================================================================
+   Hero Content Section
+   ============================================================================ */
+
+.leftSideContent {
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    padding: var(--spacing-sm);
+}
+
+.leftSideTitle {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--color-text-light);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: -1px;
+}
+
+.highlightText {
+    display: inline-block;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.leftSideSubtitle {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-muted);
+    font-size: clamp(0.5rem, 2vw, 1rem);
+    line-height: 1.6;
+    text-align: center;
+}
+
+.leftSideSubtitle strong {
+    display: block;
+    margin-top: var(--spacing-xs);
+    color: var(--color-text-light);
+    font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+/* --- Gamified Term Effect (Tinh tế & Mềm mại) --- */
+.gamifiedTerm {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0 2px;
+    /* Transition mượt mà */
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), text-shadow 0.1s ease;
+
+    /* Gradient pastel nhẹ nhàng hơn: Tím nhạt -> Mint -> Xanh dương nhạt */
+    background: linear-gradient(120deg, #4ade80 10%, #60a5fa 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+}
+
+.gamifiedTerm:hover {
+    transform: scale(1.05) translateY(-1px);
+}
+
+/* ============================================================================
+   Button Section
+   ============================================================================ */
+
+.btnWrapper {
+    display: flex;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.ctaButton,
+.ctaInfoButton {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    min-width: 170px;
+    padding: clamp(0.75rem, 2vw, 1rem) clamp(1rem, 3vw, 1.75rem);
+    border-radius: var(--border-radius-full);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--transition-bouncy);
+    transform: translateY(0);
+}
+
+.ctaButton {
+    background-color: var(--color-accent);
+    border: 2px solid transparent;
+    color: var(--color-text-dark);
+}
+
+.ctaButton:hover {
+    transform: translateY(-2px);
+}
+
+.ctaButton:active {
+    transform: translateY(0);
+}
+
+.ctaInfoButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: var(--color-text-light);
+}
+
+.ctaInfoButton:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.ctaInfoButton.toggled {
+    background: var(--color-surface);
+    border-color: var(--color-surface);
+    color: var(--color-text-dark);
+    transform: scale(1);
+}
+
+/* ============================================================================
+   Right Side Modal (Mobile)
+   ============================================================================ */
+
+.rightSide {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(26, 26, 46, 0.6);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.showModal {
+    display: flex;
+}
+
+.drawerContainer {
+    position: relative;
+    width: 100%;
+    max-width: 395px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rightSideContent {
+    position: relative;
+    width: 100%;
+    max-width: 345px;
+    max-height: 100vh;
+    padding: 25px;
+    background-color: var(--color-surface);
+    border-radius: 40px;
+    box-shadow: 0 20px 40px rgba(26, 26, 46, 0.15);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.closeModalBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 201;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-primary-dark);
+    border: 3px solid var(--color-surface);
+    border-radius: 100%;
+    color: var(--color-accent);
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.closeModalBtn:hover {
+    background: var(--color-primary-darker);
+    transform: scale(1.1);
+}
+
+/* ============================================================================
+   Right Side Desktop
+   ============================================================================ */
+
+.rightSideDesktop {
+    display: none;
+}
+
+/* ============================================================================
+   Media Queries
+   ============================================================================ */
+
+@media (min-width: 768px) {
+    .leftSide { padding: var(--spacing-xl) var(--spacing-lg); }
+    .glassCard { padding: var(--spacing-xl); }
+    .kanji1 { bottom: 2%; left: 0; font-size: clamp(10rem, 20vw, 15rem); }
+    .kanji2 { top: 8%; right: 0; font-size: clamp(10rem, 20vw, 17rem); }
+    .btnWrapper { width: 100%; justify-content: center; align-items: center; gap: var(--spacing-md); margin: 0 auto; }
+    .ctaButton, .ctaInfoButton { flex: 0 1 auto; }
+}
+
+@media (min-width: 1050px) {
+    .authContainer { display: grid; grid-template-columns: 2.2fr 1fr; gap: 0; padding-top: 40px; transition: var(--transition-smooth); }
+    .authContainer.rightsideHidden { grid-template-columns: 1fr 0fr; }
+    .webflowBanner { font-size: 1.1rem; }
+    .desktopLogo { display: block; }
+    .leftSideWrapper { max-height: calc(100vh - 60px); padding: 20px 0 20px 20px; transition: var(--transition-smooth); }
+    .authContainer.rightsideHidden .leftSideWrapper { padding: 0; }
+    .leftSide { min-height: 100%; border-radius: 30px; transition: var(--transition-smooth); }
+    .authContainer.rightsideHidden .leftSide { border-radius: 0; min-height: calc(100vh - 40px); }
+    .rightSide, .closeModalBtn { display: none !important; }
+    .mobileHeader { display: none; }
+    .kanji1 { bottom: 0; left: 5%; font-size: 15rem; }
+    .kanji2 { top: 7%; right: 3%; font-size: 17rem; }
+    .leftSideTitle { font-size: 3.5rem; text-align: center; }
+    .leftSideSubtitle { text-align: center; }
+    .leftSideSubtitle strong { font-size: 1.2rem; }
+    .ctaButton, .ctaInfoButton { padding: 0.875rem 1.75rem; font-size: 1.1rem; }
+    .rightSideDesktop { position: relative; z-index: 5; display: flex; justify-content: center; align-items: center; width: 100%; height: calc(100vh - 40px); background-color: var(--color-surface); backdrop-filter: none; overflow: hidden; transition: var(--transition-smooth); transform-origin: right; }
+    .rightSideDesktop.hidden { transform: translateX(100%); opacity: 0; pointer-events: none; }
+    .rightSideDesktop .rightSideContent { width: 100%; max-width: 100%; max-height: 100%; padding: 2rem; border-radius: 0; box-shadow: none; animation: none; }
+}
+
+@media (min-width: 1440px) {
+    .authContainer { grid-template-columns: 2.5fr 1fr; }
+    .authContainer.rightsideHidden { grid-template-columns: 1fr 0fr; }
+    .leftSideContent { max-width: 700px; }
+    .glassCard { max-width: 700px; }
+}
+
+@media (max-width: 375px) {
+    .authContainer { padding-top: 40px; }
+    .mobileHeader { top: 50px; left: var(--spacing-xs); right: var(--spacing-xs); }
+    .leftSide { padding: var(--spacing-md) var(--spacing-xs); }
+    .glassCard { padding: var(--spacing-md); }
+    .btnWrapper { width: 100%; flex-direction: column; justify-content: center; align-items: center; gap: var(--spacing-sm); margin: 0 auto; }
+    .ctaButton, .ctaInfoButton { width: 100%; min-width: auto; }
+}

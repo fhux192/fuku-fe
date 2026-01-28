@@ -5,39 +5,18 @@
     --color-surface75: rgba(255, 255, 255, 0.3);
     --color-just-black: #0e100f;
     --color-shockingly-green: #95d600;
-
-    --color-cyber-blue: #00f0ff;
-    --color-cyber-blue-light: #ccfcff;
-    --color-cyber-blue-dark: #008a94;
-
-    --color-hyper-pink: #ff00f7;
-    --color-hyper-pink-light: #ffccfd;
-    --color-hyper-pink-dark: #9e0099;
-
-    --color-electric-purple: #bd00ff;
-    --color-electric-purple-light: #f2ccff;
-    --color-electric-purple-dark: #76009e;
-
-    /* 4. Blaze Orange */
-    --color-blaze-orange: #ff5e00;
-    --color-blaze-orange-light: #ffdfcc;
-    --color-blaze-orange-dark: #9e3a00;
-
-    --color-lightning-yellow: #ffea00;
-    --color-lightning-yellow-light: #fffccc;
-    --color-lightning-yellow-dark: #9e9100;
-
-    --color-torch-red: #ff2a2a;
-    --color-torch-red-light: #ffcccc;
-    --color-torch-red-dark: #9e1a1a;
-
-    --color-quantum-teal: #00ffaa;
-    --color-quantum-teal-light: #ccffee;
-    --color-quantum-teal-dark: #009e69;
-
-    --color-black-card: #1c1f1e;
-    --color-black-border: #2f3332;
-    --color-white-dim: #e0e0e0;
+    --color-primary-dark: #1a1a2e;
+    --color-surface: #fafafa;
+    --color-accent-light: #86efac;
+    --color-text-dark: #1a1a2e;
+    --color-text-muted: #6b7280;
+    --color-error: #f87171;
+    --color-loading-border: rgba(254, 242, 242, 1);
+    --color-error-border: rgba(248, 113, 113, 0.3);
+    --color-lt-green: #4ade80;
+    --color-loading-bg: rgba(240, 253, 244, 1);
+    --color-success-border: rgba(74, 222, 128, 0.3);
+    --gradient-accent: linear-gradient(135deg, #4ade80 0%, #86efac 100%);
 
     /* Spacing Scale - consistent spacing across all components */
     --space-xs: 4px;

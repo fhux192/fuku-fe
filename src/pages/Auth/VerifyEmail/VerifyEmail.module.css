@@ -1,0 +1,415 @@
+/* VerifyEmail.module.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
+
+/* ============================================================================
+   Form Container - Main wrapper with entry animation
+   ============================================================================ */
+
+.verifyFormWrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 450px;
+    max-height: 100vh;
+    margin: auto;
+    padding: 30px 20px;
+    border-radius: 50px;
+    animation: modalFadeIn 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.verifyFormBackground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-position: center;
+}
+
+.verifyFormOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+}
+
+.verifyFormContent {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ============================================================================
+   Content Animation - Staggered entrance for child elements
+   ============================================================================ */
+
+.verifyFormContent > * {
+    animation: slideInUp 0.5s cubic-bezier(0.23, 1, 0.32, 1) backwards;
+}
+
+.verifyFormContent > *:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.verifyFormContent > *:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.verifyFormContent > *:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.verifyFormContent > *:nth-child(4) {
+    animation-delay: 0.25s;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   Typography - Title and subtitle
+   ============================================================================ */
+
+.verifyTitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: var(--color-text-dark);
+    font-family: "Google Sans Flex", sans-serif;
+    font-size: clamp(28px, 6vw, 36px);
+    font-weight: 900;
+    text-align: center;
+}
+
+.verifySubtitle {
+    margin-bottom: 20px;
+    color: var(--color-text-muted);
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: clamp(13px, 3.2vw, 15px);
+    line-height: 1.6;
+    text-align: center;
+}
+
+/* ============================================================================
+   Status Boxes - Loading, Success, Error states
+   ============================================================================ */
+
+.verifyBox {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 24px;
+    border-radius: 16px;
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-sizing: border-box;
+}
+
+.verifyStatusText {
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* Loading State */
+.verifyLoading {
+    background-color: var(--color-loading-bg);
+    border: 1px solid var(--color-loading-border);
+    color: var(--color-text-muted);
+}
+
+/* Success State */
+.verifySuccess {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: #16a34a;
+    box-shadow: 0 4px 12px rgba(22, 163, 74, 0.1);
+}
+
+/* Error State with shake animation */
+.verifyError {
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error-border);
+    color: #dc2626;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+    animation: shakeError 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes shakeError {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+/* ============================================================================
+   Spinner Animation
+   ============================================================================ */
+
+.spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(107, 114, 128, 0.2);
+    border-top-color: var(--color-text-muted);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================================================
+   Action Section - Subtitle and button
+   ============================================================================ */
+
+.verifyActionSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInUp 0.4s ease-out backwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================================
+   Button - Synced with Login styling
+   ============================================================================ */
+
+.verifyButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    min-width: 180px;
+    padding: clamp(12px, 3vw, 14px) 24px;
+    background: var(--gradient-accent);
+    border: none;
+    border-radius: 30px;
+    color: var(--color-text-dark);
+    font-family: "MuseoModerno", sans-serif;
+    font-size: clamp(15px, 3.5vw, 17px);
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.verifyButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.verifyButton:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Accent-colored shadow on hover */
+.verifyButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(74, 222, 128, 0.35);
+}
+
+.verifyButton:active {
+    transform: translateY(0);
+}
+
+/* ============================================================================
+   Tablet Breakpoint (768px)
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .verifyFormWrapper {
+        max-width: 90%;
+        padding: 28px 16px;
+        border-radius: 40px;
+    }
+
+    .verifyButton {
+        width: 70%;
+        min-width: 180px;
+    }
+}
+
+/* ============================================================================
+   Mobile Breakpoint (480px)
+   ============================================================================ */
+
+@media (max-width: 480px) {
+    .verifyFormWrapper {
+        max-width: 100%;
+        max-height: 85vh;
+        padding: 24px 15px;
+        border-radius: 35px;
+    }
+
+    .verifyTitle {
+        margin-bottom: 20px;
+    }
+
+    .verifyBox {
+        padding: 16px;
+        border-radius: 14px;
+    }
+
+    .verifyButton {
+        width: 80%;
+        min-width: 170px;
+    }
+}
+
+/* ============================================================================
+   Extra Small Breakpoint (360px)
+   ============================================================================ */
+
+@media (max-width: 360px) {
+    .verifyFormWrapper {
+        max-width: 94%;
+        padding: 20px 12px;
+        border-radius: 30px;
+    }
+
+    .verifyTitle {
+        font-size: clamp(24px, 7vw, 30px);
+    }
+
+    .verifyBox {
+        padding: 14px;
+        margin-bottom: 20px;
+    }
+
+    .verifyButton {
+        width: 85%;
+        min-width: 160px;
+    }
+}
+
+/* ============================================================================
+   Landscape Orientation - Compact layout for horizontal screens
+   ============================================================================ */
+
+@media (max-height: 600px) and (orientation: landscape) {
+    .verifyFormWrapper {
+        padding: 16px 12px;
+        border-radius: 30px;
+    }
+
+    .verifyTitle {
+        margin-bottom: 16px;
+        font-size: clamp(22px, 4vw, 28px);
+    }
+
+    .verifyBox {
+        padding: 14px;
+        margin-bottom: 16px;
+    }
+
+    .verifySubtitle {
+        margin-bottom: 14px;
+    }
+
+    .verifyButton {
+        min-width: 150px;
+        padding: 10px 20px;
+    }
+}
+
+/* ============================================================================
+   Touch Device Optimizations - Minimum tap targets for accessibility
+   ============================================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+    .verifyButton {
+        min-height: 48px;
+    }
+}
+
+/* ============================================================================
+   Very Small Screen Protection (320px) - Prevent layout breaking
+   ============================================================================ */
+
+@media (max-width: 320px) {
+    .verifyFormWrapper {
+        max-width: 96%;
+        padding: 18px 10px;
+        border-radius: 28px;
+    }
+
+    .verifyTitle {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .verifyBox {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .verifySubtitle {
+        font-size: 13px;
+    }
+
+    .verifyButton {
+        width: 90%;
+        min-width: 150px;
+        font-size: 15px;
+    }
+}

@@ -7,18 +7,17 @@ import type { FC} from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 // Pages
-import Register from './pages/auth/Register/Register';
-import VerifyEmail from './pages/auth/VerifyEmail/VerifyEmail';
-import Login from './pages/auth/Login/Login';
-import ForgotPassword from './pages/auth/ForgotPassword/ForgotPassword';
-import ResetPassword from './pages/auth/ResetPassword/ResetPassword';
-import RoadmapScreen from './pages/RoadMap/RoadmapKanjiN5';
+import Register from './pages/Auth/Register/Register';
+import VerifyEmail from './pages/Auth/VerifyEmail/VerifyEmail';
+import Login from './pages/Auth/Login/Login';
+import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
+import ResetPassword from './pages/Auth/ResetPassword/ResetPassword';
 import KanaReference from './pages/KanaReference/KanaReference';
 import CoursePage from './pages/CoursePage/CoursePage';
 
 // Layouts
-import HomeLayout from './layouts/HomeLayout/HomeLayout';
-import DashboardLayout from './layouts/DashboardLayout/DashboardLayout';
+import HomeLayout from './components/layouts/HomeLayout/HomeLayout';
+import DashboardLayout from './components/layouts/DashboardLayout/DashboardLayout';
 
 import './App.css';
 
@@ -82,7 +81,6 @@ const App: FC = () => {
                     {/* Standalone routes */}
                     <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
                     <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-                    <Route path={ROUTES.ROADMAP} element={<RoadmapScreen />} />
                     <Route path={ROUTES.KANA_REFERENCE} element={<KanaReference />} />
 
                     {/* Default redirect */}
