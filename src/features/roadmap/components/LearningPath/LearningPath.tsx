@@ -17,21 +17,17 @@ interface LearningPathProps {
 
 type NodeStatus = 'completed' | 'current' | 'locked';
 
-const LearningPath: React.FC<LearningPathProps> = ({ courses, currentLevel = 'N5' }) => {
+const LearningPath: React.FC<LearningPathProps> = ({ courses, currentLevel = 'IELTS 4.0' }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    // 1. Logic xác định trạng thái
     const getNodeStatus = (courseLv: string): NodeStatus => {
-        // Danh sách level theo thứ tự chuẩn
-        const levels = ['N5', 'N4', 'N3', 'N2', 'N1'];
+        const levels = ['IELTS 3.0', 'IELTS 4.0', 'IELTS 5.0', 'IELTS 6.0', 'IELTS 6.5','IELTS 7.0'];
 
-        // Tìm index để so sánh
         const currentIndex = levels.findIndex(l => l === currentLevel);
         const courseIndex = levels.findIndex(l => l === courseLv);
 
-        // Fallback nếu không tìm thấy level (ví dụ course mới)
         if (courseIndex === -1) return 'locked';
 
         if (courseIndex < currentIndex) return 'completed';

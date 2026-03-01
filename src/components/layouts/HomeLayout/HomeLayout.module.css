@@ -220,8 +220,7 @@
 .leftSideTitle {
     margin: 0 0 var(--spacing-md) 0;
     color: var(--color-text-light);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 2vw, 3.5rem);
     font-weight: 900;
     line-height: 1.2;
     text-align: center;
@@ -460,7 +459,7 @@
     .mobileHeader { display: none; }
     .kanji1 { bottom: 0; left: 5%; font-size: 15rem; }
     .kanji2 { top: 7%; right: 3%; font-size: 17rem; }
-    .leftSideTitle { font-size: 3.5rem; text-align: center; }
+    .leftSideTitle { font-size: 3rem; text-align: center; }
     .leftSideSubtitle { text-align: center; }
     .leftSideSubtitle strong { font-size: 1.2rem; }
     .ctaButton, .ctaInfoButton { padding: 0.875rem 1.75rem; font-size: 1.1rem; }

@@ -6,11 +6,12 @@ import { Course, RankUser } from './course.types';
  */
 
 export const COURSES_DATA: Course[] = [
-    { id: 'n5', lv: 'N5', name: 'Nhập Môn', kanji: '始', duration: '3 tháng', students: '2.5k+', lessons: 48 },
-    { id: 'n4', lv: 'N4', name: 'Sơ Cấp', kanji: '歩', duration: '4 tháng', students: '1.8k+', lessons: 64 },
-    { id: 'n3', lv: 'N3', name: 'Trung Cấp', kanji: '通', duration: '5 tháng', students: '1.2k+', lessons: 80 },
-    { id: 'n2', lv: 'N2', name: 'Thượng Cấp', kanji: '進', duration: '6 tháng', students: '800+', lessons: 96 },
-    { id: 'n1', lv: 'N1', name: 'Cao Cấp', kanji: '極', duration: '8 tháng', students: '500+', lessons: 128 },
+    { id: 'ielts_3_0', lv: 'IELTS 3.0', name: 'Nền Tảng', kanji: '礎', duration: '2 tháng', students: '3.5k+', lessons: 40 },
+    { id: 'ielts_4_0', lv: 'IELTS 4.0', name: 'Cơ Bản', kanji: '初', duration: '3 tháng', students: '2.8k+', lessons: 56 },
+    { id: 'ielts_5_0', lv: 'IELTS 5.0', name: 'Trung Cấp', kanji: '中', duration: '4 tháng', students: '2.1k+', lessons: 72 },
+    { id: 'ielts_6_0', lv: 'IELTS 6.0', name: 'Thượng Cấp', kanji: '上', duration: '5 tháng', students: '1.5k+', lessons: 88 },
+    { id: 'ielts_6_5', lv: 'IELTS 6.5', name: 'Nâng Cao', kanji: '高', duration: '6 tháng', students: '900+', lessons: 104 },
+    { id: 'ielts_7_0', lv: 'IELTS 7.0', name: 'Chuyên Sâu', kanji: '極', duration: '8 tháng', students: '500+', lessons: 120 },
 ];
 
 export const HARD_WORKING_USERS: RankUser[] = [

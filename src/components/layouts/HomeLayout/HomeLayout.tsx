@@ -68,9 +68,9 @@ const UI_CONFIG: UIConfig = {
         BANNER_PRE: 'Hiện tại Fuku đang ',
         BANNER_HIGHLIGHT: 'miễn phí',
         BANNER_POST: ' cho tất cả mọi người',
-        MAIN_TITLE_JP: '日本語を',
-        MAIN_TITLE_HIGHLIGHT: '学びましょう',
-        SUBTITLE_PRE: 'Fuku - Nền tảng học tiếng Nhật được ',
+        MAIN_TITLE_JP: 'Fuku',
+        MAIN_TITLE_HIGHLIGHT: 'Learn. Level Up!',
+        SUBTITLE_PRE: 'Nền tảng học tiếng Anh được ',
         SUBTITLE_INTERACTIVE: 'game hoá',
         SUBTITLE_POST: ' thông minh miễn phí.',
         BTN_START: 'Bắt đầu ngay',
@@ -165,6 +165,7 @@ const HeroSection = memo<HeroSectionProps>(({ onNavigate, onOpenToggleRightSide,
                     >
                         {UI_CONFIG.TEXT.SUBTITLE_INTERACTIVE}
                     </span>
+                    <br/>
                     {UI_CONFIG.TEXT.SUBTITLE_POST}
                 </strong>
             </p>
