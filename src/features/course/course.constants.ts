@@ -6,12 +6,14 @@ import { Course, RankUser } from './course.types';
  */
 
 export const COURSES_DATA: Course[] = [
-    { id: 'ielts_3_0', lv: 'IELTS 3.0', name: 'Nền Tảng', kanji: '礎', duration: '2 tháng', students: '3.5k+', lessons: 40 },
-    { id: 'ielts_4_0', lv: 'IELTS 4.0', name: 'Cơ Bản', kanji: '初', duration: '3 tháng', students: '2.8k+', lessons: 56 },
-    { id: 'ielts_5_0', lv: 'IELTS 5.0', name: 'Trung Cấp', kanji: '中', duration: '4 tháng', students: '2.1k+', lessons: 72 },
-    { id: 'ielts_6_0', lv: 'IELTS 6.0', name: 'Thượng Cấp', kanji: '上', duration: '5 tháng', students: '1.5k+', lessons: 88 },
-    { id: 'ielts_6_5', lv: 'IELTS 6.5', name: 'Nâng Cao', kanji: '高', duration: '6 tháng', students: '900+', lessons: 104 },
-    { id: 'ielts_7_0', lv: 'IELTS 7.0', name: 'Chuyên Sâu', kanji: '極', duration: '8 tháng', students: '500+', lessons: 120 },
+    { id: 'ielts_3_0', lv: 'IELTS 3.0', name: 'Nền Tảng', duration: '2 tháng', students: '3.5k+', lessons: 40 },
+    { id: 'ielts_4_0', lv: 'IELTS 4.0', name: 'Cơ Bản',  duration: '3 tháng', students: '2.8k+', lessons: 56 },
+    { id: 'ielts_5_0', lv: 'IELTS 5.0', name: 'Trung Cấp',  duration: '4 tháng', students: '2.1k+', lessons: 72 },
+    { id: 'ielts_6_0', lv: 'IELTS 6.0', name: 'Thượng Cấp', duration: '5 tháng', students: '1.5k+', lessons: 88 },
+    { id: 'ielts_6_5', lv: 'IELTS 6.5', name: 'Nâng Cao',  duration: '6 tháng', students: '900+', lessons: 104 },
+    { id: 'ielts_7_0', lv: 'IELTS 7.0', name: 'Chuyên Sâu',  duration: '8 tháng', students: '500+', lessons: 120 },
+    { id: 'ielts_7_5', lv: 'IELTS 7.5', name: 'Bứt Phá',  duration: '10 tháng', students: '300+', lessons: 136 },
+    { id: 'ielts_8_0', lv: 'IELTS 8.0', name: 'Bậc Thầy',  duration: '12 tháng', students: '150+', lessons: 152 },
 ];
 
 export const HARD_WORKING_USERS: RankUser[] = [

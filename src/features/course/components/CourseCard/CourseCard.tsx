@@ -36,7 +36,6 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ course, isSelected, 
                 }
             }}
         >
-            <div className={styles.cardBg} aria-hidden="true">{course.kanji}</div>
 
             <div className={styles.cardTop}>
                 <div className={styles.levelBadge}>{course.lv}</div>

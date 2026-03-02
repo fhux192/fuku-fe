@@ -1,342 +1,411 @@
-/* components/LearningPath/LearningPath.module.css */
-
-/* =============================================================================
-   1. Design Tokens & Variables
-   ============================================================================= */
-
+/* === 1. Design Tokens === */
 :root {
-    --lp-bg-surface: #ffffff;
-    --lp-primary: #1a1a2e;       /* Màu tối chủ đạo */
-    --lp-accent: #4ade80;        /* Màu xanh lá active */
-    --lp-accent-glow: rgba(74, 222, 128, 0.5);
-    --lp-locked: #e2e8f0;        /* Màu xám cho node bị khóa */
-    --lp-text-main: #1e293b;
-    --lp-text-sub: #64748b;
-    --lp-line-height: 4px;
-    --lp-node-size: 60px;
-    --lp-node-size-mobile: 50px;
+    --lp-bg-surface:            #ffffff;
+    --lp-primary:               #1a1a2e;
+    --lp-accent:                #4ade80;
+    --lp-locked:                #e2e8f0;
+    --lp-text-main:             #1e293b;
+    --lp-text-sub:              #64748b;
+    --lp-line-height:           4px;
+
+    --lp-node-outer:            72px;
+    --lp-node-size:             60px;
+    --lp-node-outer-mobile:     60px;
+    --lp-node-size-mobile:      50px;
+
+    --lp-track-height:          160px;
+    --lp-track-height-mobile:   130px;
+
+    --lp-scrollbar-height:      4px;
+    --lp-scrollbar-thumb:       #cbd5e1;
+    --lp-scrollbar-thumb-hover: #94a3b8;
 }
 
-/* =============================================================================
-   2. Main Container
-   ============================================================================= */
-
+/* === 2. Main Container === */
 .pathContainer {
-    background: var(--lp-bg-surface);
+    background:    var(--lp-bg-surface);
     border-radius: 24px;
-    padding: 32px;
+    padding:       32px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    position: relative;
-    overflow: hidden;
+    border:        1px solid rgba(0, 0, 0, 0.04);
+    position:      relative;
+    overflow-x:    clip;
+    overflow-y:    visible;
 }
 
-/* Header styling */
+/* === 3. Header === */
 .pathHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
+    display:         flex;
+    justify-content: flex-start;
+    align-items:     center;
+    margin-bottom:   32px;
+    position:        relative;
 }
 
 .headerTitle {
-    display: flex;
+    display:     flex;
     align-items: center;
-    gap: 12px;
+    gap:         12px;
 }
 
 .iconBox {
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
+    width:           42px;
+    height:          42px;
+    background:      linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
+    border-radius:   12px;
+    display:         flex;
+    align-items:     center;
     justify-content: center;
-    color: var(--lp-accent);
-    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.2);
+    color:           var(--lp-accent);
+    flex-shrink:     0;
 }
 
 .headerTitle h2 {
-    font-size: 1.25rem;
+    font-size:   1.25rem;
     font-weight: 700;
-    color: var(--lp-text-main);
-    margin: 0;
+    color:       var(--lp-text-main);
+    margin:      0;
 }
 
-.headerTitle p {
-    font-size: 0.875rem;
-    color: var(--lp-text-sub);
-    margin: 4px 0 0 0;
+.subtitleWrapper {
+    display:     flex;
+    align-items: center;
+    gap:         8px;
+    margin-top:  6px;
+    min-height:  24px;
+}
+
+.subtitleText {
+    font-size:  0.875rem;
+    color:      var(--lp-text-sub);
+    transition: opacity 0.25s ease;
 }
 
 .currentBadge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(74, 222, 128, 0.1);
-    color: #15803d;
-    padding: 6px 12px;
+    display:       flex;
+    align-items:   center;
+    gap:           4px;
+    background:    rgba(74, 222, 128, 0.1);
+    color:         #15803d;
+    padding:       4px 10px;
     border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size:     0.75rem;
+    font-weight:   600;
+    animation:     fadeIn 0.25s ease;
+    white-space:   nowrap;
+    flex-shrink:   0;
 }
 
-/* =============================================================================
-   3. The Scrollable Track (Horizontal)
-   ============================================================================= */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-3px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
 
+/* === 4. Track === */
 .trackWrapper {
-    position: relative;
-    /* Tạo hiệu ứng mờ 2 bên để báo hiệu có thể cuộn */
+    position:   relative;
+    height:     var(--lp-track-height);
+    overflow-y: visible;
+    z-index:    10;
 }
 
 .trackScroll {
-    display: flex;
-    align-items: center;
-    gap: 0; /* Gap xử lý bằng connector */
-    overflow-x: auto;
-    padding: 20px 0; /* Padding để không bị cắt shadow */
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none; /* Firefox */
+    display:                    flex;
+    align-items:                center;
+    height:                     100%;
+    overflow-x:                 auto;
+    overflow-y:                 visible;
+    padding:                    0 20px;
+    box-sizing:                 border-box;
+    scroll-snap-type:           x mandatory;
+    scrollbar-width:            none;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+    scroll-behavior:            smooth;
 }
 
 .trackScroll::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
+    display: none;
 }
 
-/* =============================================================================
-   4. Node & Connector Items
-   ============================================================================= */
+/* === Mobile Scrollbar Variant === */
+.trackScrollMobile {
+    padding-bottom:  16px;
+    height:          calc(var(--lp-track-height-mobile) + 16px);
+    align-items:     flex-start;
+    padding-top:     16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--lp-scrollbar-thumb) transparent;
+}
 
-/* --- Item Wrapper --- */
+.trackScrollMobile::-webkit-scrollbar {
+    display: block;
+    height:  var(--lp-scrollbar-height);
+}
+
+.trackScrollMobile::-webkit-scrollbar-track {
+    background:    transparent;
+    border-radius: 999px;
+}
+
+.trackScrollMobile::-webkit-scrollbar-thumb {
+    background:    var(--lp-scrollbar-thumb);
+    border-radius: 999px;
+}
+
+.trackScrollMobile::-webkit-scrollbar-thumb:hover {
+    background: var(--lp-scrollbar-thumb-hover);
+}
+
+/* === 5. Node & Connector === */
 .pathItem {
-    display: flex;
+    display:     flex;
     align-items: center;
     flex-shrink: 0;
-    position: relative;
+    position:    relative;
 }
 
-/* --- Connector Line (Đường nối) --- */
 .connector {
-    width: 60px; /* Độ dài đường nối */
-    height: var(--lp-line-height);
-    background: var(--lp-locked);
+    width:         56px;
+    height:        var(--lp-line-height);
+    background:    var(--lp-locked);
     border-radius: 2px;
-    margin: 0 8px; /* Khoảng cách an toàn với node */
-    position: relative;
-    transition: all 0.4s ease;
+    margin:        0 6px;
+    flex-shrink:   0;
+    transition:    background 0.4s ease, box-shadow 0.4s ease;
 }
 
 .connectorActive {
     background: var(--lp-accent);
-    box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
 }
 
-/* --- Node (Hình tròn + Text) --- */
 .nodeWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    scroll-snap-align: center; /* Quan trọng: Snap vào giữa màn hình */
-    position: relative;
-    z-index: 2;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display:           flex;
+    flex-direction:    column;
+    align-items:       center;
+    gap:               10px;
+    cursor:            pointer;
+    scroll-snap-align: center;
+    position:          relative;
+    z-index:           2;
+    outline:           none;
+    width:             var(--lp-node-outer);
+    transition:        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .nodeWrapper:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
 }
 
-/* --- Circle Design --- */
-.nodeCircle {
-    width: var(--lp-node-size);
-    height: var(--lp-node-size);
-    border-radius: 50%;
-    background: var(--lp-bg-surface);
-    border: 3px solid var(--lp-locked);
-    display: flex;
-    align-items: center;
+/* === Bounce === */
+.nodeBounce {
+    z-index: 20;
+}
+
+.nodeBounce .nodeCircleOuter {
+    animation: bounceSelect 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes bounceSelect {
+    0%   { transform: scale(1)    translateY(0);    }
+    25%  { transform: scale(1.14) translateY(-8px); }
+    50%  { transform: scale(0.96) translateY(2px);  }
+    75%  { transform: scale(1.04) translateY(-2px); }
+    100% { transform: scale(1)    translateY(0);    }
+}
+
+/* === Outer === */
+.nodeCircleOuter {
+    width:           var(--lp-node-outer);
+    height:          var(--lp-node-outer);
+    display:         flex;
+    align-items:     center;
     justify-content: center;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--lp-text-sub);
-    position: relative;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    flex-shrink:     0;
+    position:        relative;
+    z-index:         2;
 }
 
-/* --- Node States --- */
+/* === Inner Circle === */
+.nodeCircle {
+    width:           var(--lp-node-size);
+    height:          var(--lp-node-size);
+    border-radius:   50%;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    position:        relative;
+    background:      #f8fafc;
+    border:          2px solid #e2e8f0;
+    transition:      background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-/* 1. Completed */
-.statusCompleted .nodeCircle {
-    background: var(--lp-accent);
+/* === 6. Node States === */
+.nodeCircleSelected {
+    background:   linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
     border-color: var(--lp-accent);
-    color: var(--lp-primary);
-    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.3);
+    transform:    scale(1.08);
 }
 
-/* 2. Locked */
-.statusLocked {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-.statusLocked .nodeWrapper:hover {
-    transform: none;
+.nodeCircleSelected::after {
+    content: none;
 }
 
-/* 3. Current (Active) - Hiệu ứng đẹp nhất */
-.statusCurrent .nodeCircle {
-    background: var(--lp-primary);
+.nodeCirclePassed {
     border-color: var(--lp-accent);
-    color: var(--lp-accent);
-    box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.2), 0 8px 20px rgba(26, 26, 46, 0.25);
-    transform: scale(1.1); /* To hơn một chút */
 }
 
-/* Vòng xoay nhẹ cho current */
-.statusCurrent .nodeCircle::after {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 50%;
-    border: 2px dashed var(--lp-accent);
-    animation: spin 10s linear infinite;
-    opacity: 0.5;
+.statusUnselected .nodeWrapper:hover .nodeCircle {
+    border-color: #94a3b8;
+    transform:    scale(1.04);
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+.statusPassed .nodeWrapper:hover .nodeCircle {
+    transform:   scale(1.04);
 }
 
-/* --- Node Info (Text dưới) --- */
+/* === 7. Node Labels === */
 .nodeInfo {
     text-align: center;
-    width: 100px; /* Giới hạn chiều rộng text để không bị tràn */
+    width:      var(--lp-node-outer);
 }
 
 .nodeLabel {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--lp-text-main);
+    display:       block;
+    font-size:     0.78rem;
+    font-weight:   600;
+    color:         var(--lp-text-sub);
     margin-bottom: 2px;
+    transition:    color 0.25s ease;
+    white-space:   nowrap;
 }
 
-.nodeSub {
-    display: block;
-    font-size: 0.7rem;
-    color: var(--lp-text-sub);
+.statusSelected .nodeLabel {
+    color:       var(--lp-primary);
+    font-weight: 700;
 }
 
-.statusCurrent .nodeLabel {
-    color: var(--lp-primary);
-    font-weight: 800;
+.statusPassed .nodeLabel {
+    color:       #15803d;
+    font-weight: 600;
 }
 
-.statusCompleted .nodeLabel {
-    color: #15803d;
-}
-
-/* =============================================================================
-   5. Navigation Buttons (Desktop)
-   ============================================================================= */
-
+/* === 8. Navigation Buttons === */
 .navBtn {
-    position: absolute;
-    top: 55%; /* Canh giữa theo chiều dọc track */
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--lp-bg-surface);
-    border: 1px solid rgba(0,0,0,0.1);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    display: flex;
-    align-items: center;
+    position:        absolute;
+    top:             50%;
+    transform:       translateY(-50%);
+    width:           34px;
+    height:          34px;
+    border-radius:   50%;
+    background:      var(--lp-bg-surface);
+    border:          1px solid rgba(0, 0, 0, 0.08);
+    box-shadow:      0 2px 8px rgba(0, 0, 0, 0.08);
+    display:         flex;
+    align-items:     center;
     justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.2s ease;
-    opacity: 0;
-    pointer-events: none;
+    cursor:          pointer;
+    z-index:         20;
+    transition:      all 0.2s ease;
+    opacity:         0;
+    pointer-events:  none;
+    color:           var(--lp-text-sub);
 }
 
 .pathContainer:hover .navBtn {
-    opacity: 1;
+    opacity:        1;
     pointer-events: auto;
 }
 
 .navBtn:hover {
-    background: var(--lp-primary);
-    color: var(--lp-accent);
-    transform: translateY(-50%) scale(1.1);
+    background:   var(--lp-primary);
+    color:        var(--lp-accent);
+    border-color: transparent;
+    box-shadow:   0 4px 12px rgba(26, 26, 46, 0.2);
+    transform:    translateY(-50%) scale(1.08);
 }
 
-.navPrev { left: 16px; }
-.navNext { right: 16px; }
+.navPrev { left:  10px; }
+.navNext { right: 10px; }
 
-/* =============================================================================
-   6. Responsive Design
-   ============================================================================= */
+/* === 9. Swipe Hint === */
+.swipeHint {
+    display:         flex;
+    align-items:     center;
+    justify-content: flex-end;
+    gap:             4px;
+    margin-top:      2px;
+    padding-right:   4px;
+    opacity:         0;
+    transition:      opacity 0.5s ease;
+    pointer-events:  none;
+    height:          16px;
+}
 
-/* Tablet & Mobile */
+.swipeHintVisible {
+    opacity: 1;
+}
+
+.swipeHint span {
+    font-size:      0.65rem;
+    color:          var(--lp-text-sub);
+    font-weight:    500;
+    letter-spacing: 0.02em;
+}
+
+.swipeArrow {
+    color:     var(--lp-accent) !important;
+    animation: nudgeArrow 1.2s ease-in-out infinite;
+}
+
+@keyframes nudgeArrow {
+    0%, 100% { transform: translateX(0);   opacity: 0.4; }
+    50%      { transform: translateX(4px); opacity: 1;   }
+}
+
+/* === 10. Responsive === */
 @media (max-width: 1024px) {
-    .pathContainer {
-        padding: 24px 16px;
-    }
-
-    .connector {
-        width: 40px; /* Thu ngắn đường nối */
-    }
-
-    .nodeInfo {
-        width: 80px;
-    }
+    .pathContainer { padding: 24px 16px; }
+    .connector     { width: 36px; }
 }
 
-/* Mobile (< 650px) */
 @media (max-width: 650px) {
     .pathHeader {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-        margin-bottom: 24px;
+        align-items:    flex-start;
+        gap:            10px;
+        margin-bottom:  20px;
     }
 
-    .headerTitle h2 {
-        font-size: 1.1rem;
-    }
+    .headerTitle h2 { font-size: 1rem; }
 
-    /* Ẩn nút nav trên mobile, dùng touch swipe */
-    .navBtn {
-        display: none !important;
-    }
-
-    /* Tăng vùng chạm cho mobile */
-    .nodeCircle {
-        width: var(--lp-node-size-mobile);
-        height: var(--lp-node-size-mobile);
-        font-size: 1rem;
-    }
-
-    .connector {
-        width: 30px;
-    }
-
-    .nodeLabel {
-        font-size: 0.75rem;
-    }
-
-    /* Mask gradient hẹp hơn trên mobile để thấy nhiều nội dung hơn */
     .trackWrapper {
-        mask-image: linear-gradient(to right, transparent, black 2%, black 98%, transparent);
+        height: calc(var(--lp-track-height-mobile) + 16px);
+    }
+
+    .nodeCircleOuter {
+        width:  var(--lp-node-outer-mobile);
+        height: var(--lp-node-outer-mobile);
+    }
+
+    .nodeCircle {
+        width:  var(--lp-node-size-mobile);
+        height: var(--lp-node-size-mobile);
+    }
+
+    .nodeWrapper {
+        width: var(--lp-node-outer-mobile);
+    }
+
+    .nodeInfo {
+        width: var(--lp-node-outer-mobile);
+    }
+
+    .connector { width: 24px; }
+    .nodeLabel { font-size: 0.7rem; }
+
+    .trackWrapper {
+        mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
     }
 }

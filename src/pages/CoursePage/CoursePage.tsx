@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import lottie from 'lottie-web';
-import {defineElement} from '@lordicon/element';
+import { defineElement } from '@lordicon/element';
 import RankingBoard from '../../features/course/components/RankingBoard/RankingBoard';
 import CourseCard from '../../features/course/components/CourseCard/CourseCard';
 import LearningPath from '../../features/roadmap/components/LearningPath/LearningPath';
 import RoadmapPage from '../RoadmapPage/RoadmapPage';
-import {useCourseSelection} from '../../features/course/hooks/useCourseSelection';
+import { useCourseSelection } from '../../features/course/hooks/useCourseSelection';
 import {
     COURSES_DATA,
     HARD_WORKING_USERS,
@@ -16,29 +16,28 @@ import styles from './CoursePage.module.css';
 
 const CoursePage: React.FC = () => {
 
-    const {selectCourse, isSelected} = useCourseSelection();
+    const { selectCourse, isSelected } = useCourseSelection();
 
-    // State to control roadmap visibility
-    const [showRoadmap, setShowRoadmap] = useState(false);
+    const [showRoadmap,     setShowRoadmap]     = useState(false);
     const [roadmapCourseId, setRoadmapCourseId] = useState<string | null>(null);
+    const [selectedLevel,   setSelectedLevel]   = useState<string>('');
 
     useEffect(() => {
         defineElement(lottie.loadAnimation);
     }, []);
 
-    /**
-     * Handle course card click
-     * Opens roadmap for the selected course
-     */
+    // =========================================================================
+    // Handle course card click — opens roadmap
+    // =========================================================================
     const handleCourseClick = (courseId: string) => {
         selectCourse(courseId);
         setRoadmapCourseId(courseId);
         setShowRoadmap(true);
     };
 
-    /**
-     * Close roadmap and return to course list
-     */
+    // =========================================================================
+    // Close roadmap and return to course list
+    // =========================================================================
     const handleCloseRoadmap = () => {
         setShowRoadmap(false);
         setRoadmapCourseId(null);
@@ -46,15 +45,20 @@ const CoursePage: React.FC = () => {
 
     return (
         <>
-            {/* Main Course Page - Hidden when roadmap is open */}
+            {/* ================================================================
+                Main Course Page
+            ================================================================ */}
             {!showRoadmap && (
                 <div className={styles.pageContainer}>
 
-
-                    <LearningPath courses={COURSES_DATA}/>
+                    <LearningPath
+                        courses={COURSES_DATA}
+                        selectedLevel={selectedLevel}
+                        onLevelSelect={(lv) => setSelectedLevel(lv)}
+                    />
 
                     <section className={styles.rankSection} aria-labelledby="ranking-title">
-                        <h2 id="ranking-title" className={styles.sectionHeading}>Bảng xếp hạng</h2>
+                        <h2 id="ranking-title" className={styles.sectionHeading}>Leaderboard</h2>
                         <div className={styles.rankContainer}>
                             <RankingBoard
                                 type="hardworking"
@@ -78,22 +82,25 @@ const CoursePage: React.FC = () => {
                     </section>
 
                     <section aria-labelledby="courses-title">
-                        <h2 id="courses-title" className={styles.sectionHeading}>Danh Sách Khóa Học</h2>
+                        <h2 id="courses-title" className={styles.sectionHeading}>Exercises</h2>
                         <div className={styles.courseGrid} role="group" aria-label="Available courses">
                             {COURSES_DATA.map((course) => (
                                 <CourseCard
                                     key={course.id}
                                     course={course}
                                     isSelected={isSelected(course.id)}
-                                    onSelect={handleCourseClick} // Updated to open roadmap
+                                    onSelect={handleCourseClick}
                                 />
                             ))}
                         </div>
                     </section>
+
                 </div>
             )}
 
-            {/* Roadmap Overlay - Shows when course is clicked */}
+            {/* ================================================================
+                Roadmap Overlay
+            ================================================================ */}
             {showRoadmap && roadmapCourseId && (
                 <RoadmapPage
                     courseId={roadmapCourseId}

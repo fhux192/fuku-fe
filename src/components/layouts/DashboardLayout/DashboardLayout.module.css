@@ -36,7 +36,6 @@
     --avatar-font-mobile: 0.75rem;
     --avatar-font-mobile-small: 0.75rem;
 
-    /* FAB Variables - Desktop */
     --fab-size: 70px;
     --fab-action-size: 56px;
     --fab-gap: 70px;
@@ -660,7 +659,6 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Main FAB Button */
 .fabMainBtn {
     width: var(--fab-size);
     height: var(--fab-size);
@@ -774,7 +772,6 @@ body {
     box-shadow: 0 6px 20px rgba(26, 26, 46, 0.2);
 }
 
-/* Prevent scale change on active - this was causing position shift */
 .fabActionBtn:active {
     transform: translateY(calc(var(--fab-gap) * -1.5)) scale(0.95) !important;
 }
@@ -1031,7 +1028,6 @@ body {
         transition: var(--transition-nav);
     }
 
-    /* Sidebar Animation Logic */
     .sidebarVisible {
         transform: scaleX(1) translateY(0);
         opacity: 1;
@@ -1166,7 +1162,7 @@ body {
 
     /* FAB Mobile - positioned above bottom nav */
     .fabContainer {
-        bottom: calc(90px + env(safe-area-inset-bottom));
+        bottom: calc(75px + env(safe-area-inset-bottom));
         right: var(--fab-offset);
     }
 
@@ -1192,7 +1188,6 @@ body {
         transform: translateX(-50%) translateY(0);
     }
 
-    /* Mobile active states - maintain position */
     .fabActionsOpen .fabActionBtn:nth-child(1):active {
         transform: translateY(calc(var(--fab-gap) * -1.5)) scale(0.95) !important;
     }

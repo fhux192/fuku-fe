@@ -10,7 +10,6 @@ export interface Course {
     id: string;
     lv: string;
     name: string;
-    kanji: string;
     duration: string;
     students: string;
     lessons: number;
