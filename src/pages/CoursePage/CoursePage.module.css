@@ -52,7 +52,6 @@
 .sectionHeading {
     font-size: 1.5rem;
     color: var(--color-text-dark);
-    margin-bottom: 20px;
     font-weight: 800;
 }
 
@@ -61,6 +60,7 @@
    ============================================================================= */
 
 .courseGrid {
+    margin:24px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 20px;
@@ -95,6 +95,7 @@
     }
 
     .courseGrid {
+        margin:16px;
         grid-template-columns: 1fr;
     }
 }

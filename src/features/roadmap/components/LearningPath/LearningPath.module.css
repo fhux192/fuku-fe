@@ -68,7 +68,6 @@
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     border-radius: 50%;
-    border: 1.5px dashed var(--lp-accent);
     box-sizing: border-box; /* Prevents layout shifting */
     pointer-events: none;
     opacity: 0;
@@ -84,10 +83,9 @@
 
 .pathContainer {
     background:    var(--lp-bg-surface);
-    border-radius: 24px;
-    padding: 24px 16px 4px;
+    border-radius: 20px;
+    padding: 24px 0;
     margin-bottom: 40px;
-    border:        1px solid rgba(0, 0, 0, 0.04);
     position:      relative;
     overflow-x:    clip;
     overflow-y:    visible;
@@ -113,11 +111,12 @@
 .iconBox {
     width:           42px;
     height:          42px;
-    background:      linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
+    background:      #1a1a2e;
     border-radius:   12px;
     display:         flex;
     align-items:     center;
     justify-content: center;
+    margin-left: 16px;
     color:           var(--color-surface-white);
     flex-shrink:     0;
 }
@@ -133,7 +132,7 @@
     display:     flex;
     align-items: center;
     gap:         8px;
-    min-height:  24px;
+    min-height:  30px;
 }
 
 .subtitleText {
@@ -220,10 +219,6 @@
     border-radius: 999px;
 }
 
-.trackScrollMobile::-webkit-scrollbar-thumb:hover {
-    background: var(--lp-scrollbar-thumb-hover);
-}
-
 /* ============================================================================ */
 /* Nodes & Connectors                                                           */
 /* ============================================================================ */
@@ -276,10 +271,6 @@
     outline:           none;
     width:             var(--lp-node-outer);
     transition:        transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.nodeWrapper:hover {
-    transform: translateY(-3px);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -344,18 +335,8 @@
 }
 
 .nodeCirclePassed {
-    background:   linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
+    background:   #1a1a2e;
     border-color: var(--lp-accent);
-}
-
-/* Change border color on hover to sync with theme */
-.statusUnselected .nodeWrapper:hover .nodeCircle {
-    border-color: var(--lp-accent);
-    transform:    scale(1.04);
-}
-
-.statusPassed .nodeWrapper:hover .nodeCircle {
-    transform:   scale(1.04);
 }
 
 /* ============================================================================ */
@@ -377,10 +358,6 @@
     white-space:   nowrap;
 }
 
-/* * UPDATE:
- * Selected: Takes Theme color (accent) to stand out
- * Passed: Reverts to Primary color (dark)
- */
 .statusSelected .nodeLabel {
     color:       var(--lp-accent);
     font-weight: 700;
@@ -391,10 +368,6 @@
     font-weight: 600;
 }
 
-/* Unselected Hover: Level name also brightens to Theme color on hover */
-.statusUnselected .nodeWrapper:hover .nodeLabel {
-    color: var(--lp-accent);
-}
 
 /* ============================================================================ */
 /* Navigation Buttons & Hints                                                   */
@@ -418,19 +391,6 @@
     opacity:         0;
     pointer-events:  none;
     color:           var(--lp-text-sub);
-}
-
-.pathContainer:hover .navBtn {
-    opacity:        1;
-    pointer-events: auto;
-}
-
-.navBtn:hover {
-    background:   var(--lp-primary);
-    color:        var(--lp-accent);
-    border-color: transparent;
-    box-shadow:   0 4px 12px rgba(26, 26, 46, 0.2);
-    transform:    translateY(-50%) scale(1.08);
 }
 
 .navPrev { left:  10px; }
@@ -478,14 +438,59 @@
 /* Media Queries                                                                */
 /* ============================================================================ */
 
+@media (hover: hover) and (pointer: fine) {
+    .nodeWrapper:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Change border color on hover to sync with theme */
+    .statusUnselected .nodeWrapper:hover .nodeCircle {
+        border-color: var(--lp-accent);
+        transform:    scale(1.04);
+    }
+
+    .statusPassed .nodeWrapper:hover .nodeCircle {
+        transform:   scale(1.04);
+    }
+
+    /* Unselected Hover: Level name also brightens to Theme color on hover */
+    .statusUnselected .nodeWrapper:hover .nodeLabel {
+        color: var(--lp-accent);
+    }
+
+    .pathContainer:hover .navBtn {
+        opacity:        1;
+        pointer-events: auto;
+    }
+
+    .navBtn:hover {
+        background:   var(--lp-primary);
+        color:        var(--lp-accent);
+        border-color: transparent;
+        box-shadow:   0 4px 12px rgba(26, 26, 46, 0.2);
+        transform:    translateY(-50%) scale(1.08);
+    }
+
+    .trackScrollMobile::-webkit-scrollbar-thumb:hover {
+        background: var(--lp-scrollbar-thumb-hover);
+    }
+}
+
 @media (max-width: 1024px) {
+    .iconBox{
+        margin-left: 16px;
+    }
     .pathContainer {
-        padding: 24px 16px 4px;
+        padding: 36px 0 4px;
+        margin-bottom:0;
     }
     .connector { width: 36px; }
 }
 
 @media (max-width: 650px) {
+    .iconBox{
+        margin-left: 16px;
+    }
     .pathHeader {
         flex-direction: column;
         align-items:    flex-start;
@@ -520,7 +525,4 @@
     .connector { width: 24px; }
     .nodeLabel { font-size: 0.7rem; }
 
-    .trackWrapper {
-        mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent);
-    }
 }

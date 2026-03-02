@@ -432,7 +432,6 @@ body {
     height: 100%;
     background: var(--color-surface-white);
     border-radius: var(--border-radius-lg);
-    padding: 40px;
     overflow-y: auto;
     position: relative;
     box-shadow: 0 4px 24px rgba(26, 26, 46, 0.04);
@@ -1140,7 +1139,6 @@ body {
 
     .mainDisplay {
         border-radius: 0;
-        padding: 20px 16px calc(80px + env(safe-area-inset-bottom)) 16px;
         box-shadow: none;
     }
 
