@@ -58,7 +58,7 @@ const CoursePage: React.FC = () => {
                     />
 
                     <section className={styles.rankSection} aria-labelledby="ranking-title">
-                        <h2 id="ranking-title" className={styles.sectionHeading}>Leaderboard</h2>
+                        <h2 id="ranking-title" className={styles.sectionHeading}>Bảng xếp hạng</h2>
                         <div className={styles.rankContainer}>
                             <RankingBoard
                                 type="hardworking"
@@ -82,7 +82,7 @@ const CoursePage: React.FC = () => {
                     </section>
 
                     <section aria-labelledby="courses-title">
-                        <h2 id="courses-title" className={styles.sectionHeading}>Exercises</h2>
+                        <h2 id="courses-title" className={styles.sectionHeading}>Danh sách bài làm</h2>
                         <div className={styles.courseGrid} role="group" aria-label="Available courses">
                             {COURSES_DATA.map((course) => (
                                 <CourseCard

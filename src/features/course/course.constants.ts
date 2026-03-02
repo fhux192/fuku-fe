@@ -6,7 +6,6 @@ import { Course, RankUser } from './course.types';
  */
 
 export const COURSES_DATA: Course[] = [
-    { id: 'ielts_3_0', lv: 'IELTS 3.0', name: 'Nền Tảng', duration: '2 tháng', students: '3.5k+', lessons: 40 },
     { id: 'ielts_4_0', lv: 'IELTS 4.0', name: 'Cơ Bản',  duration: '3 tháng', students: '2.8k+', lessons: 56 },
     { id: 'ielts_5_0', lv: 'IELTS 5.0', name: 'Trung Cấp',  duration: '4 tháng', students: '2.1k+', lessons: 72 },
     { id: 'ielts_6_0', lv: 'IELTS 6.0', name: 'Thượng Cấp', duration: '5 tháng', students: '1.5k+', lessons: 88 },

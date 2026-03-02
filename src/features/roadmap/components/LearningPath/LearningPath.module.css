@@ -1,8 +1,11 @@
-/* === 1. Design Tokens === */
+/* ============================================================================ */
+/* Tokens & Variables                                                           */
+/* ============================================================================ */
+
 :root {
     --lp-bg-surface:            #ffffff;
     --lp-primary:               #1a1a2e;
-    --lp-accent:                #4ade80;
+    --lp-accent:                #4ade80; /* Default color (will be overridden by theme) */
     --lp-locked:                #e2e8f0;
     --lp-text-main:             #1e293b;
     --lp-text-sub:              #64748b;
@@ -21,24 +24,83 @@
     --lp-scrollbar-thumb-hover: #94a3b8;
 }
 
-/* === 2. Main Container === */
+/* ============================================================================ */
+/* Level Themes                                                                 */
+/* Muted colors applied to borders, connectors, and labels                      */
+/* ============================================================================ */
+
+.theme40 { --lp-accent: #4ade80; } /* Original Green */
+.theme50 { --lp-accent: #60a5fa; } /* Soft Blue */
+.theme60 { --lp-accent: #c084fc; } /* Soft Purple */
+.theme65 { --lp-accent: #fb7185; } /* Soft Pink */
+.theme70 { --lp-accent: #fbbf24; } /* Soft Yellow */
+.theme75 { --lp-accent: #fb923c; } /* Soft Orange */
+.theme80 { --lp-accent: #2dd4bf; } /* Soft Teal */
+
+/* ------------------------------------------------------------------------ */
+/* Selected State Animations (Runs once forwards)                           */
+/* ------------------------------------------------------------------------ */
+
+/* Theme 7.0: Amber (Single pulse) */
+.theme70.statusSelected .nodeCircle {
+    animation: pulseAmber 1.5s ease-out forwards;
+}
+
+/* Theme 7.5: Orange (Single pulse, larger amplitude) */
+.theme75.statusSelected .nodeCircle {
+    animation: pulseOrange 1.5s ease-out forwards;
+}
+
+/* Theme 8.0: Teal pop effect */
+.theme80.statusSelected .nodeCircle {
+    animation: popTeal 1.5s ease-out forwards;
+}
+
+@keyframes popTeal {
+    0%   { transform: scale(1.08); box-shadow: 0 0 8px rgba(45, 212, 191, 0.4); }
+    50%  { transform: scale(1.16); box-shadow: 0 0 16px rgba(255, 255, 255, 0.8); }
+    100% { transform: scale(1.08); box-shadow: 0 0 4px rgb(0, 255, 97); }
+}
+
+.theme80.statusSelected .nodeCircle::before,
+.theme80.statusSelected .nodeCircle::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 50%;
+    border: 1.5px dashed var(--lp-accent);
+    box-sizing: border-box; /* Prevents layout shifting */
+    pointer-events: none;
+    opacity: 0;
+}
+
+.theme80.statusSelected .nodeCircle::after {
+    animation-delay: 0.25s; /* Second wave follows the first */
+}
+
+/* ============================================================================ */
+/* Main Container                                                               */
+/* ============================================================================ */
+
 .pathContainer {
     background:    var(--lp-bg-surface);
     border-radius: 24px;
-    padding:       32px;
-    margin-bottom: 20px;
+    padding: 24px 16px 4px;
+    margin-bottom: 40px;
     border:        1px solid rgba(0, 0, 0, 0.04);
     position:      relative;
     overflow-x:    clip;
     overflow-y:    visible;
 }
 
-/* === 3. Header === */
+/* ============================================================================ */
+/* Header Area                                                                  */
+/* ============================================================================ */
+
 .pathHeader {
     display:         flex;
     justify-content: flex-start;
     align-items:     center;
-    margin-bottom:   32px;
     position:        relative;
 }
 
@@ -56,7 +118,7 @@
     display:         flex;
     align-items:     center;
     justify-content: center;
-    color:           var(--lp-accent);
+    color:           var(--color-surface-white);
     flex-shrink:     0;
 }
 
@@ -71,12 +133,12 @@
     display:     flex;
     align-items: center;
     gap:         8px;
-    margin-top:  6px;
     min-height:  24px;
 }
 
 .subtitleText {
     font-size:  0.875rem;
+    font-weight: 600;
     color:      var(--lp-text-sub);
     transition: opacity 0.25s ease;
 }
@@ -101,7 +163,10 @@
     to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* === 4. Track === */
+/* ============================================================================ */
+/* Track & Scrollbar                                                            */
+/* ============================================================================ */
+
 .trackWrapper {
     position:   relative;
     height:     var(--lp-track-height);
@@ -127,7 +192,10 @@
     display: none;
 }
 
-/* === Mobile Scrollbar Variant === */
+/* ------------------------------------------------------------------------ */
+/* Mobile Scrollbar Variant                                                 */
+/* ------------------------------------------------------------------------ */
+
 .trackScrollMobile {
     padding-bottom:  16px;
     height:          calc(var(--lp-track-height-mobile) + 16px);
@@ -156,7 +224,10 @@
     background: var(--lp-scrollbar-thumb-hover);
 }
 
-/* === 5. Node & Connector === */
+/* ============================================================================ */
+/* Nodes & Connectors                                                           */
+/* ============================================================================ */
+
 .pathItem {
     display:     flex;
     align-items: center;
@@ -171,11 +242,26 @@
     border-radius: 2px;
     margin:        0 6px;
     flex-shrink:   0;
-    transition:    background 0.4s ease, box-shadow 0.4s ease;
+    position:      relative;
+    overflow:      hidden;
 }
 
-.connectorActive {
+/* Progress bar uses the node's dominant color */
+.connector::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
     background: var(--lp-accent);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.15s linear;
+    border-radius: 2px;
+}
+
+.connectorActive::after {
+    clip-path: inset(0 0 0 0);
 }
 
 .nodeWrapper {
@@ -196,7 +282,10 @@
     transform: translateY(-3px);
 }
 
-/* === Bounce === */
+/* ------------------------------------------------------------------------ */
+/* Bounce Animation                                                         */
+/* ------------------------------------------------------------------------ */
+
 .nodeBounce {
     z-index: 20;
 }
@@ -213,7 +302,10 @@
     100% { transform: scale(1)    translateY(0);    }
 }
 
-/* === Outer === */
+/* ------------------------------------------------------------------------ */
+/* Node Layout Details                                                      */
+/* ------------------------------------------------------------------------ */
+
 .nodeCircleOuter {
     width:           var(--lp-node-outer);
     height:          var(--lp-node-outer);
@@ -225,7 +317,6 @@
     z-index:         2;
 }
 
-/* === Inner Circle === */
 .nodeCircle {
     width:           var(--lp-node-size);
     height:          var(--lp-node-size);
@@ -241,23 +332,25 @@
     transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* === 6. Node States === */
+/* ============================================================================ */
+/* Node States (Selected, Passed, Unselected)                                   */
+/* ============================================================================ */
+
+/* Dark background maintains elegance, only border color changes */
 .nodeCircleSelected {
     background:   linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
     border-color: var(--lp-accent);
     transform:    scale(1.08);
 }
 
-.nodeCircleSelected::after {
-    content: none;
-}
-
 .nodeCirclePassed {
+    background:   linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
     border-color: var(--lp-accent);
 }
 
+/* Change border color on hover to sync with theme */
 .statusUnselected .nodeWrapper:hover .nodeCircle {
-    border-color: #94a3b8;
+    border-color: var(--lp-accent);
     transform:    scale(1.04);
 }
 
@@ -265,7 +358,10 @@
     transform:   scale(1.04);
 }
 
-/* === 7. Node Labels === */
+/* ============================================================================ */
+/* Labels & Typography                                                          */
+/* ============================================================================ */
+
 .nodeInfo {
     text-align: center;
     width:      var(--lp-node-outer);
@@ -281,17 +377,29 @@
     white-space:   nowrap;
 }
 
+/* * UPDATE:
+ * Selected: Takes Theme color (accent) to stand out
+ * Passed: Reverts to Primary color (dark)
+ */
 .statusSelected .nodeLabel {
-    color:       var(--lp-primary);
+    color:       var(--lp-accent);
     font-weight: 700;
 }
 
 .statusPassed .nodeLabel {
-    color:       #15803d;
+    color:       var(--lp-primary);
     font-weight: 600;
 }
 
-/* === 8. Navigation Buttons === */
+/* Unselected Hover: Level name also brightens to Theme color on hover */
+.statusUnselected .nodeWrapper:hover .nodeLabel {
+    color: var(--lp-accent);
+}
+
+/* ============================================================================ */
+/* Navigation Buttons & Hints                                                   */
+/* ============================================================================ */
+
 .navBtn {
     position:        absolute;
     top:             50%;
@@ -301,7 +409,6 @@
     border-radius:   50%;
     background:      var(--lp-bg-surface);
     border:          1px solid rgba(0, 0, 0, 0.08);
-    box-shadow:      0 2px 8px rgba(0, 0, 0, 0.08);
     display:         flex;
     align-items:     center;
     justify-content: center;
@@ -329,7 +436,10 @@
 .navPrev { left:  10px; }
 .navNext { right: 10px; }
 
-/* === 9. Swipe Hint === */
+/* ------------------------------------------------------------------------ */
+/* Swipe Hint Element                                                       */
+/* ------------------------------------------------------------------------ */
+
 .swipeHint {
     display:         flex;
     align-items:     center;
@@ -364,10 +474,15 @@
     50%      { transform: translateX(4px); opacity: 1;   }
 }
 
-/* === 10. Responsive === */
+/* ============================================================================ */
+/* Media Queries                                                                */
+/* ============================================================================ */
+
 @media (max-width: 1024px) {
-    .pathContainer { padding: 24px 16px; }
-    .connector     { width: 36px; }
+    .pathContainer {
+        padding: 24px 16px 4px;
+    }
+    .connector { width: 36px; }
 }
 
 @media (max-width: 650px) {

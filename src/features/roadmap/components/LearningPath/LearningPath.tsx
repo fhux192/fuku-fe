@@ -3,10 +3,9 @@ import { Map, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 import { Course } from '../../../course/course.types';
 import styles from './LearningPath.module.css';
 
-// === Icons ===
-const ICON_SELECTED   = 'https://cdn.lordicon.com/vdjwmfqs.json';
-const ICON_PASSED     = 'https://cdn.lordicon.com/guqkthkk.json';
-const ICON_UNSELECTED = 'https://cdn.lordicon.com/yhtmwrae.json';
+// ============================================================================
+// Types
+// ============================================================================
 
 interface LearningPathProps {
     courses: Course[];
@@ -14,9 +13,17 @@ interface LearningPathProps {
     onLevelSelect?: (level: string) => void;
 }
 
-// === Levels ===
+type NodeState = 'selected' | 'passed' | 'unselected';
+
+// ============================================================================
+// Constants & Configurations
+// ============================================================================
+
+const ICON_SELECTED = 'https://cdn.lordicon.com/hjrbjhnq.json';
+const ICON_PASSED = 'https://cdn.lordicon.com/uvofdfal.json';
+const ICON_UNSELECTED = 'https://cdn.lordicon.com/wjogzler.json';
+
 const LEVELS = [
-    'IELTS 3.0',
     'IELTS 4.0',
     'IELTS 5.0',
     'IELTS 6.0',
@@ -26,28 +33,38 @@ const LEVELS = [
     'IELTS 8.0',
 ];
 
-const HINT_INTERVAL = 12000;
-const HINT_NUDGE    = 70;
-const HINT_STEP_MS  = 500;
-const SESSION_KEY   = 'fuku_learningPath_selectedLevel';
+// Muted color palette to match dark backgrounds without being overly flashy
+const LEVEL_CONFIG: Record<string, { theme: string; colorPrimary: string }> = {
+    'IELTS 4.0': { theme: styles.theme40, colorPrimary: '#4ade80' }, // Original Green
+    'IELTS 5.0': { theme: styles.theme50, colorPrimary: '#60a5fa' }, // Soft Blue
+    'IELTS 6.0': { theme: styles.theme60, colorPrimary: '#c084fc' }, // Soft Purple
+    'IELTS 6.5': { theme: styles.theme65, colorPrimary: '#fb7185' }, // Soft Pink
+    'IELTS 7.0': { theme: styles.theme70, colorPrimary: '#fbbf24' }, // Soft Yellow
+    'IELTS 7.5': { theme: styles.theme75, colorPrimary: '#fb923c' }, // Soft Orange
+    'IELTS 8.0': { theme: styles.theme80, colorPrimary: '#2dd4bf' }, // Soft Teal
+};
 
-type NodeState = 'selected' | 'passed' | 'unselected';
+const SESSION_KEY = 'fuku_learningPath_selectedLevel';
 
-const getNodeState = (courseLv: string, selectedLevel?: string): NodeState => {
-    if (!selectedLevel) return 'unselected';
-    const selectedIdx = LEVELS.indexOf(selectedLevel);
-    const courseIdx   = LEVELS.indexOf(courseLv);
-    if (courseIdx === -1)           return 'unselected';
-    if (courseLv === selectedLevel) return 'selected';
-    if (courseIdx < selectedIdx)    return 'passed';
+// ============================================================================
+// Utility Functions
+// ============================================================================
+
+const getNodeState = (courseIdx: number, displayIdx: number, targetIdx: number): NodeState => {
+    if (displayIdx === -1) return 'unselected';
+    if (courseIdx === targetIdx && displayIdx === targetIdx) return 'selected';
+    if (courseIdx <= displayIdx) return 'passed';
     return 'unselected';
 };
 
-// === LordIconNode ===
+// ============================================================================
+// Sub Components
+// ============================================================================
+
 const LordIconNode: React.FC<{
     nodeState: NodeState;
-    isHovered: boolean;
-}> = ({ nodeState, isHovered }) => {
+    colorPrimary: string;
+}> = ({ nodeState,  colorPrimary }) => {
     const ref = useRef<HTMLElement | null>(null);
 
     useEffect(() => {
@@ -56,85 +73,67 @@ const LordIconNode: React.FC<{
 
         let iconSrc = ICON_UNSELECTED;
         if (nodeState === 'selected') iconSrc = ICON_SELECTED;
-        if (nodeState === 'passed')   iconSrc = ICON_PASSED;
+        if (nodeState === 'passed') iconSrc = ICON_PASSED;
 
         el.setAttribute('src', iconSrc);
         el.setAttribute('stroke', 'bold');
 
-        el.setAttribute('colors', nodeState === 'selected'
-            ? 'primary:#4ade80,secondary:#ffffff'
+        const primaryColor = nodeState === 'unselected' ? '#64748b' : colorPrimary;
+        const secondaryColor = nodeState === 'selected'
+            ? '#ffffff'
             : nodeState === 'passed'
-                ? 'primary:#4ade80,secondary:#1a1a2e'
-                : 'primary:#64748b,secondary:#94a3b8'
-        );
-        el.setAttribute('style', 'width:28px;height:28px;display:block;flex-shrink:0');
+                ? '#1a1a2e'
+                : '#94a3b8';
+
+        el.setAttribute('colors', `primary:${primaryColor},secondary:${secondaryColor}`);
+        el.setAttribute('style', 'width:30px;height:30px;display:block;flex-shrink:0');
+        el.setAttribute('state', 'morph-book');
+        el.setAttribute('delay', '3000');
 
         if (nodeState === 'selected') {
-            el.setAttribute('trigger', 'loop');
-        } else if (isHovered) {
             el.setAttribute('trigger', 'loop');
         } else {
             el.setAttribute('trigger', 'none');
         }
-    }, [nodeState, isHovered]);
+    }, [nodeState,  colorPrimary]);
 
     // @ts-ignore
     return <lord-icon key={nodeState} ref={ref} />;
 };
 
-// === Main Component ===
+// ============================================================================
+// Main Component
+// ============================================================================
+
 const LearningPath: React.FC<LearningPathProps> = ({
                                                        courses,
                                                        selectedLevel,
                                                        onLevelSelect,
                                                    }) => {
-    const scrollRef    = useRef<HTMLDivElement>(null);
-    const hintTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // ------------------------------------------------------------------------
+    // State & Refs
+    // ------------------------------------------------------------------------
+
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const hintTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const userScrolled = useRef(false);
 
-    const [canScrollLeft,  setCanScrollLeft]  = useState(false);
+    const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
-    const [isMobile,       setIsMobile]       = useState(false);
-    const [showSwipeHint,  setShowSwipeHint]  = useState(false);
-    const [bouncingLevel,  setBouncingLevel]  = useState<string | null>(null);
-    const [hoveredLevel,   setHoveredLevel]   = useState<string | null>(null);
+    const [isMobile, setIsMobile] = useState(false);
+    const [bouncingLevel, setBouncingLevel] = useState<string | null>(null);
+    const [displayIdx, setDisplayIdx] = useState<number>(-1);
 
-    // === Restore State ===
-    useEffect(() => {
-        const savedLevel = sessionStorage.getItem(SESSION_KEY);
-        if (savedLevel && !selectedLevel && onLevelSelect) {
-            onLevelSelect(savedLevel);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // ------------------------------------------------------------------------
+    // Event Handlers
+    // ------------------------------------------------------------------------
 
-    // === Detect Mobile ===
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth <= 650);
-        check();
-        window.addEventListener('resize', check);
-        return () => window.removeEventListener('resize', check);
-    }, []);
-
-    // === Scroll Button State ===
     const checkScrollButtons = useCallback(() => {
         if (!scrollRef.current) return;
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
         setCanScrollLeft(scrollLeft > 10);
         setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
     }, []);
-
-    // === Auto Scroll ===
-    useEffect(() => {
-        if (!scrollRef.current) return;
-        const selectedEl = scrollRef.current.querySelector(`.${styles.statusSelected}`) as HTMLElement | null;
-        if (selectedEl) {
-            const containerWidth = scrollRef.current.clientWidth;
-            const scrollTo = selectedEl.offsetLeft - containerWidth / 2 + selectedEl.clientWidth / 2;
-            scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
-        }
-        checkScrollButtons();
-    }, [courses, selectedLevel, checkScrollButtons]);
 
     const scroll = (direction: 'left' | 'right') => {
         scrollRef.current?.scrollBy({
@@ -143,7 +142,6 @@ const LearningPath: React.FC<LearningPathProps> = ({
         });
     };
 
-    // === Handle Click ===
     const handleNodeClick = (lv: string) => {
         if (!onLevelSelect) return;
 
@@ -160,75 +158,117 @@ const LearningPath: React.FC<LearningPathProps> = ({
         }
     };
 
-    // === Swipe Hint ===
-    const playHint = useCallback(() => {
-        if (!scrollRef.current || userScrolled.current) return;
-        const el     = scrollRef.current;
-        const origin = el.scrollLeft;
-        el.scrollTo({ left: origin + HINT_NUDGE, behavior: 'smooth' });
-        setTimeout(() => {
-            el.scrollTo({ left: origin, behavior: 'smooth' });
-        }, HINT_STEP_MS);
-    }, []);
-
-    useEffect(() => {
-        if (!isMobile) return;
-        const showTimer = setTimeout(() => setShowSwipeHint(true),  3500);
-        const hideTimer = setTimeout(() => setShowSwipeHint(false), 7500);
-        return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
-    }, [isMobile]);
-
-    useEffect(() => {
-        if (!isMobile) return;
-        const schedule = () => {
-            hintTimer.current = setTimeout(() => {
-                if (!userScrolled.current) { playHint(); schedule(); }
-            }, HINT_INTERVAL);
-        };
-        hintTimer.current = setTimeout(() => {
-            if (!userScrolled.current) { playHint(); schedule(); }
-        }, 10000);
-        return () => { if (hintTimer.current) clearTimeout(hintTimer.current); };
-    }, [isMobile, playHint]);
-
     const handleScroll = useCallback(() => {
         checkScrollButtons();
         if (!userScrolled.current) {
             userScrolled.current = true;
-            setShowSwipeHint(false);
             if (hintTimer.current) clearTimeout(hintTimer.current);
         }
     }, [checkScrollButtons]);
 
+    // ------------------------------------------------------------------------
+    // Lifecycle & Effects
+    // ------------------------------------------------------------------------
+
+    useEffect(() => {
+        const savedLevel = sessionStorage.getItem(SESSION_KEY);
+        if (savedLevel && !selectedLevel && onLevelSelect) {
+            onLevelSelect(savedLevel);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth <= 650);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
+    useEffect(() => {
+        const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
+
+        if (displayIdx === targetIdx) return;
+
+        if (displayIdx === -1 && targetIdx > -1) {
+            setDisplayIdx(0);
+            return;
+        }
+
+        const stepTime = targetIdx > displayIdx ? 150 : 70;
+
+        const interval = setInterval(() => {
+            setDisplayIdx((prev) => {
+                const next = prev < targetIdx ? prev + 1 : prev - 1;
+                if (next === targetIdx) {
+                    clearInterval(interval);
+                }
+                return next;
+            });
+        }, stepTime);
+
+        return () => clearInterval(interval);
+    }, [selectedLevel, displayIdx]);
+
+    useEffect(() => {
+        if (!scrollRef.current) return;
+
+        const targetElement = scrollRef.current.querySelector(
+            `.${styles.statusSelected}, .${styles.statusPassed}:last-of-type`
+        ) as HTMLElement | null;
+
+        if (targetElement) {
+            const containerWidth = scrollRef.current.clientWidth;
+            const scrollTo = targetElement.offsetLeft - containerWidth / 2 + targetElement.clientWidth / 2;
+            scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+        }
+
+        checkScrollButtons();
+    }, [displayIdx, checkScrollButtons]);
+
+    // ------------------------------------------------------------------------
+    // Render
+    // ------------------------------------------------------------------------
+
+    const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
+    const selectedThemeConfig = selectedLevel ? LEVEL_CONFIG[selectedLevel] : null;
+
     return (
         <section className={styles.pathContainer}>
-            {/* === Header === */}
+            {/* Header Section */}
             <header className={styles.pathHeader}>
                 <div className={styles.headerTitle}>
                     <div className={styles.iconBox}>
                         <Map size={24} strokeWidth={2.5} />
                     </div>
                     <div>
-                        <h2 style={{textAlign:"left"}}>Level Selection</h2>
+                        <h2 style={{ textAlign: "left" }}>Cấp độ</h2>
                         <div className={styles.subtitleWrapper}>
                             {selectedLevel ? (
                                 <>
-                                    <span className={styles.subtitleText}>Selected:</span>
-                                    <div className={styles.currentBadge}>
+                                    <span className={styles.subtitleText}>Đã chọn:</span>
+                                    <div
+                                        className={styles.currentBadge}
+                                        style={selectedThemeConfig ? {
+                                            color: selectedThemeConfig.colorPrimary,
+                                            backgroundColor: `${selectedThemeConfig.colorPrimary}26`
+                                        } : undefined}
+                                    >
                                         <Zap size={14} fill="currentColor" />
                                         <span>{selectedLevel}</span>
                                     </div>
                                 </>
                             ) : (
-                                <span className={styles.subtitleText}>Choose your target level</span>
+                                <span className={styles.subtitleText}>Chọn cấp độ bạn cần</span>
                             )}
                         </div>
                     </div>
                 </div>
             </header>
 
-            {/* === Track Area === */}
+            {/* Track & Nodes Section */}
             <div className={styles.trackWrapper}>
+                {/* Desktop Navigation */}
                 {!isMobile && canScrollLeft && (
                     <button
                         className={`${styles.navBtn} ${styles.navPrev}`}
@@ -248,39 +288,44 @@ const LearningPath: React.FC<LearningPathProps> = ({
                     </button>
                 )}
 
+                {/* Main Scrollable Track */}
                 <div
                     className={`${styles.trackScroll} ${isMobile ? styles.trackScrollMobile : ''}`}
                     ref={scrollRef}
                     onScroll={handleScroll}
                 >
                     {courses.map((course, index) => {
-                        const nodeState  = getNodeState(course.lv, selectedLevel);
+                        const courseIdx = LEVELS.indexOf(course.lv);
+                        const nodeState = getNodeState(courseIdx, displayIdx, targetIdx);
                         const isBouncing = course.lv === bouncingLevel;
-                        const isHovered  = course.lv === hoveredLevel;
                         const isLastItem = index === courses.length - 1;
+                        const isConnectorActive = courseIdx < displayIdx;
+                        const baseThemeConfig = LEVEL_CONFIG[course.lv] || { theme: '', colorPrimary: '#4ade80' };
+
+                        const themeConfig = ((nodeState === 'passed' || nodeState === 'selected') && selectedThemeConfig)
+                            ? selectedThemeConfig
+                            : baseThemeConfig;
 
                         const stateClass = {
-                            selected:   styles.statusSelected,
-                            passed:     styles.statusPassed,
+                            selected: styles.statusSelected,
+                            passed: styles.statusPassed,
                             unselected: styles.statusUnselected,
                         }[nodeState];
 
                         const circleClass = {
-                            selected:   styles.nodeCircleSelected,
-                            passed:     styles.nodeCirclePassed,
+                            selected: styles.nodeCircleSelected,
+                            passed: styles.nodeCirclePassed,
                             unselected: '',
                         }[nodeState];
 
                         return (
                             <div
                                 key={course.id}
-                                className={`${styles.pathItem} ${stateClass}`}
+                                className={`${styles.pathItem} ${stateClass} ${themeConfig.theme}`}
                             >
                                 <div
                                     className={`${styles.nodeWrapper} ${isBouncing ? styles.nodeBounce : ''}`}
                                     onClick={() => handleNodeClick(course.lv)}
-                                    onMouseEnter={() => setHoveredLevel(course.lv)}
-                                    onMouseLeave={() => setHoveredLevel(null)}
                                     role="button"
                                     aria-pressed={nodeState === 'selected'}
                                     tabIndex={0}
@@ -290,7 +335,7 @@ const LearningPath: React.FC<LearningPathProps> = ({
                                         <div className={`${styles.nodeCircle} ${circleClass}`}>
                                             <LordIconNode
                                                 nodeState={nodeState}
-                                                isHovered={isHovered}
+                                                colorPrimary={themeConfig.colorPrimary}
                                             />
                                         </div>
                                     </div>
@@ -300,9 +345,10 @@ const LearningPath: React.FC<LearningPathProps> = ({
                                     </div>
                                 </div>
 
+                                {/* Connector Line */}
                                 {!isLastItem && (
                                     <div
-                                        className={`${styles.connector} ${nodeState !== 'unselected' ? styles.connectorActive : ''}`}
+                                        className={`${styles.connector} ${isConnectorActive ? styles.connectorActive : ''}`}
                                     />
                                 )}
                             </div>
@@ -310,12 +356,6 @@ const LearningPath: React.FC<LearningPathProps> = ({
                     })}
                 </div>
 
-                {isMobile && canScrollRight && (
-                    <div className={`${styles.swipeHint} ${showSwipeHint ? styles.swipeHintVisible : ''}`}>
-                        <span>Swipe to explore</span>
-                        <span className={styles.swipeArrow}>→</span>
-                    </div>
-                )}
             </div>
         </section>
     );

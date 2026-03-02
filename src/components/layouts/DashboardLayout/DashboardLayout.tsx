@@ -714,7 +714,6 @@ const DashboardLayout: React.FC = () => {
                     {NAV_ITEMS.map(({ path, label, icon }) => (
                         <div
                             key={path}
-                            // ← thẻ cha: gắn ref để hook lắng nghe mouseenter
                             ref={(el) => { navParentRefs.current[path] = el; }}
                             className={`${styles.navItem} ${isActive(path) ? styles.activeNavItem : ''}`}
                             onClick={() => handleNavigation(path)}
