@@ -17,7 +17,6 @@ interface CourseCardProps {
  * Only re-renders when its own props change
  */
 const CourseCard: React.FC<CourseCardProps> = React.memo(({ course, isSelected, onSelect }) => {
-    // Handler wrapped to prevent new function creation on every render
     const handleClick = () => onSelect(course.id);
 
     return (
@@ -28,7 +27,6 @@ const CourseCard: React.FC<CourseCardProps> = React.memo(({ course, isSelected, 
             tabIndex={0}
             aria-pressed={isSelected}
             aria-label={`Select ${course.lv} - ${course.name} course`}
-            // Keyboard accessibility - missing in original
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -75,7 +73,7 @@ interface CourseStatProps {
 
 const CourseStat: React.FC<CourseStatProps> = React.memo(({ iconSrc, value, label }) => (
     <div className={styles.stat} aria-label={label}>
-        {/* @ts-ignore - lord-icon is a custom element not in TypeScript DOM */}
+        {/* @ts-ignore */}
         <lord-icon
             src={iconSrc}
             trigger="hover"

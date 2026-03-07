@@ -275,8 +275,8 @@ const Register: React.FC = () => {
                                 {/* @ts-ignore */}
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
-                                    state="morph-cross"
-                                    trigger="custom"
+                                    state={showPassword ? 'hover-look-around' : 'hover-lashes'}
+                                    trigger="morph"
                                     style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}
                                 />
                             </button>
@@ -306,8 +306,8 @@ const Register: React.FC = () => {
                                 {/* @ts-ignore */}
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
-                                    state="morph-cross"
-                                    trigger="custom"
+                                    state={showConfirmPassword ? 'hover-look-around' : 'hover-lashes'}
+                                    trigger="morph"
                                     style={{ width: '35px', height: '35px', cursor: 'pointer', marginLeft: '10px' }}
                                 />
                             </button>

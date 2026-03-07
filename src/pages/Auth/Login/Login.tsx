@@ -181,7 +181,6 @@ const Login: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        // Delay prevents race condition with icon rendering
         const timer = setTimeout(() => {
             if (avatarIconRef.current) {
                 const player = avatarIconRef.current.playerInstance;
@@ -244,7 +243,6 @@ const Login: React.FC = () => {
                     setError('Không nhận được token từ server.');
                 }
             } else {
-                // Handle error response from ApiResponse wrapper
                 const errorMessage = result.error || result.message || UI_CONFIG.MESSAGES.LOGIN_FAIL;
                 setError(errorMessage);
             }
@@ -340,8 +338,8 @@ const Login: React.FC = () => {
                                 {/* @ts-ignore */}
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.EYE}
-                                    state="morph-cross"
-                                    trigger="custom"
+                                    state={isPasswordVisible ? 'hover-look-around' : 'hover-lashes'}
+                                    trigger="morph"
                                     style={{ width: '35px', height: '35px', cursor: 'pointer' }}
                                 />
                             </button>

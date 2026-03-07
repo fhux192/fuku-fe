@@ -429,8 +429,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                         {/* @ts-ignore */}
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
-                                            state="morph-cross"
-                                            trigger="custom"
+                                            state={isPasswordVisible ? 'hover-look-around' : 'hover-lashes'}
+                                            trigger="morph"
                                             style={{ width: '35px', height: '35px', cursor: 'pointer' }}
                                         />
                                     </button>

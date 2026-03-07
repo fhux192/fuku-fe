@@ -436,8 +436,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                                         {/* @ts-ignore */}
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
-                                            state="morph-cross"
-                                            trigger="custom"
+                                            state={showPassword ? 'hover-look-around' : 'hover-lashes'}
+                                            trigger="morph"
                                             style={{ width: '35px', height: '35px', cursor: 'pointer' }}
                                         />
                                     </button>
@@ -469,8 +469,8 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                                         {/* @ts-ignore */}
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
-                                            state="morph-cross"
-                                            trigger="custom"
+                                            state={showConfirmPassword ? 'hover-look-around' : 'hover-lashes'}
+                                            trigger="morph"
                                             style={{ width: '35px', height: '35px', cursor: 'pointer' }}
                                         />
                                     </button>

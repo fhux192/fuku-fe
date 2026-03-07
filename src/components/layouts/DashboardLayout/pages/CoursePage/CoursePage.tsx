@@ -34,7 +34,7 @@ const CoursePage: React.FC = () => {
             id: `course_${i}`,
             lv: level,
             name: `${level} Path`,
-            duration: `${i + 3} Months`,
+            duration: `${i + 6} Months`,
             students: `${(i + 1.5).toFixed(1)}k+`,
             lessons: 40 + (i * 12),
         }));
@@ -45,7 +45,7 @@ const CoursePage: React.FC = () => {
         const skills = ['Reading', 'Listening', 'Writing', 'Speaking', 'Vocabulary', 'Grammar'];
         const types = ['Practice', 'Mock Test', 'Quiz', 'Exercise'];
 
-        return Array.from({ length: 20 }, (_, i) => {
+        return Array.from({ length: 77 }, (_, i) => {
             const randomLv = levels[Math.floor(Math.random() * levels.length)];
             const randomSkill = skills[Math.floor(Math.random() * skills.length)];
             const randomType = types[Math.floor(Math.random() * types.length)];
@@ -54,7 +54,7 @@ const CoursePage: React.FC = () => {
                 id: `task_${i}`,
                 code: `EN-${randomLv.split(' ')[1]}-${100 + i}`,
                 title: `${randomSkill} ${randomType} - Unit ${i + 1}`,
-                status: i % 4 === 0 ? 'completed' : i % 4 === 1 ? 'in_progress' : 'not_started',
+                status: i % Math.floor(Math.random() * 7) === 0 ? 'completed' : i % 4 === 1 ? 'in_progress' : 'not_started',
                 score: i % 4 === 0 ? Math.floor(Math.random() * 9) + 1 : undefined,
                 level: randomLv,
             };

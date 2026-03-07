@@ -40,7 +40,30 @@ const LEVEL_COLORS: Record<string, string> = {
     'IELTS 8.0': '#14b8a6',
 };
 
-const TASK_ICON_URL = "https://cdn.lordicon.com/edplgash.json";
+const AVATAR_OPTIONS = [
+    'https://cdn.lordicon.com/dznelzdk.json',
+    'https://cdn.lordicon.com/czcsywgo.json',
+    'https://cdn.lordicon.com/ajzwsrcs.json',
+    'https://cdn.lordicon.com/sgtmgpft.json',
+    'https://cdn.lordicon.com/edplgash.json',
+    "https://cdn.lordicon.com/nwfpiryp.json",
+    "https://cdn.lordicon.com/rhmhivzj.json",
+    "https://cdn.lordicon.com/hwfggmas.json",
+    "https://cdn.lordicon.com/bhvzarpg.json",
+    "https://cdn.lordicon.com/uvhtrvux.json",
+    "https://cdn.lordicon.com/vqkaxtlm.json",
+    "https://cdn.lordicon.com/emjmgjnt.json",
+    "https://cdn.lordicon.com/qaeqyqcc.json",
+    "https://cdn.lordicon.com/tzovitfd.json",
+    "https://cdn.lordicon.com/drdlomqk.json",
+    "https://cdn.lordicon.com/snsyzslg.json",
+    "https://cdn.lordicon.com/gcpjssdi.json",
+    "https://cdn.lordicon.com/ejdrjrvy.json",
+    "https://cdn.lordicon.com/tdbbbqzo.json",
+    "https://cdn.lordicon.com/jlhrsjqp.json",
+    "https://cdn.lordicon.com/cadyhyeo.json",
+    "https://cdn.lordicon.com/etuixrny.json"
+];
 
 // ============================================================================
 // Main Component
@@ -137,7 +160,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 {tasks.length === 0 ? (
                     <div className={styles.emptyState}>Không có bài tập phù hợp.</div>
                 ) : (
-                    tasks.map((task) => {
+                    tasks.map((task, index) => {
                         const isSelected = task.id === selectedTaskId;
                         const isCompleted = task.status === 'completed';
                         const isInProgress = task.status === 'in_progress';
@@ -145,6 +168,8 @@ const TaskList: React.FC<TaskListProps> = ({
                         const currentTaskColor = (task.level && LEVEL_COLORS[task.level])
                             ? LEVEL_COLORS[task.level]
                             : (isDefault ? '#3b82f6' : headerColor);
+
+                        const iconSrc = AVATAR_OPTIONS[index % AVATAR_OPTIONS.length];
 
                         return (
                             <div
@@ -172,7 +197,7 @@ const TaskList: React.FC<TaskListProps> = ({
                                 <div className={styles.iconWrapper}>
                                     {/* @ts-ignore */}
                                     <lord-icon
-                                        src={TASK_ICON_URL}
+                                        src={iconSrc}
                                         trigger="hover"
                                         style={{ width: '150px', height: '160px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
                                     />
@@ -189,10 +214,13 @@ const TaskList: React.FC<TaskListProps> = ({
                                     <h3 className={`${styles.taskTitle} ${isCompleted ? styles.strikethrough : ''}`}>
                                         {task.title}
                                     </h3>
-                                    <p className={styles.statusLabel}>
-                                        {isCompleted ? 'Đã hoàn thành' :
-                                            isInProgress ? 'Đang làm' : 'Chưa làm'}
-                                    </p>
+                                    {isCompleted ? (
+                                        <div className={styles.stampCompleted}>ĐÃ HOÀN THÀNH</div>
+                                    ) : (
+                                        <p className={styles.statusLabel}>
+                                            {isInProgress ? 'Đang làm' : 'Chưa làm'}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className={styles.cardFooter}>
