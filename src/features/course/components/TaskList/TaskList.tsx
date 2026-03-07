@@ -199,7 +199,7 @@ const TaskList: React.FC<TaskListProps> = ({
                                     <lord-icon
                                         src={iconSrc}
                                         trigger="hover"
-                                        style={{ width: '150px', height: '160px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
+                                        style={{ width: '100px', height: '100px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
                                     />
                                     {isInProgress && (
                                         <div className={styles.inProgressOverlay}>

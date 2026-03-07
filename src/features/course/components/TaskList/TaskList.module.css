@@ -351,11 +351,6 @@
 
     .taskTitle { font-size: 0.9rem; }
 
-    .iconWrapper {
-        width: 120px !important;
-        height: 130px !important;
-    }
-
     .overlayCircle {
         width: 3.5rem;
         height: 3.5rem;
@@ -432,11 +427,6 @@
     }
 
     .cardFooter button svg { width: 0.75rem; height: 0.75rem; }
-
-    .iconWrapper{
-        width: 70px !important;
-        height: 75px !important;
-    }
 
     .overlayCircle {
         width: 2.5rem;
