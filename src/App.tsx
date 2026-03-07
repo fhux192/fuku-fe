@@ -1,6 +1,7 @@
-/**
- * Main App component - handles routing and layout structure
- */
+
+// ============================================================================
+// App.tsx
+// ============================================================================
 
 import React from 'react';
 import type { FC} from 'react';
@@ -13,7 +14,9 @@ import Login from './pages/Auth/Login/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword/ResetPassword';
 import KanaReference from './pages/KanaReference/KanaReference';
-import CoursePage from './pages/CoursePage/CoursePage';
+import CoursePage from './components/layouts/DashboardLayout/pages/CoursePage/CoursePage';
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import History from "./components/layouts/DashboardLayout/pages/HistoryPage/HistoryPage";
 
 // Layouts
 import HomeLayout from './components/layouts/HomeLayout/HomeLayout';
@@ -34,6 +37,8 @@ const ROUTES = {
     ROADMAP: '/roadmap',
     KANA_REFERENCE: '/kana-reference',
     HOME_COURSE: '/home/course',
+    PROFILE: '/profile',
+    HOME_HISTORY:'/home/history',
 } as const;
 
 // ============================================================================
@@ -76,12 +81,14 @@ const App: FC = () => {
                     {/* Dashboard routes - TODO: Add PrivateRoute wrapper */}
                     <Route element={<DashboardLayout />}>
                         <Route path={ROUTES.HOME_COURSE} element={<CoursePage />} />
+                        <Route path={ROUTES.HOME_HISTORY} element={<History />} />
                     </Route>
 
                     {/* Standalone routes */}
                     <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
                     <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
                     <Route path={ROUTES.KANA_REFERENCE} element={<KanaReference />} />
+                    <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
 
                     {/* Default redirect */}
                     <Route path={ROUTES.ROOT} element={<Navigate to={ROUTES.LOGIN} replace />} />

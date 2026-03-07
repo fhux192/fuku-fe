@@ -19,6 +19,7 @@
 .pageContainer {
     width: 100%;
     min-height: 100%;
+    padding:8px;
     font-family: "Google Sans Flex", sans-serif;
     color: var(--color-text-dark);
 }

@@ -1,4 +1,3 @@
-/* DashboardLayout.module.css */
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap');
 
@@ -297,7 +296,6 @@ body {
 
 .levelInfoContainer {
     padding: 12px;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border-radius: var(--border-radius-sm);
     margin-bottom: 4px;
 }
@@ -533,7 +531,7 @@ body {
     width: var(--avatar-desktop);
     height: var(--avatar-desktop);
     border-radius: 50%;
-    background: var(--color-accent);
+    background: var(--color-surface-white);
     color: var(--color-text-dark);
     display: flex;
     align-items: center;
@@ -686,7 +684,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Prevent icon from capturing clicks incorrectly */
 }
 
 /* Pulse ring animation */

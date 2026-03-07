@@ -24,6 +24,7 @@ interface NavItem {
     label: string;
     icon: string;
     title: string;
+    requiresAuth?: boolean;
 }
 
 interface DecodedToken {
@@ -32,6 +33,7 @@ interface DecodedToken {
     sub: string;
     iat: number;
     exp: number;
+    avatar?: string;
 }
 
 interface UserLevelData {
@@ -85,19 +87,22 @@ const NAV_ITEMS: NavItem[] = [
         path: '/home',
         label: 'Diễn đàn',
         icon: 'https://cdn.lordicon.com/oeotfwsx.json',
-        title: 'Diễn đàn'
+        title: 'Diễn đàn',
+        requiresAuth: false
     },
     {
         path: '/home/course',
         label: 'Bài học',
         icon: 'https://cdn.lordicon.com/hjrbjhnq.json',
-        title: 'Bài học'
+        title: 'Bài học',
+        requiresAuth: false
     },
     {
         path: '/home/history',
         label: 'Lịch sử',
         icon: 'https://cdn.lordicon.com/ibjcmcbv.json',
-        title: 'Lịch sử'
+        title: 'Lịch sử',
+        requiresAuth: true
     }
 ];
 
@@ -148,6 +153,7 @@ const API_CONFIG = {
     DAILY_LOGIN: '/levels/daily-login'
 };
 
+
 // ============================================================================
 // Utility Functions
 // ============================================================================
@@ -168,7 +174,7 @@ const decodeJWT = (token: string): DecodedToken | null => {
     }
 };
 
-const getUserFromToken = (): { name: string; email: string; userId: number | null } | null => {
+const getUserFromToken = (): { name: string; email: string; userId: number | null; avatar: string } | null => {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) return null;
@@ -181,10 +187,13 @@ const getUserFromToken = (): { name: string; email: string; userId: number | nul
             return null;
         }
 
+        const cachedAvatar = localStorage.getItem(`userAvatar_${decoded.sub}`);
+
         return {
             name: decoded.name || 'Người dùng',
             email: decoded.sub || '',
-            userId: decoded.id || null
+            userId: decoded.id || null,
+            avatar: cachedAvatar || decoded.avatar || ""
         };
     } catch (error) {
         console.error('Failed to get user from token:', error);
@@ -204,27 +213,14 @@ const formatXp = (xp: number): string => {
     return xp.toString();
 };
 
-// ============================================================================
-// Helper: play lord-icon animation
-// ============================================================================
-
 const playLordIcon = (iconEl: LordIconElement | null) => {
     if (!iconEl?.playerInstance) return;
     iconEl.playerInstance.stop();
     iconEl.playerInstance.play();
 };
 
-const getAvatarInitials = (name: string): string => {
-    if (!name || name === 'Khách') return 'Khách';
-    const cleanName = name.trim();
-    const parts = cleanName.split(/\s+/);
-    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
-    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-};
-
 // ============================================================================
 // Hook: useParentHoverLordIcon
-// Gắn mouseenter lên thẻ cha (parentRefs), khi hover sẽ play icon con (iconRefs)
 // ============================================================================
 
 const useParentHoverLordIcon = (
@@ -287,11 +283,13 @@ const DashboardLayout: React.FC = () => {
     const [isFabOpen, setIsFabOpen] = useState<boolean>(false);
 
     const [userName, setUserName] = useState<string>('Khách');
+    const [userAvatar, setUserAvatar] = useState<string>("");
     const [, setUserId] = useState<number | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false);
+    const [pendingAuthPath, setPendingAuthPath] = useState<string | null>(null);
 
     const [userLevel, setUserLevel] = useState<UserLevelData | null>(null);
     const [isLoadingLevel, setIsLoadingLevel] = useState<boolean>(false);
@@ -331,7 +329,7 @@ const DashboardLayout: React.FC = () => {
     useParentHoverLordIcon(fabParentRefs, fabIconRefs, fabIds);
 
     // =========================================================================
-    // Toast Functions
+    // Functions
     // =========================================================================
 
     const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
@@ -341,10 +339,6 @@ const DashboardLayout: React.FC = () => {
     const hideToast = useCallback(() => {
         setToastConfig(prev => ({ ...prev, isVisible: false }));
     }, []);
-
-    // =========================================================================
-    // API Functions
-    // =========================================================================
 
     const fetchUserLevel = useCallback(async (uid: number) => {
         setIsLoadingLevel(true);
@@ -415,6 +409,7 @@ const DashboardLayout: React.FC = () => {
         const user = getUserFromToken();
         if (user) {
             setUserName(user.name);
+            setUserAvatar(user.avatar);
             setIsAuthenticated(true);
             if (user.userId) {
                 setUserId(user.userId);
@@ -429,9 +424,36 @@ const DashboardLayout: React.FC = () => {
         }
     }, [fetchUserLevel, claimDailyLoginBonus]);
 
-    // =========================================================================
-    // Modal Handlers
-    // =========================================================================
+    useEffect(() => {
+        const handleStorageChange = () => syncUserData();
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, [syncUserData]);
+
+    useEffect(() => {
+        syncUserData();
+    }, [location.pathname, syncUserData]);
+
+    const handleLoginSuccess = useCallback(() => {
+        setIsLoginModalOpen(false);
+        syncUserData();
+        showToast('Đăng nhập thành công!', 'success');
+
+        if (pendingAuthPath) {
+            navigate(pendingAuthPath);
+            setPendingAuthPath(null);
+        }
+    }, [syncUserData, showToast, pendingAuthPath, navigate]);
+
+    const handleLogout = (): void => {
+        localStorage.removeItem('authToken');
+        setUserLevel(null);
+        syncUserData();
+        setIsDropdownOpen(false);
+        setIsMobileMenuOpen(false);
+        showToast('Đăng xuất thành công!', 'success');
+        navigate('/home/course');
+    };
 
     const handleSwitchToRegister = useCallback(() => {
         setIsLoginModalOpen(false);
@@ -451,44 +473,12 @@ const DashboardLayout: React.FC = () => {
         setIsForgotPasswordModalOpen(true);
     }, []);
 
-    const handleLoginSuccess = useCallback(() => {
-        setIsLoginModalOpen(false);
-        syncUserData();
-        showToast('Đăng nhập thành công!', 'success');
-    }, [syncUserData, showToast]);
-
-    const handleRegisterSuccess = useCallback(() => {
-        setIsRegisterModalOpen(false);
-        setIsLoginModalOpen(true);
-        showToast('Đăng ký thành công! Vui lòng kiểm tra email.', 'success');
-    }, [showToast]);
-
-    const handleLogout = (): void => {
-        localStorage.removeItem('authToken');
-        setUserLevel(null);
-        syncUserData();
-        setIsDropdownOpen(false);
-        setIsMobileMenuOpen(false);
-        showToast('Đăng xuất thành công!', 'success');
-    };
-
-    // =========================================================================
-    // FAB Handlers
-    // =========================================================================
-
-    const toggleFab = useCallback(() => {
-        setIsFabOpen(prev => !prev);
-    }, []);
-
+    const toggleFab = useCallback(() => setIsFabOpen(prev => !prev), []);
     const handleFabActionClick = useCallback((action: FabAction) => {
         action.onClick();
         setIsFabOpen(false);
         showToast(`Đã chọn: ${action.label}`, 'info');
     }, [showToast]);
-
-    // =========================================================================
-    // Effects
-    // =========================================================================
 
     useEffect(() => {
         defineElement(lottie.loadAnimation);
@@ -525,10 +515,6 @@ const DashboardLayout: React.FC = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // =========================================================================
-    // Event Handlers
-    // =========================================================================
-
     const handleMainContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
         if (!isMobile) return;
         const currentScrollY = e.currentTarget.scrollTop;
@@ -557,35 +543,21 @@ const DashboardLayout: React.FC = () => {
         }
     };
 
-    const handleNavigation = (path: string): void => {
+    const handleNavigation = (path: string, requiresAuth: boolean = false): void => {
+        if (requiresAuth && !isAuthenticated) {
+            setPendingAuthPath(path);
+            setIsLoginModalOpen(true);
+            return;
+        }
         navigate(path);
         if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     };
 
-    // =========================================================================
-    // Helper Functions
-    // =========================================================================
-
-    const formatTime = (date: Date) => date.toLocaleTimeString('vi-VN', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-    });
-
-    const formatDate = (date: Date) => date.toLocaleDateString('vi-VN', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-
+    const formatTime = (date: Date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const formatDate = (date: Date) => date.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const isActive = (path: string) => location.pathname === path;
-
     const userNameColor = userLevel ? getStageColor(userLevel.stage) : '#ffffff';
-
-    const getFabVisibilityClass = (): string => {
-        if (!isMobile) return styles.fabVisible;
-        return isNavVisible ? styles.fabVisible : styles.fabHidden;
-    };
-
-    // =========================================================================
-    // Render Functions
-    // =========================================================================
+    const getFabVisibilityClass = (): string => (!isMobile) ? styles.fabVisible : (isNavVisible ? styles.fabVisible : styles.fabHidden);
 
     const renderLevelInfo = () => {
         if (isLoadingLevel) {
@@ -605,9 +577,7 @@ const DashboardLayout: React.FC = () => {
                     <div className={styles.levelHeader}>
                         <span className={styles.levelIcon}>🌱</span>
                         <div className={styles.levelDetails}>
-                            <span className={styles.levelRankName} style={{ color: '#4ade80' }}>
-                                Mầm non 1
-                            </span>
+                            <span className={styles.levelRankName} style={{ color: '#4ade80' }}>Mầm non 1</span>
                             <span className={styles.levelPosition}>Chưa có dữ liệu</span>
                         </div>
                     </div>
@@ -632,9 +602,7 @@ const DashboardLayout: React.FC = () => {
                 <div className={styles.levelHeader}>
                     <span className={styles.levelIcon}>{userLevel.icon}</span>
                     <div className={styles.levelDetails}>
-                        <span className={styles.levelRankName} style={{ color: getStageColor(userLevel.stage) }}>
-                            {userLevel.rankName}
-                        </span>
+                        <span className={styles.levelRankName} style={{ color: getStageColor(userLevel.stage) }}>{userLevel.rankName}</span>
                         <span className={styles.levelPosition}>Hạng #{userLevel.rankPosition}</span>
                     </div>
                 </div>
@@ -648,16 +616,12 @@ const DashboardLayout: React.FC = () => {
                     <div className={styles.progressBarContainer}>
                         <div
                             className={styles.progressBar}
-                            style={{
-                                width: `${Math.min(userLevel.progressPercent, 100)}%`,
-                                background: getStageColor(userLevel.stage)
-                            }}
+                            style={{ width: `${Math.min(userLevel.progressPercent, 100)}%`, background: getStageColor(userLevel.stage) }}
                         />
                     </div>
                     {!userLevel.isMaxLevel ? (
                         <div className={styles.xpRemaining}>
-                            Còn <strong>{formatXp(userLevel.xpToNextLevel)}</strong> XP để lên{' '}
-                            <span style={{ color: getStageColor(userLevel.stage) }}>{userLevel.nextRankName}</span>
+                            Còn <strong>{formatXp(userLevel.xpToNextLevel)}</strong> XP để lên <span style={{ color: getStageColor(userLevel.stage) }}>{userLevel.nextRankName}</span>
                         </div>
                     ) : (
                         <div className={styles.maxLevelBadge}>🎉 Đã đạt cấp tối đa!</div>
@@ -666,10 +630,6 @@ const DashboardLayout: React.FC = () => {
             </div>
         );
     };
-
-    // =========================================================================
-    // Render
-    // =========================================================================
 
     return (
         <div className={styles.dashboardLayout}>
@@ -692,17 +652,9 @@ const DashboardLayout: React.FC = () => {
                 message={dailyLoginModal.message}
             />
 
-            {/* ================================================================
-                Sidebar
-            ================================================================ */}
             <aside className={`${styles.sidebar} ${isMobile ? (isNavVisible ? styles.sidebarVisible : styles.sidebarHidden) : ''}`}>
                 <div className={styles.logoArea}>
-                    <img
-                        src={logo}
-                        alt="Fuku Logo"
-                        className={styles.logoImage}
-                        onClick={() => navigate('/home')}
-                    />
+                    <img src={logo} alt="Fuku Logo" className={styles.logoImage} onClick={() => navigate('/home')} />
                 </div>
 
                 <div className={styles.timeDisplay}>
@@ -711,45 +663,32 @@ const DashboardLayout: React.FC = () => {
                 </div>
 
                 <nav className={styles.navGroup}>
-                    {NAV_ITEMS.map(({ path, label, icon }) => (
+                    {NAV_ITEMS.map(({ path, label, icon, requiresAuth }) => (
                         <div
                             key={path}
                             ref={(el) => { navParentRefs.current[path] = el; }}
                             className={`${styles.navItem} ${isActive(path) ? styles.activeNavItem : ''}`}
-                            onClick={() => handleNavigation(path)}
+                            onClick={() => handleNavigation(path, requiresAuth)}
                             role="button"
                             tabIndex={0}
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleNavigation(path, requiresAuth); }}
                         >
                             {/* @ts-ignore */}
-                            <lord-icon
-                                ref={(el: LordIconElement) => { navIconRefs.current[path] = el; }}
-                                src={icon}
-                                trigger="hover"
-                                colors="primary:#ffffff"
-                                style={{ width: '25px', height: '25px' }}
-                            />
+                            <lord-icon ref={(el: LordIconElement) => { navIconRefs.current[path] = el; }} src={icon} trigger="hover" colors="primary:#ffffff" style={{ width: '25px', height: '25px' }} />
                             <span>{label}</span>
                         </div>
                     ))}
 
-                    {/* Mobile/Tablet User Profile */}
                     {(isMobile || isTablet) && (
                         <div className={styles.navUserProfileContainer} ref={mobileMenuRef}>
-                            <div
-                                className={`${styles.navItem} ${styles.navUserProfile}`}
-                                onClick={handleUserProfileClick}
-                            >
+                            <div className={`${styles.navItem} ${styles.navUserProfile}`} onClick={handleUserProfileClick}>
                                 <div className={styles.navUserAvatar}>
+                                    {/* Mobile Avatar: Remove colors prop when authenticated so the avatar's native colors show */}
                                     {/* @ts-ignore */}
-                                    <lord-icon
-                                        src="https://cdn.lordicon.com/bushiqea.json"
-                                        trigger="hover"
-                                        colors="primary:#1a1a2e"
-                                        style={{ width: '25px', height: '25px' }}
-                                    />
+                                    <lord-icon src={userAvatar} colors={!isAuthenticated ? "primary:#1a1a2e" : undefined} style={{ width: '25px', height: '25px' }} />
                                 </div>
                                 <span className={styles.navUserName} style={{ color: userNameColor }}>
-                                    {getAvatarInitials(userName)}
+                                    {isAuthenticated ? userName : 'Khách'}
                                 </span>
                             </div>
 
@@ -757,20 +696,14 @@ const DashboardLayout: React.FC = () => {
                                 <div className={styles.mobileMenuDropdown}>
                                     {renderLevelInfo()}
                                     <div className={styles.mobileMenuDivider} />
-                                    <button
-                                        className={styles.mobileMenuItem}
-                                        onClick={() => { setIsMobileMenuOpen(false); navigate('/profile'); }}
-                                    >
+                                    <button className={styles.mobileMenuItem} onClick={() => { setIsMobileMenuOpen(false); navigate('/profile'); }}>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" />
                                         </svg>
                                         <span>Hồ sơ cá nhân</span>
                                     </button>
                                     <div className={styles.mobileMenuDivider} />
-                                    <button
-                                        className={`${styles.mobileMenuItem} ${styles.mobileMenuItemDanger}`}
-                                        onClick={handleLogout}
-                                    >
+                                    <button className={`${styles.mobileMenuItem} ${styles.mobileMenuItemDanger}`} onClick={handleLogout}>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                             <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9M16 17L21 12L16 7M21 12H9" />
                                         </svg>
@@ -782,38 +715,23 @@ const DashboardLayout: React.FC = () => {
                     )}
                 </nav>
 
-                {/* Sidebar Footer - Desktop only */}
                 <div className={styles.sidebarFooter}>
                     <div className={styles.quickStats}>
-                        <div className={styles.statBox}>
-                            <div className={styles.statNumber}>5</div>
-                            <div className={styles.statLabel}>Khóa học</div>
-                        </div>
-                        <div className={styles.statBox}>
-                            <div className={styles.statNumber}>127</div>
-                            <div className={styles.statLabel}>Bài học</div>
-                        </div>
+                        <div className={styles.statBox}><div className={styles.statNumber}>5</div><div className={styles.statLabel}>Khóa học</div></div>
+                        <div className={styles.statBox}><div className={styles.statNumber}>127</div><div className={styles.statLabel}>Bài học</div></div>
                     </div>
 
                     <div className={styles.userProfileContainer} ref={dropdownRef}>
                         <div className={styles.userProfile} onClick={handleUserProfileClick}>
                             <div className={styles.userAvatar}>
                                 {/* @ts-ignore */}
-                                <lord-icon
-                                    src="https://cdn.lordicon.com/bushiqea.json"
-                                    trigger="hover"
-                                    style={{ width: '32px', height: '32px' }}
-                                />
+                                <lord-icon src={userAvatar} trigger="loop"   style={{ width: '32px', height: '32px' }} />
                             </div>
                             <div className={styles.userInfo}>
-                                <div className={styles.userName} style={{ color: userNameColor }}>
-                                    {userName}
-                                </div>
+                                <div className={styles.userName} style={{ color: userNameColor }}>{userName}</div>
                                 <div className={styles.userStatus}>
                                     {userLevel ? (
-                                        <span style={{ color: getStageColor(userLevel.stage) }}>
-                                            {userLevel.icon} {userLevel.rankName}
-                                        </span>
+                                        <span style={{ color: getStageColor(userLevel.stage) }}>{userLevel.icon} {userLevel.rankName}</span>
                                     ) : isAuthenticated ? (
                                         <span style={{ color: '#4ade80' }}>🌱 Mầm non 1</span>
                                     ) : (
@@ -827,20 +745,14 @@ const DashboardLayout: React.FC = () => {
                             <div className={styles.dropdownMenu}>
                                 {renderLevelInfo()}
                                 <div className={styles.dropdownDivider} />
-                                <button
-                                    className={styles.dropdownItem}
-                                    onClick={() => { setIsDropdownOpen(false); navigate('/profile'); }}
-                                >
+                                <button className={styles.dropdownItem} onClick={() => { setIsDropdownOpen(false); navigate('/profile'); }}>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" />
                                     </svg>
                                     <span>Hồ sơ cá nhân</span>
                                 </button>
                                 <div className={styles.dropdownDivider} />
-                                <button
-                                    className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
-                                    onClick={handleLogout}
-                                >
+                                <button className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`} onClick={handleLogout}>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                         <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9M16 17L21 12L16 7M21 12H9" />
                                     </svg>
@@ -852,95 +764,43 @@ const DashboardLayout: React.FC = () => {
                 </div>
             </aside>
 
-            {/* ================================================================
-                Main Content
-            ================================================================ */}
-            <main
-                className={styles.mainDisplay}
-                onScroll={handleMainContentScroll}
-                ref={mainContentRef}
-            >
+            <main className={styles.mainDisplay} onScroll={handleMainContentScroll} ref={mainContentRef}>
                 <Outlet />
             </main>
 
-            {/* ================================================================
-                Floating Action Button
-            ================================================================ */}
-            <div
-                className={`${styles.fabContainer} ${getFabVisibilityClass()}`}
-                ref={fabRef}
-            >
+            <div className={`${styles.fabContainer} ${getFabVisibilityClass()}`} ref={fabRef}>
                 <div className={`${styles.fabActions} ${isFabOpen ? styles.fabActionsOpen : ''}`}>
                     {FAB_ACTIONS.map((action) => (
-                        <button
-                            key={action.id}
-                            // ← thẻ cha: gắn ref để hook lắng nghe mouseenter
-                            ref={(el) => { fabParentRefs.current[action.id] = el; }}
-                            className={styles.fabActionBtn}
-                            onClick={() => handleFabActionClick(action)}
-                        >
+                        <button key={action.id} ref={(el) => { fabParentRefs.current[action.id] = el; }} className={styles.fabActionBtn} onClick={() => handleFabActionClick(action)}>
                             <div className={styles.fabActionIcon}>
                                 {/* @ts-ignore */}
-                                <lord-icon
-                                    ref={(el: LordIconElement) => { fabIconRefs.current[action.id] = el; }}
-                                    src={action.icon}
-                                    trigger="hover"
-                                    colors={`primary:${action.color}`}
-                                    style={{ width: '32px', height: '32px' }}
-                                />
+                                <lord-icon ref={(el: LordIconElement) => { fabIconRefs.current[action.id] = el; }} src={action.icon} trigger="hover" colors={`primary:${action.color}`} style={{ width: '32px', height: '32px' }} />
                             </div>
                             <span className={styles.fabActionLabel}>{action.label}</span>
                         </button>
                     ))}
                 </div>
 
-                <button
-                    className={`${styles.fabMainBtn} ${isFabOpen ? styles.fabMainBtnOpen : ''}`}
-                    onClick={toggleFab}
-                    aria-label={isFabOpen ? 'Đóng menu liên hệ' : 'Mở menu liên hệ'}
-                    aria-expanded={isFabOpen}
-                >
+                <button className={`${styles.fabMainBtn} ${isFabOpen ? styles.fabMainBtnOpen : ''}`} onClick={toggleFab} aria-label={isFabOpen ? 'Đóng menu liên hệ' : 'Mở menu liên hệ'} aria-expanded={isFabOpen}>
                     <div className={styles.fabMainIcon}>
                         {/* @ts-ignore */}
-                        <lord-icon
-                            src="https://cdn.lordicon.com/byicyhmi.json"
-                            trigger="click"
-                            style={{ width: '70px', height: '70px' }}
-                        />
+                        <lord-icon src="https://cdn.lordicon.com/byicyhmi.json" trigger="click" style={{ width: '70px', height: '70px' }} />
                     </div>
                     <div className={styles.fabPulse} />
                 </button>
             </div>
 
-            {isFabOpen && (
-                <div
-                    className={styles.fabOverlay}
-                    onClick={() => setIsFabOpen(false)}
-                    aria-hidden="true"
-                />
-            )}
+            {isFabOpen && <div className={styles.fabOverlay} onClick={() => setIsFabOpen(false)} aria-hidden="true" />}
 
-            {/* ================================================================
-                Modals
-            ================================================================ */}
             <LoginModal
                 isOpen={isLoginModalOpen}
-                onClose={() => setIsLoginModalOpen(false)}
+                onClose={() => { setIsLoginModalOpen(false); setPendingAuthPath(null); }}
                 onLoginSuccess={handleLoginSuccess}
                 onSwitchToRegister={handleSwitchToRegister}
                 onSwitchToForgotPass={handleSwitchToForgotPass}
             />
-            <RegisterModal
-                isOpen={isRegisterModalOpen}
-                onClose={() => setIsRegisterModalOpen(false)}
-                onRegisterSuccess={handleRegisterSuccess}
-                onSwitchToLogin={handleSwitchToLogin}
-            />
-            <ForgotPasswordModal
-                isOpen={isForgotPasswordModalOpen}
-                onClose={() => setIsForgotPasswordModalOpen(false)}
-                onSwitchToLogin={handleSwitchToLogin}
-            />
+            <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} onSwitchToLogin={handleSwitchToLogin} />
+            <ForgotPasswordModal isOpen={isForgotPasswordModalOpen} onClose={() => setIsForgotPasswordModalOpen(false)} onSwitchToLogin={handleSwitchToLogin} />
         </div>
     );
 };
