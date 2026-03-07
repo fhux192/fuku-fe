@@ -2,9 +2,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 
-/* Import các triggers cần thiết để tránh lỗi unregistered trigger */
-import { Element } from '@lordicon/element';
-
 import LearningPath from '../../../../../features/course/components/LearningPath/LearningPath';
 import TaskList, { Task } from '../../../../../features/course/components/TaskList/TaskList';
 import RoadmapPage from '../../../../../pages/RoadmapPage/RoadmapPage';

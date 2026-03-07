@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BookOpen, RotateCcw, Play, ArrowRight, Zap } from 'lucide-react';
+import { BookOpen, RotateCcw, Play, Zap } from 'lucide-react';
 import styles from './TaskList.module.css';
 
 // ============================================================================
