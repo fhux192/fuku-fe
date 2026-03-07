@@ -1,0 +1,851 @@
+/* ============================================================================
+   ProfilePage.module.css
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:wght@400;600;700;800&display=swap');
+
+:root {
+    --c-dark:    #1a1a2e;
+    --c-surface: #ffffff;
+    --c-bg:      #f8fafc;
+    --c-border:  rgba(26, 26, 46, 0.08);
+    --c-muted:   #64748b;
+    --c-subtle:  #94a3b8;
+    --c-accent:  #4ade80;
+
+    --r-lg: 24px;
+    --r-md: 16px;
+    --r-sm: 12px;
+
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.page {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--c-bg);
+    font-family: "Google Sans Flex", sans-serif;
+    color: var(--c-dark);
+    scroll-behavior: smooth;
+}
+
+.page::-webkit-scrollbar { width: 6px; }
+.page::-webkit-scrollbar-track { background: transparent; }
+.page::-webkit-scrollbar-thumb {
+    background: rgba(26, 26, 46, 0.15);
+    border-radius: 10px;
+}
+.page::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 46, 0.25); }
+
+.contentWrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ============================================================================
+   Loading
+   ============================================================================ */
+
+.loadingWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(26, 26, 46, 0.05);
+    border-radius: 50%;
+    animation: spin 0.8s var(--ease-smooth) infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ============================================================================
+   Top bar — Glassmorphism
+   ============================================================================ */
+
+.topBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--c-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    margin-bottom: 24px;
+}
+
+.backBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--c-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: var(--r-sm);
+    transition: all 0.2s var(--ease);
+    font-family: inherit;
+}
+
+.backBtn:hover {
+    background: rgba(26, 26, 46, 0.05);
+    color: var(--c-dark);
+    transform: translateX(-2px);
+}
+
+.topTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+/* ============================================================================
+   Identity block
+   ============================================================================ */
+
+.identityBlock {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 32px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    box-shadow: 0 4px 24px rgba(26, 26, 46, 0.03);
+    overflow: hidden;
+    animation: fadeUp 0.4s var(--ease-out) both;
+}
+
+.identityGlow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.avatarWrap {
+    position: relative;
+    flex-shrink: 0;
+    z-index: 2;
+    cursor: pointer;
+    transition: transform 0.2s var(--ease-out);
+}
+
+.avatarWrap:hover {
+    transform: scale(1.03);
+}
+
+.avatarOuter {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid;
+    background: var(--c-surface);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.avatarInner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--c-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.avatarLetters {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.avatarBadge {
+    position: absolute;
+    bottom: 0;
+    right: -5px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--c-surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.12);
+    border: 2px solid var(--c-surface);
+}
+
+.avatarEditOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.avatarWrap:hover .avatarEditOverlay {
+    opacity: 1;
+}
+
+.identityInfo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 2;
+}
+
+.userName {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--c-dark);
+    line-height: 1.1;
+    margin: 0;
+}
+
+.chipsRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.rankChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px solid;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.idChip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px solid var(--c-border);
+    background: var(--c-surface);
+    color: var(--c-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: "MuseoModerno", sans-serif;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+}
+
+.idChip:hover {
+    background: var(--c-bg);
+    border-color: rgba(26, 26, 46, 0.15);
+    color: var(--c-dark);
+}
+
+.bio {
+    font-size: 0.95rem;
+    color: var(--c-muted);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.metaLine {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.metaLine span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--c-subtle);
+    font-weight: 500;
+}
+
+.metaLine i {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--c-border);
+}
+
+/* ============================================================================
+   Generic Cards & XP Block
+   ============================================================================ */
+
+.card {
+    margin-top: 20px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    padding: 24px;
+    box-shadow: 0 4px 24px rgba(26, 26, 46, 0.03);
+    animation: fadeUp 0.4s 0.1s var(--ease-out) both;
+}
+
+.cardHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.cardTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+/* XP Specific */
+.xpTopRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 16px;
+}
+
+.xpCaption {
+    font-size: 0.8rem;
+    color: var(--c-subtle);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px;
+}
+
+.xpBig {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+}
+
+.xpUnit {
+    font-size: 1.2rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.xpGoal { text-align: right; }
+.xpGoalValue {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0;
+}
+
+.xpTrack {
+    width: 100%;
+    height: 10px;
+    background: rgba(26, 26, 46, 0.06);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.xpFill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+}
+
+.xpFill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.xpHint {
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    color: var(--c-muted);
+    text-align: center;
+    font-weight: 500;
+}
+
+/* ============================================================================
+   Stats Grid
+   ============================================================================ */
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+    animation: fadeUp 0.4s 0.15s var(--ease-out) both;
+}
+
+.statCell {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    box-shadow: 0 4px 16px rgba(26, 26, 46, 0.02);
+    transition: all 0.25s var(--ease-out);
+    position: relative;
+    overflow: hidden;
+}
+
+.statCell:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(26, 26, 46, 0.06);
+    border-color: rgba(26, 26, 46, 0.12);
+}
+
+.statIconWrap {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.statData {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.statVal {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--c-dark);
+    line-height: 1;
+}
+
+.statUnit {
+    font-size: 0.8rem;
+    color: var(--c-muted);
+    font-weight: 600;
+}
+
+.statLbl {
+    font-size: 0.85rem;
+    color: var(--c-muted);
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* ============================================================================
+   Heatmap
+   ============================================================================ */
+
+.heatmapWrapper {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+
+.heatmapWrapper::-webkit-scrollbar { height: 4px; }
+.heatmapWrapper::-webkit-scrollbar-track { background: transparent; }
+.heatmapWrapper::-webkit-scrollbar-thumb { background: rgba(26, 26, 46, 0.1); border-radius: 4px; }
+
+.heatmap {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(15px, 1fr));
+    gap: 6px;
+    min-width: 400px;
+}
+
+.heatCell {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    transition: transform 0.2s, opacity 0.2s;
+    cursor: pointer;
+}
+
+.heatCell:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.heatLegend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--c-subtle);
+    font-weight: 500;
+}
+
+.heatLegendDot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+/* ============================================================================
+   Tabs (Moved to Bottom)
+   ============================================================================ */
+
+.tabBar {
+    display: flex;
+    border-bottom: 2px solid var(--c-border);
+    margin-top: 32px;
+    gap: 32px;
+}
+
+.tabBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--c-muted);
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    font-family: inherit;
+}
+
+.tabBtn:hover { color: var(--c-dark); }
+
+.tabBadge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: rgba(26, 26, 46, 0.08);
+    color: var(--c-muted);
+    padding: 2px 8px;
+    border-radius: 50px;
+}
+
+/* ============================================================================
+   Activity List
+   ============================================================================ */
+
+.listContainer {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-lg);
+    margin-top: 20px;
+    padding: 12px 24px;
+    box-shadow: 0 4px 24px rgba(26, 26, 46, 0.03);
+    animation: fadeUp 0.4s var(--ease-out) both;
+}
+
+.actRow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--c-border);
+    animation: fadeUp 0.3s var(--ease-out) both;
+    transition: all 0.2s;
+}
+
+.actRow:last-child { border-bottom: none; }
+
+.actRow:hover {
+    transform: translateX(4px);
+}
+
+.actDot {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.actText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.actTitle {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--c-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.actSub {
+    font-size: 0.8rem;
+    color: var(--c-muted);
+}
+
+.actXp {
+    font-family: "MuseoModerno", sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+/* ============================================================================
+   Achievements Grid
+   ============================================================================ */
+
+.achieveGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.achieveCard {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--r-md);
+    padding: 24px 16px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeUp 0.3s var(--ease-out) both;
+    transition: all 0.25s var(--ease-out);
+    box-shadow: 0 4px 16px rgba(26, 26, 46, 0.02);
+}
+
+.achieveCard:not(.achieveLocked):hover {
+    box-shadow: 0 8px 24px rgba(26, 26, 46, 0.08);
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(26, 26, 46, 0.15);
+}
+
+.achieveLocked {
+    opacity: 0.5;
+    background: rgba(26, 26, 46, 0.02);
+    filter: grayscale(80%);
+}
+
+.achieveIconWrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--c-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.achieveIcon { font-size: 1.8rem; }
+
+.achieveName {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--c-dark);
+}
+
+.achieveDesc {
+    font-size: 0.75rem;
+    color: var(--c-muted);
+    line-height: 1.4;
+}
+
+.achieveDate {
+    font-size: 0.7rem;
+    color: var(--c-subtle);
+    font-weight: 600;
+    margin-top: 4px;
+    background: var(--c-bg);
+    padding: 2px 8px;
+    border-radius: 50px;
+}
+
+/* ============================================================================
+   Avatar Modal
+   ============================================================================ */
+
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 46, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modalContent {
+    background: var(--c-surface);
+    width: 90%;
+    max-width: 420px;
+    border-radius: var(--r-lg);
+    padding: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: scaleUp 0.3s var(--ease-out);
+}
+
+@keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modalTitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--c-dark);
+    margin: 0;
+}
+
+.modalCloseBtn {
+    background: rgba(26, 26, 46, 0.05);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--c-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modalCloseBtn:hover {
+    background: rgba(26, 26, 46, 0.1);
+    color: var(--c-dark);
+}
+
+.avatarGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.avatarOption {
+    aspect-ratio: 1;
+    border-radius: var(--r-md);
+    border: 2px solid var(--c-border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: var(--c-bg);
+    transition: all 0.2s;
+}
+
+.avatarOption:hover {
+    border-color: var(--c-accent);
+    transform: scale(1.05);
+}
+
+.avatarSelected {
+    border-color: var(--c-accent);
+    background: rgba(74, 222, 128, 0.1); /* fallback soft green */
+    box-shadow: 0 4px 12px rgba(74, 222, 128, 0.2);
+}
+
+/* ============================================================================
+   Responsive
+   ============================================================================ */
+
+@media (max-width: 1024px) {
+    .contentWrapper { padding: 0 16px; }
+    .statsGrid { grid-template-columns: repeat(2, 1fr); }
+    .achieveGrid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 650px) {
+    .topBar { padding: 12px 16px; margin-bottom: 16px; }
+    .topTitle { font-size: 0.9rem; }
+
+    .identityBlock {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 20px;
+    }
+    .avatarOuter { width: 80px; height: 80px; border-width: 2px; }
+    .avatarLetters { font-size: 1.6rem; }
+    .userName { font-size: 1.5rem; }
+
+    .card { padding: 20px; margin-top: 16px; }
+    .xpBig { font-size: 2rem; }
+    .statsGrid { gap: 12px; margin-top: 16px; }
+    .statCell { padding: 16px; }
+
+    .achieveGrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .listContainer { padding: 8px 16px; }
+    .actRow { gap: 12px; }
+    .actDot { width: 36px; height: 36px; font-size: 1rem; }
+
+    .avatarGrid { gap: 12px; }
+}
+
+@media (max-width: 360px) {
+    .achieveGrid { grid-template-columns: 1fr; }
+    .statsGrid { grid-template-columns: 1fr; }
+    .chipsRow { flex-direction: column; align-items: flex-start; }
+    .avatarGrid { grid-template-columns: repeat(3, 1fr); }
+}

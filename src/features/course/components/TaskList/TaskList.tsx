@@ -1,0 +1,204 @@
+import React, { useEffect } from 'react';
+import { BookOpen, RotateCcw, Play, ArrowRight, Zap } from 'lucide-react';
+import styles from './TaskList.module.css';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
+
+export interface Task {
+    id: string;
+    code: string;
+    title: string;
+    status: TaskStatus;
+    score?: number;
+    level?: string;
+}
+
+interface TaskListProps {
+    tasks: Task[];
+    selectedTaskId?: string;
+    onTaskSelect?: (taskId: string) => void;
+    selectedLevel?: string;
+}
+
+const SESSION_KEY = 'fuku_taskList_selectedTask';
+
+const LEVEL_COLORS: Record<string, string> = {
+    'IELTS 4.0': '#4ade80',
+    'IELTS 5.0': '#3b82f6',
+    'IELTS 6.0': '#a855f7',
+    'IELTS 6.5': '#f43f5e',
+    'IELTS 7.0': '#eab308',
+    'IELTS 7.5': '#f97316',
+    'IELTS 8.0': '#14b8a6',
+};
+
+const TASK_ICON_URL = "https://cdn.lordicon.com/edplgash.json";
+
+const TaskList: React.FC<TaskListProps> = ({
+                                               tasks,
+                                               selectedTaskId,
+                                               onTaskSelect,
+                                               selectedLevel,
+                                           }) => {
+    useEffect(() => {
+        const savedTask = sessionStorage.getItem(SESSION_KEY);
+        if (savedTask && !selectedTaskId && onTaskSelect) {
+            const taskExists = tasks.find(t => t.id === savedTask);
+            if (taskExists) {
+                onTaskSelect(savedTask);
+            }
+        }
+    }, [tasks, selectedTaskId, onTaskSelect]);
+
+    const handleTaskClick = (task: Task) => {
+        if (!onTaskSelect) return;
+        onTaskSelect(task.id);
+        sessionStorage.setItem(SESSION_KEY, task.id);
+    };
+
+    const completedCount = tasks.filter(t => t.status === 'completed').length;
+    const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
+
+    const isDefault = !selectedLevel;
+    const headerColor = isDefault ? '#0f172a' : (LEVEL_COLORS[selectedLevel!] || '#94a3b8');
+
+    return (
+        <section className={styles.container}>
+            {/* HEADER */}
+            <header className={styles.pageHeader}>
+                <div className={styles.headerLeft}>
+                    <div className={styles.headerIcon}>
+                        <BookOpen size={24} strokeWidth={2} />
+                    </div>
+                    <div className={styles.headerText}>
+                        <h2 className={styles.title}>Danh sách bài tập</h2>
+                        <div
+                            className={styles.headerBadge}
+                            style={{
+                                color: headerColor,
+                                backgroundColor: `${headerColor}1A`,
+                                borderColor: `${headerColor}33`
+                            }}
+                        >
+                            <Zap size={12} fill={isDefault ? "none" : "currentColor"} />
+                            <span>{selectedLevel || 'Phổ biến'}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={styles.progressContainer}>
+                    <div className={styles.progressText}>
+                        <span>Tiến độ học tập</span>
+                        <span className={styles.progressPercent} style={{ color: headerColor }}>
+                            {progressPercent}%
+                        </span>
+                    </div>
+                    <div className={styles.progressBar}>
+                        <div
+                            className={styles.progressFill}
+                            style={{
+                                width: `${progressPercent}%`,
+                                backgroundColor: headerColor
+                            }}
+                        />
+                    </div>
+                </div>
+            </header>
+
+            {/* TASK GRID */}
+            <div className={styles.taskGrid}>
+                {tasks.length === 0 ? (
+                    <div className={styles.emptyState}></div>
+                ) : (
+                    tasks.map((task) => {
+                        const isSelected = task.id === selectedTaskId;
+                        const isCompleted = task.status === 'completed';
+                        const isInProgress = task.status === 'in_progress';
+
+                        const currentTaskColor = (task.level && LEVEL_COLORS[task.level])
+                            ? LEVEL_COLORS[task.level]
+                            : (isDefault ? '#3b82f6' : headerColor);
+
+                        return (
+                            <div
+                                key={task.id}
+                                className={`${styles.taskCard} ${isSelected ? styles.selected : ''} ${isCompleted ? styles.completedCard : ''}`}
+                                onClick={() => handleTaskClick(task)}
+                            >
+                                {/* Overlay cho bài đang làm */}
+                                {isInProgress && (
+                                    <div className={styles.inProgressOverlay}>
+                                        <div className={styles.overlayCircle}>
+                                            <Play size={32} fill="white" color="white" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className={styles.cardHeader}>
+                                    <span
+                                        className={styles.badgeCode}
+                                        style={{
+                                            color: isCompleted ? '#94a3b8' : currentTaskColor,
+                                            backgroundColor: isCompleted ? 'rgba(148, 163, 184, 0.1)' : `${currentTaskColor}15`
+                                        }}
+                                    >
+                                        {task.code}
+                                    </span>
+                                    {isCompleted && task.score !== undefined && (
+                                        <div className={styles.scoreTag}>
+                                            <span>{task.score}đ</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className={styles.iconWrapper}>
+                                    {/* @ts-ignore */}
+                                    <lord-icon
+                                        src={TASK_ICON_URL}
+                                        trigger="hover"
+                                        style={{ width: '150px', height: '160px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
+                                    />
+                                </div>
+
+                                <div className={styles.cardBody}>
+                                    <h3 className={`${styles.taskTitle} ${isCompleted ? styles.strikethrough : ''}`}>
+                                        {task.title}
+                                    </h3>
+                                    <p className={styles.statusLabel}>
+                                        {isCompleted ? 'Đã hoàn thành' :
+                                            isInProgress ? 'Đang thực hiện' : 'Chưa bắt đầu'}
+                                    </p>
+                                </div>
+
+                                <div className={styles.cardFooter}>
+                                    {isCompleted ? (
+                                        <button className={styles.btnRetake}>
+                                            <RotateCcw size={16} />
+                                            <span>Làm lại</span>
+                                        </button>
+                                    ) : isInProgress ? (
+                                        <button className={styles.btnResume}>
+                                            <Play size={16} fill="currentColor" />
+                                            <span>Tiếp tục</span>
+                                        </button>
+                                    ) : (
+                                        <button className={styles.btnStart}>
+                                            <span>Bắt đầu</span>
+                                            <ArrowRight size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
+        </section>
+    );
+};
+
+export default TaskList;
