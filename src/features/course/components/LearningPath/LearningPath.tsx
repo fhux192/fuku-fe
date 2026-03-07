@@ -3,6 +3,10 @@ import { Map, Zap } from 'lucide-react';
 import { Course } from '../../course.types';
 import styles from './LearningPath.module.css';
 
+// ============================================================================
+// Types & Interfaces
+// ============================================================================
+
 interface LearningPathProps {
     courses: Course[];
     selectedLevel?: string;
@@ -10,6 +14,10 @@ interface LearningPathProps {
 }
 
 type NodeState = 'selected' | 'passed' | 'unselected';
+
+// ============================================================================
+// Constants & Configurations
+// ============================================================================
 
 const ICON_SELECTED = 'https://cdn.lordicon.com/hjrbjhnq.json';
 const ICON_PASSED = 'https://cdn.lordicon.com/uvofdfal.json';
@@ -29,6 +37,10 @@ const LEVEL_CONFIG: Record<string, { theme: string; colorPrimary: string }> = {
 
 const SESSION_KEY = 'fuku_learningPath_selectedLevel';
 
+// ============================================================================
+// Utilities
+// ============================================================================
+
 const getNodeState = (courseIdx: number, displayIdx: number, targetIdx: number): NodeState => {
     if (displayIdx === -1) return 'unselected';
     if (courseIdx === targetIdx && displayIdx === targetIdx) return 'selected';
@@ -36,41 +48,55 @@ const getNodeState = (courseIdx: number, displayIdx: number, targetIdx: number):
     return 'unselected';
 };
 
+// ============================================================================
+// Sub-Components
+// ============================================================================
+
 const LordIconNode: React.FC<{ nodeState: NodeState; colorPrimary: string }> = ({ nodeState, colorPrimary }) => {
     const ref = useRef<HTMLElement | null>(null);
+
     useEffect(() => {
         const el = ref.current;
         if (!el) return;
+
         let iconSrc = nodeState === 'selected' ? ICON_SELECTED : nodeState === 'passed' ? ICON_PASSED : ICON_UNSELECTED;
+
         el.setAttribute('src', iconSrc);
         el.setAttribute('stroke', 'bold');
+
         const primaryColor = nodeState === 'unselected' ? '#94a3b8' : colorPrimary;
         const secondaryColor = nodeState === 'selected' ? '#ffffff' : nodeState === 'passed' ? '#1a1a2e' : '#cbd5e1';
+
         el.setAttribute('colors', `primary:${primaryColor},secondary:${secondaryColor}`);
         el.setAttribute('style', 'width:30px;height:30px;display:block;flex-shrink:0');
         el.setAttribute('state', 'morph-book');
         el.setAttribute('delay', '3000');
-        el.setAttribute('trigger', nodeState === 'selected' ? 'loop' : 'none');
+
+        el.setAttribute('trigger', nodeState === 'selected' ? 'loop' : '');
     }, [nodeState, colorPrimary]);
+
     // @ts-ignore
     return <lord-icon key={nodeState} ref={ref} />;
 };
 
+// ============================================================================
+// Main Component
+// ============================================================================
+
 const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onLevelSelect }) => {
+
+    // ------------------------------------------------------------------------
+    // State & Refs
+    // ------------------------------------------------------------------------
+
     const scrollRef = useRef<HTMLDivElement>(null);
     const [displayIdx, setDisplayIdx] = useState<number>(-1);
     const [isMobile, setIsMobile] = useState(false);
     const [bouncingLevel, setBouncingLevel] = useState<string | null>(null);
 
-    const handleNodeClick = (lv: string) => {
-        if (!onLevelSelect) return;
-        setBouncingLevel(lv);
-        setTimeout(() => setBouncingLevel(null), 500);
-        const newLevel = selectedLevel === lv ? '' : lv;
-        onLevelSelect(newLevel);
-        if (newLevel) sessionStorage.setItem(SESSION_KEY, newLevel);
-        else sessionStorage.removeItem(SESSION_KEY);
-    };
+    // ------------------------------------------------------------------------
+    // Lifecycle & Effects
+    // ------------------------------------------------------------------------
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth <= 650);
@@ -83,6 +109,7 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
         const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
         if (displayIdx === targetIdx) return;
         if (displayIdx === -1 && targetIdx > -1) { setDisplayIdx(0); return; }
+
         const stepTime = targetIdx > displayIdx ? 150 : 70;
         const interval = setInterval(() => {
             setDisplayIdx((prev) => {
@@ -103,6 +130,26 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
             scrollRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
         }
     }, [displayIdx]);
+
+    // ------------------------------------------------------------------------
+    // Handlers
+    // ------------------------------------------------------------------------
+
+    const handleNodeClick = (lv: string) => {
+        if (!onLevelSelect) return;
+        setBouncingLevel(lv);
+        setTimeout(() => setBouncingLevel(null), 500);
+
+        const newLevel = selectedLevel === lv ? '' : lv;
+        onLevelSelect(newLevel);
+
+        if (newLevel) sessionStorage.setItem(SESSION_KEY, newLevel);
+        else sessionStorage.removeItem(SESSION_KEY);
+    };
+
+    // ------------------------------------------------------------------------
+    // Render
+    // ------------------------------------------------------------------------
 
     const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
     const selectedThemeConfig = selectedLevel ? LEVEL_CONFIG[selectedLevel] : null;
@@ -144,7 +191,14 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
                                             <LordIconNode nodeState={nodeState} colorPrimary={themeConfig.colorPrimary} />
                                         </div>
                                     </div>
-                                    <div className={styles.nodeInfo}><span className={styles.nodeLabel}>{course.lv}</span></div>
+                                    <div className={styles.nodeInfo}>
+                                        <span
+                                            className={styles.nodeLabel}
+                                            style={nodeState === 'selected' ? { color: themeConfig.colorPrimary, fontWeight: '800' } : undefined}
+                                        >
+                                            {course.lv}
+                                        </span>
+                                    </div>
                                 </div>
                                 {index < courses.length - 1 && <div className={`${styles.connector} ${courseIdx < displayIdx ? styles.connectorActive : ''}`} />}
                             </div>

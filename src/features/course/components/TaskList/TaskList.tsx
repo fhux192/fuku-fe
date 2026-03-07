@@ -3,7 +3,7 @@ import { BookOpen, RotateCcw, Play, ArrowRight, Zap } from 'lucide-react';
 import styles from './TaskList.module.css';
 
 // ============================================================================
-// Types
+// Types & Interfaces
 // ============================================================================
 
 export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
@@ -24,6 +24,10 @@ interface TaskListProps {
     selectedLevel?: string;
 }
 
+// ============================================================================
+// Constants & Configurations
+// ============================================================================
+
 const SESSION_KEY = 'fuku_taskList_selectedTask';
 
 const LEVEL_COLORS: Record<string, string> = {
@@ -38,12 +42,21 @@ const LEVEL_COLORS: Record<string, string> = {
 
 const TASK_ICON_URL = "https://cdn.lordicon.com/edplgash.json";
 
+// ============================================================================
+// Main Component
+// ============================================================================
+
 const TaskList: React.FC<TaskListProps> = ({
                                                tasks,
                                                selectedTaskId,
                                                onTaskSelect,
                                                selectedLevel,
                                            }) => {
+
+    // ------------------------------------------------------------------------
+    // Lifecycle
+    // ------------------------------------------------------------------------
+
     useEffect(() => {
         const savedTask = sessionStorage.getItem(SESSION_KEY);
         if (savedTask && !selectedTaskId && onTaskSelect) {
@@ -54,11 +67,19 @@ const TaskList: React.FC<TaskListProps> = ({
         }
     }, [tasks, selectedTaskId, onTaskSelect]);
 
+    // ------------------------------------------------------------------------
+    // Handlers
+    // ------------------------------------------------------------------------
+
     const handleTaskClick = (task: Task) => {
         if (!onTaskSelect) return;
         onTaskSelect(task.id);
         sessionStorage.setItem(SESSION_KEY, task.id);
     };
+
+    // ------------------------------------------------------------------------
+    // Logic
+    // ------------------------------------------------------------------------
 
     const completedCount = tasks.filter(t => t.status === 'completed').length;
     const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
@@ -66,9 +87,12 @@ const TaskList: React.FC<TaskListProps> = ({
     const isDefault = !selectedLevel;
     const headerColor = isDefault ? '#0f172a' : (LEVEL_COLORS[selectedLevel!] || '#94a3b8');
 
+    // ------------------------------------------------------------------------
+    // Render
+    // ------------------------------------------------------------------------
+
     return (
         <section className={styles.container}>
-            {/* HEADER */}
             <header className={styles.pageHeader}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerIcon}>
@@ -109,10 +133,9 @@ const TaskList: React.FC<TaskListProps> = ({
                 </div>
             </header>
 
-            {/* TASK GRID */}
             <div className={styles.taskGrid}>
                 {tasks.length === 0 ? (
-                    <div className={styles.emptyState}></div>
+                    <div className={styles.emptyState}>Không có bài tập phù hợp.</div>
                 ) : (
                     tasks.map((task) => {
                         const isSelected = task.id === selectedTaskId;
@@ -129,28 +152,19 @@ const TaskList: React.FC<TaskListProps> = ({
                                 className={`${styles.taskCard} ${isSelected ? styles.selected : ''} ${isCompleted ? styles.completedCard : ''}`}
                                 onClick={() => handleTaskClick(task)}
                             >
-                                {/* Overlay cho bài đang làm */}
-                                {isInProgress && (
-                                    <div className={styles.inProgressOverlay}>
-                                        <div className={styles.overlayCircle}>
-                                            <Play size={32} fill="white" color="white" />
-                                        </div>
-                                    </div>
-                                )}
-
                                 <div className={styles.cardHeader}>
                                     <span
                                         className={styles.badgeCode}
                                         style={{
                                             color: isCompleted ? '#94a3b8' : currentTaskColor,
-                                            backgroundColor: isCompleted ? 'rgba(148, 163, 184, 0.1)' : `${currentTaskColor}15`
+                                            backgroundColor: isCompleted ? 'rgba(148, 163, 184, 0.1)' : `${currentTaskColor}15`,
                                         }}
                                     >
                                         {task.code}
                                     </span>
                                     {isCompleted && task.score !== undefined && (
                                         <div className={styles.scoreTag}>
-                                            <span>{task.score}đ</span>
+                                            <span>{task.score} Điểm</span>
                                         </div>
                                     )}
                                 </div>
@@ -162,6 +176,13 @@ const TaskList: React.FC<TaskListProps> = ({
                                         trigger="hover"
                                         style={{ width: '150px', height: '160px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
                                     />
+                                    {isInProgress && (
+                                        <div className={styles.inProgressOverlay}>
+                                            <div className={styles.overlayCircle}>
+                                                <Play size={32} fill="white" color="white" />
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className={styles.cardBody}>
@@ -170,7 +191,7 @@ const TaskList: React.FC<TaskListProps> = ({
                                     </h3>
                                     <p className={styles.statusLabel}>
                                         {isCompleted ? 'Đã hoàn thành' :
-                                            isInProgress ? 'Đang thực hiện' : 'Chưa bắt đầu'}
+                                            isInProgress ? 'Đang làm' : 'Chưa làm'}
                                     </p>
                                 </div>
 
@@ -187,8 +208,8 @@ const TaskList: React.FC<TaskListProps> = ({
                                         </button>
                                     ) : (
                                         <button className={styles.btnStart}>
+                                            <Play size={16} fill="currentColor" />
                                             <span>Bắt đầu</span>
-                                            <ArrowRight size={16} />
                                         </button>
                                     )}
                                 </div>

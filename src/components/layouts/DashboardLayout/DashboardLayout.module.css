@@ -220,7 +220,6 @@ body {
     width: var(--avatar-desktop);
     height: var(--avatar-desktop);
     border-radius: 50%;
-    background: var(--color-accent);
     color: var(--color-text-dark);
     display: flex;
     align-items: center;

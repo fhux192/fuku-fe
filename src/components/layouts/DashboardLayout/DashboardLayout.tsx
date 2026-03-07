@@ -1,24 +1,20 @@
 // ============================================================================
 // DashboardLayout.tsx
 // ============================================================================
-
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import styles from './DashboardLayout.module.css';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 import logo from '../../../assets/images/logo/logo192.png';
-
 import LoginModal from '../../../features/auth/components/LoginModal/LoginModal';
 import RegisterModal from '../../../features/auth/components/RegisterModal/RegisterModal';
 import ForgotPasswordModal from '../../../features/auth/components/ForgotPasswordModal/ForgotPasswordModal';
 import Toast from '../../ui/Toast/Toast';
 import DailyLoginModal from '../../../features/gamification/components/DailyLoginModal/DailyLoginModal';
-
 // ============================================================================
 // Types
 // ============================================================================
-
 interface NavItem {
     path: string;
     label: string;
@@ -26,7 +22,6 @@ interface NavItem {
     title: string;
     requiresAuth?: boolean;
 }
-
 interface DecodedToken {
     id: number;
     name: string;
@@ -35,7 +30,6 @@ interface DecodedToken {
     exp: number;
     avatar?: string;
 }
-
 interface UserLevelData {
     userId: number;
     userName: string;
@@ -51,7 +45,6 @@ interface UserLevelData {
     isMaxLevel: boolean;
     rankPosition: number;
 }
-
 interface DailyLoginData {
     firstLoginToday: boolean;
     loginDate: string;
@@ -61,7 +54,6 @@ interface DailyLoginData {
     message: string;
     levelInfo: UserLevelData;
 }
-
 interface LordIconElement extends HTMLElement {
     playerInstance?: {
         play: () => void;
@@ -69,7 +61,6 @@ interface LordIconElement extends HTMLElement {
         isPlaying: boolean;
     };
 }
-
 interface FabAction {
     id: string;
     icon: string;
@@ -77,11 +68,9 @@ interface FabAction {
     color: string;
     onClick: () => void;
 }
-
 // ============================================================================
 // Constants
 // ============================================================================
-
 const NAV_ITEMS: NavItem[] = [
     {
         path: '/home',
@@ -105,7 +94,6 @@ const NAV_ITEMS: NavItem[] = [
         requiresAuth: true
     }
 ];
-
 const FAB_ACTIONS: FabAction[] = [
     {
         id: 'chat',
@@ -129,11 +117,9 @@ const FAB_ACTIONS: FabAction[] = [
         onClick: () => console.log('Phone clicked')
     }
 ];
-
 const MOBILE_BREAKPOINT = 650;
 const TABLET_BREAKPOINT = 1024;
 const SCROLL_THRESHOLD = 50;
-
 const STAGE_COLORS: Record<string, string> = {
     'MAM_NON': '#4ade80',
     'TIEU_HOC': '#FFEB3B',
@@ -146,18 +132,15 @@ const STAGE_COLORS: Record<string, string> = {
     'PHO_GIAO_SU': '#FF5722',
     'GIAO_SU': '#FFD700',
 };
-
 const API_CONFIG = {
     BASE_URL: 'http://localhost:8080/api',
     LEVEL: '/levels/me',
     DAILY_LOGIN: '/levels/daily-login'
 };
-
-
+const DEFAULT_AVATAR = 'https://cdn.lordicon.com/bushiqea.json';
 // ============================================================================
 // Utility Functions
 // ============================================================================
-
 const decodeJWT = (token: string): DecodedToken | null => {
     try {
         const parts = token.split('.');
@@ -173,22 +156,17 @@ const decodeJWT = (token: string): DecodedToken | null => {
         return null;
     }
 };
-
 const getUserFromToken = (): { name: string; email: string; userId: number | null; avatar: string } | null => {
     try {
         const token = localStorage.getItem('authToken');
         if (!token) return null;
-
         const decoded = decodeJWT(token);
         if (!decoded) return null;
-
         if (decoded.exp && decoded.exp < Date.now() / 1000) {
             localStorage.removeItem('authToken');
             return null;
         }
-
         const cachedAvatar = localStorage.getItem(`userAvatar_${decoded.sub}`);
-
         return {
             name: decoded.name || 'Người dùng',
             email: decoded.sub || '',
@@ -200,29 +178,24 @@ const getUserFromToken = (): { name: string; email: string; userId: number | nul
         return null;
     }
 };
-
 const getStageColor = (stage: string | undefined): string => {
     if (!stage) return '#ffffff';
     return STAGE_COLORS[stage] || '#ffffff';
 };
-
 const formatXp = (xp: number): string => {
     if (xp >= 1000) {
         return (xp / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
     }
     return xp.toString();
 };
-
 const playLordIcon = (iconEl: LordIconElement | null) => {
     if (!iconEl?.playerInstance) return;
     iconEl.playerInstance.stop();
     iconEl.playerInstance.play();
 };
-
 // ============================================================================
 // Hook: useParentHoverLordIcon
 // ============================================================================
-
 const useParentHoverLordIcon = (
     parentRefs: React.MutableRefObject<Record<string, HTMLElement | null>>,
     iconRefs: React.MutableRefObject<Record<string, LordIconElement | null>>,
@@ -230,19 +203,16 @@ const useParentHoverLordIcon = (
 ) => {
     useEffect(() => {
         const cleanupFns: (() => void)[] = [];
-
         const timeoutId = setTimeout(() => {
             keys.forEach(key => {
                 const parent = parentRefs.current[key];
                 const icon = iconRefs.current[key];
                 if (!parent || !icon) return;
-
                 const handleMouseEnter = () => playLordIcon(icon);
                 parent.addEventListener('mouseenter', handleMouseEnter);
                 cleanupFns.push(() => parent.removeEventListener('mouseenter', handleMouseEnter));
             });
         }, 300);
-
         return () => {
             clearTimeout(timeoutId);
             cleanupFns.forEach(fn => fn());
@@ -250,11 +220,9 @@ const useParentHoverLordIcon = (
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [keys.join(',')]);
 };
-
 // ============================================================================
 // Main Component
 // ============================================================================
-
 const DashboardLayout: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -263,17 +231,13 @@ const DashboardLayout: React.FC = () => {
     const mainContentRef = useRef<HTMLDivElement>(null);
     const fabRef = useRef<HTMLDivElement>(null);
     const lastScrollY = useRef<number>(0);
-
     const navParentRefs = useRef<Record<string, HTMLElement | null>>({});
     const fabParentRefs = useRef<Record<string, HTMLElement | null>>({});
-
     const navIconRefs = useRef<Record<string, LordIconElement | null>>({});
     const fabIconRefs = useRef<Record<string, LordIconElement | null>>({});
-
     // =========================================================================
     // State
     // =========================================================================
-
     const [currentTime, setCurrentTime] = useState<Date>(new Date());
     const [isNavVisible, setIsNavVisible] = useState<boolean>(true);
     const [isMobile, setIsMobile] = useState<boolean>(false);
@@ -281,19 +245,16 @@ const DashboardLayout: React.FC = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
     const [isFabOpen, setIsFabOpen] = useState<boolean>(false);
-
     const [userName, setUserName] = useState<string>('Khách');
-    const [userAvatar, setUserAvatar] = useState<string>("");
+    const [userAvatar, setUserAvatar] = useState<string>(DEFAULT_AVATAR);
     const [, setUserId] = useState<number | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
     const [isRegisterModalOpen, setIsRegisterModalOpen] = useState<boolean>(false);
     const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState<boolean>(false);
     const [pendingAuthPath, setPendingAuthPath] = useState<string | null>(null);
-
     const [userLevel, setUserLevel] = useState<UserLevelData | null>(null);
     const [isLoadingLevel, setIsLoadingLevel] = useState<boolean>(false);
-
     const [toastConfig, setToastConfig] = useState<{
         isVisible: boolean;
         message: string;
@@ -303,7 +264,6 @@ const DashboardLayout: React.FC = () => {
         message: '',
         type: 'success'
     });
-
     const [dailyLoginModal, setDailyLoginModal] = useState<{
         isOpen: boolean;
         streak: number;
@@ -321,31 +281,24 @@ const DashboardLayout: React.FC = () => {
         icon: '🌱',
         message: ''
     });
-
     const navPaths = NAV_ITEMS.map(item => item.path);
     const fabIds = FAB_ACTIONS.map(action => action.id);
-
     useParentHoverLordIcon(navParentRefs, navIconRefs, navPaths);
     useParentHoverLordIcon(fabParentRefs, fabIconRefs, fabIds);
-
     // =========================================================================
     // Functions
     // =========================================================================
-
     const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'success') => {
         setToastConfig({ isVisible: true, message, type });
     }, []);
-
     const hideToast = useCallback(() => {
         setToastConfig(prev => ({ ...prev, isVisible: false }));
     }, []);
-
     const fetchUserLevel = useCallback(async (uid: number) => {
         setIsLoadingLevel(true);
         try {
             const token = localStorage.getItem('authToken');
             const url = `${API_CONFIG.BASE_URL}${API_CONFIG.LEVEL}/${uid}`;
-
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
@@ -353,7 +306,6 @@ const DashboardLayout: React.FC = () => {
                     'Content-Type': 'application/json'
                 }
             });
-
             if (response.ok) {
                 const result = await response.json();
                 if (result.success && result.data) {
@@ -368,12 +320,10 @@ const DashboardLayout: React.FC = () => {
             setIsLoadingLevel(false);
         }
     }, []);
-
     const claimDailyLoginBonus = useCallback(async (uid: number) => {
         try {
             const token = localStorage.getItem('authToken');
             const url = `${API_CONFIG.BASE_URL}${API_CONFIG.DAILY_LOGIN}/${uid}`;
-
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -381,7 +331,6 @@ const DashboardLayout: React.FC = () => {
                     'Content-Type': 'application/json'
                 }
             });
-
             if (response.ok) {
                 const result = await response.json();
                 if (result.success && result.data) {
@@ -404,12 +353,11 @@ const DashboardLayout: React.FC = () => {
             console.error('Error claiming daily login:', error);
         }
     }, []);
-
     const syncUserData = useCallback(() => {
         const user = getUserFromToken();
         if (user) {
             setUserName(user.name);
-            setUserAvatar(user.avatar);
+            setUserAvatar(user.avatar || DEFAULT_AVATAR);
             setIsAuthenticated(true);
             if (user.userId) {
                 setUserId(user.userId);
@@ -418,33 +366,29 @@ const DashboardLayout: React.FC = () => {
             }
         } else {
             setUserName('Khách');
+            setUserAvatar(DEFAULT_AVATAR);
             setIsAuthenticated(false);
             setUserId(null);
             setUserLevel(null);
         }
     }, [fetchUserLevel, claimDailyLoginBonus]);
-
     useEffect(() => {
         const handleStorageChange = () => syncUserData();
         window.addEventListener('storage', handleStorageChange);
         return () => window.removeEventListener('storage', handleStorageChange);
     }, [syncUserData]);
-
     useEffect(() => {
         syncUserData();
     }, [location.pathname, syncUserData]);
-
     const handleLoginSuccess = useCallback(() => {
         setIsLoginModalOpen(false);
         syncUserData();
         showToast('Đăng nhập thành công!', 'success');
-
         if (pendingAuthPath) {
             navigate(pendingAuthPath);
             setPendingAuthPath(null);
         }
     }, [syncUserData, showToast, pendingAuthPath, navigate]);
-
     const handleLogout = (): void => {
         localStorage.removeItem('authToken');
         setUserLevel(null);
@@ -454,39 +398,33 @@ const DashboardLayout: React.FC = () => {
         showToast('Đăng xuất thành công!', 'success');
         navigate('/home/course');
     };
-
     const handleSwitchToRegister = useCallback(() => {
         setIsLoginModalOpen(false);
         setIsForgotPasswordModalOpen(false);
         setIsRegisterModalOpen(true);
     }, []);
-
     const handleSwitchToLogin = useCallback(() => {
         setIsRegisterModalOpen(false);
         setIsForgotPasswordModalOpen(false);
         setIsLoginModalOpen(true);
     }, []);
-
     const handleSwitchToForgotPass = useCallback(() => {
         setIsLoginModalOpen(false);
         setIsRegisterModalOpen(false);
         setIsForgotPasswordModalOpen(true);
     }, []);
-
     const toggleFab = useCallback(() => setIsFabOpen(prev => !prev), []);
     const handleFabActionClick = useCallback((action: FabAction) => {
         action.onClick();
         setIsFabOpen(false);
         showToast(`Đã chọn: ${action.label}`, 'info');
     }, [showToast]);
-
     useEffect(() => {
         defineElement(lottie.loadAnimation);
         syncUserData();
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, [syncUserData]);
-
     useEffect(() => {
         const checkScreenSize = () => {
             const width = window.innerWidth;
@@ -498,7 +436,6 @@ const DashboardLayout: React.FC = () => {
         window.addEventListener('resize', checkScreenSize);
         return () => window.removeEventListener('resize', checkScreenSize);
     }, []);
-
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -514,23 +451,26 @@ const DashboardLayout: React.FC = () => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
-
     const handleMainContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
         if (!isMobile) return;
-        const currentScrollY = e.currentTarget.scrollTop;
+        const target = e.currentTarget;
+        const currentScrollY = target.scrollTop;
         const scrollDiff = currentScrollY - lastScrollY.current;
+        const atBottom = currentScrollY + target.clientHeight >= target.scrollHeight - 1;
         if (Math.abs(scrollDiff) > SCROLL_THRESHOLD) {
-            if (scrollDiff > 0) {
+            if (scrollDiff > 0 && !atBottom) {
                 setIsNavVisible(false);
                 setIsMobileMenuOpen(false);
                 setIsFabOpen(false);
-            } else {
+            } else if (scrollDiff < 0) {
                 setIsNavVisible(true);
             }
             lastScrollY.current = currentScrollY;
         }
+        if (atBottom) {
+            setIsNavVisible(true);
+        }
     };
-
     const handleUserProfileClick = (): void => {
         if (isAuthenticated) {
             if (isMobile || isTablet) {
@@ -542,7 +482,6 @@ const DashboardLayout: React.FC = () => {
             setIsLoginModalOpen(true);
         }
     };
-
     const handleNavigation = (path: string, requiresAuth: boolean = false): void => {
         if (requiresAuth && !isAuthenticated) {
             setPendingAuthPath(path);
@@ -552,13 +491,11 @@ const DashboardLayout: React.FC = () => {
         navigate(path);
         if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     };
-
     const formatTime = (date: Date) => date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const formatDate = (date: Date) => date.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const isActive = (path: string) => location.pathname === path;
     const userNameColor = userLevel ? getStageColor(userLevel.stage) : '#ffffff';
     const getFabVisibilityClass = (): string => (!isMobile) ? styles.fabVisible : (isNavVisible ? styles.fabVisible : styles.fabHidden);
-
     const renderLevelInfo = () => {
         if (isLoadingLevel) {
             return (
@@ -570,7 +507,6 @@ const DashboardLayout: React.FC = () => {
                 </div>
             );
         }
-
         if (!userLevel) {
             return (
                 <div className={styles.levelInfoContainer}>
@@ -596,7 +532,6 @@ const DashboardLayout: React.FC = () => {
                 </div>
             );
         }
-
         return (
             <div className={styles.levelInfoContainer}>
                 <div className={styles.levelHeader}>
@@ -630,7 +565,6 @@ const DashboardLayout: React.FC = () => {
             </div>
         );
     };
-
     return (
         <div className={styles.dashboardLayout}>
             <Toast
@@ -640,7 +574,6 @@ const DashboardLayout: React.FC = () => {
                 onClose={hideToast}
                 duration={1500}
             />
-
             <DailyLoginModal
                 isOpen={dailyLoginModal.isOpen}
                 onClose={() => setDailyLoginModal(prev => ({ ...prev, isOpen: false }))}
@@ -651,17 +584,14 @@ const DashboardLayout: React.FC = () => {
                 icon={dailyLoginModal.icon}
                 message={dailyLoginModal.message}
             />
-
             <aside className={`${styles.sidebar} ${isMobile ? (isNavVisible ? styles.sidebarVisible : styles.sidebarHidden) : ''}`}>
                 <div className={styles.logoArea}>
                     <img src={logo} alt="Fuku Logo" className={styles.logoImage} onClick={() => navigate('/home')} />
                 </div>
-
                 <div className={styles.timeDisplay}>
                     <div className={styles.currentTime}>{formatTime(currentTime)}</div>
                     <div className={styles.currentDate}>{formatDate(currentTime)}</div>
                 </div>
-
                 <nav className={styles.navGroup}>
                     {NAV_ITEMS.map(({ path, label, icon, requiresAuth }) => (
                         <div
@@ -678,20 +608,17 @@ const DashboardLayout: React.FC = () => {
                             <span>{label}</span>
                         </div>
                     ))}
-
                     {(isMobile || isTablet) && (
                         <div className={styles.navUserProfileContainer} ref={mobileMenuRef}>
                             <div className={`${styles.navItem} ${styles.navUserProfile}`} onClick={handleUserProfileClick}>
                                 <div className={styles.navUserAvatar}>
-                                    {/* Mobile Avatar: Remove colors prop when authenticated so the avatar's native colors show */}
                                     {/* @ts-ignore */}
-                                    <lord-icon src={userAvatar} colors={!isAuthenticated ? "primary:#1a1a2e" : undefined} style={{ width: '25px', height: '25px' }} />
+                                    <lord-icon trigger='morph' key={userAvatar} src={userAvatar} colors={!isAuthenticated ? "primary:#ffffff" : undefined} style={{ width: '25px', height: '25px' }} />
                                 </div>
                                 <span className={styles.navUserName} style={{ color: userNameColor }}>
                                     {isAuthenticated ? userName : 'Khách'}
                                 </span>
                             </div>
-
                             {isMobileMenuOpen && isAuthenticated && (
                                 <div className={styles.mobileMenuDropdown}>
                                     {renderLevelInfo()}
@@ -714,18 +641,16 @@ const DashboardLayout: React.FC = () => {
                         </div>
                     )}
                 </nav>
-
                 <div className={styles.sidebarFooter}>
                     <div className={styles.quickStats}>
                         <div className={styles.statBox}><div className={styles.statNumber}>5</div><div className={styles.statLabel}>Khóa học</div></div>
                         <div className={styles.statBox}><div className={styles.statNumber}>127</div><div className={styles.statLabel}>Bài học</div></div>
                     </div>
-
                     <div className={styles.userProfileContainer} ref={dropdownRef}>
                         <div className={styles.userProfile} onClick={handleUserProfileClick}>
                             <div className={styles.userAvatar}>
                                 {/* @ts-ignore */}
-                                <lord-icon src={userAvatar} trigger="loop"   style={{ width: '32px', height: '32px' }} />
+                                <lord-icon key={userAvatar} src={userAvatar} trigger="loop" style={{ width: '32px', height: '32px' }} />
                             </div>
                             <div className={styles.userInfo}>
                                 <div className={styles.userName} style={{ color: userNameColor }}>{userName}</div>
@@ -740,7 +665,6 @@ const DashboardLayout: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-
                         {isDropdownOpen && isAuthenticated && (
                             <div className={styles.dropdownMenu}>
                                 {renderLevelInfo()}
@@ -763,11 +687,9 @@ const DashboardLayout: React.FC = () => {
                     </div>
                 </div>
             </aside>
-
             <main className={styles.mainDisplay} onScroll={handleMainContentScroll} ref={mainContentRef}>
                 <Outlet />
             </main>
-
             <div className={`${styles.fabContainer} ${getFabVisibilityClass()}`} ref={fabRef}>
                 <div className={`${styles.fabActions} ${isFabOpen ? styles.fabActionsOpen : ''}`}>
                     {FAB_ACTIONS.map((action) => (
@@ -780,18 +702,15 @@ const DashboardLayout: React.FC = () => {
                         </button>
                     ))}
                 </div>
-
                 <button className={`${styles.fabMainBtn} ${isFabOpen ? styles.fabMainBtnOpen : ''}`} onClick={toggleFab} aria-label={isFabOpen ? 'Đóng menu liên hệ' : 'Mở menu liên hệ'} aria-expanded={isFabOpen}>
                     <div className={styles.fabMainIcon}>
                         {/* @ts-ignore */}
-                        <lord-icon src="https://cdn.lordicon.com/byicyhmi.json" trigger="click" style={{ width: '70px', height: '70px' }} />
+                        <lord-icon src="https://cdn.lordicon.com/daeumrty.json" trigger="click" style={{ width: '70px', height: '70px' }} />
                     </div>
                     <div className={styles.fabPulse} />
                 </button>
             </div>
-
             {isFabOpen && <div className={styles.fabOverlay} onClick={() => setIsFabOpen(false)} aria-hidden="true" />}
-
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={() => { setIsLoginModalOpen(false); setPendingAuthPath(null); }}
@@ -804,5 +723,4 @@ const DashboardLayout: React.FC = () => {
         </div>
     );
 };
-
 export default DashboardLayout;
