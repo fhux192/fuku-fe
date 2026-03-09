@@ -41,14 +41,14 @@
     padding: 24px 16px;
     background: #1a1a2e;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
+    border-radius: 24px;
     font-family: "Google Sans Flex", sans-serif;
     overflow-x: clip;
     overflow-y: visible;
 }
 
 /* ============================================================================
-   Header Area (ĐÃ MỞ RỘNG VÙNG CLICK)
+   Header Area
    ============================================================================ */
 .pathHeader {
     display: flex;
@@ -58,7 +58,6 @@
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-
     padding: 12px;
     margin: -12px -12px 0 -12px;
     border-radius: 16px;
@@ -149,7 +148,7 @@
 }
 
 /* ============================================================================
-   Track & Scroll Area (Container Animations)
+   Track & Scroll Area
    ============================================================================ */
 .trackWrapper {
     position: relative;
@@ -180,6 +179,7 @@
     align-items: center;
     height: 100%;
     padding-right: 8px;
+    margin-left: 16px;
     box-sizing: border-box;
     overflow-x: auto;
     overflow-y: visible;
@@ -390,6 +390,13 @@
 }
 
 @media (max-width: 650px) {
+    .trackWrapper {
+        mask-image: linear-gradient(to right, transparent, black 0%, black 90%, transparent);
+    }
+
+    .trackScroll{
+        margin-left: 0;
+    }
     .pathHeader {
         padding: 8px;
         margin: -8px -8px 16px -8px;
@@ -403,8 +410,8 @@
 
     .iconBox {
         margin-left: 4px;
-        width: 36px;
-        height: 36px;
+        width: 42px;
+        height: 42px;
     }
 
     .title { font-size: 1.1rem; }

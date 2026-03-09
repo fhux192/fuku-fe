@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react'; // Thêm useCallback
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Map, Zap, ChevronDown, ChevronUp } from 'lucide-react';
 import { Course } from '../../course.types';
 import styles from './LearningPath.module.css';
@@ -89,47 +89,60 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
     // ------------------------------------------------------------------------
 
     const scrollRef = useRef<HTMLDivElement>(null);
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const [displayIdx, setDisplayIdx] = useState<number>(-1);
     const [isMobile, setIsMobile] = useState(false);
     const [bouncingLevel, setBouncingLevel] = useState<string | null>(null);
     const [isExpanded, setIsExpanded] = useState(true);
     const [isVisible, setIsVisible] = useState(true);
 
-    const shouldAutoClose = useRef<boolean>(true);
-
     // ------------------------------------------------------------------------
-    // Handlers (Dùng useCallback để ổn định reference)
+    // Handlers
     // ------------------------------------------------------------------------
 
-    const handleToggleExpand = useCallback((forceState?: boolean, isUserManualClick: boolean = false) => {
-        if (isUserManualClick) {
-            shouldAutoClose.current = false;
-            if (timerRef.current) {
-                clearTimeout(timerRef.current);
-                timerRef.current = null;
-            }
-        }
-
-        // Dùng functional update của state để tránh phụ thuộc vào biến isExpanded bên ngoài
+    const handleToggleExpand = useCallback((forceState?: boolean) => {
         setIsExpanded((prevExpanded) => {
             const nextState = typeof forceState === 'boolean' ? forceState : !prevExpanded;
 
             if (nextState) {
                 setIsVisible(true);
-                // Giữ nguyên logic timeout nhẹ để đảm bảo animation chạy mượt
                 return true;
             } else {
-                // Khi đóng, chúng ta set false ngay cho animation, sau đó mới ẩn DOM
                 setTimeout(() => setIsVisible(false), 400);
                 return false;
             }
         });
     }, []);
 
+    const handleNodeClick = (e: React.MouseEvent, lv: string) => {
+        e.stopPropagation();
+        if (!onLevelSelect) return;
+
+        setBouncingLevel(lv);
+        setTimeout(() => setBouncingLevel(null), 500);
+
+        const newLevel = selectedLevel === lv ? '' : lv;
+        onLevelSelect(newLevel);
+
+        // Lưu trạng thái tạm thời vào sessionStorage
+        if (newLevel) {
+            sessionStorage.setItem(SESSION_KEY, newLevel);
+        } else {
+            sessionStorage.removeItem(SESSION_KEY);
+        }
+
+        handleToggleExpand(true);
+    };
+
     // ------------------------------------------------------------------------
     // Lifecycle & Effects
     // ------------------------------------------------------------------------
+
+    useEffect(() => {
+        const storedLevel = sessionStorage.getItem(SESSION_KEY);
+        if (storedLevel && !selectedLevel && onLevelSelect) {
+            onLevelSelect(storedLevel);
+        }
+    }, [onLevelSelect, selectedLevel]);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth <= 650);
@@ -168,55 +181,8 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
         }
     }, [displayIdx, isExpanded]);
 
-    // Effect này trước đây gây ra cảnh báo ESLint
-    useEffect(() => {
-        const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
-        if (displayIdx === targetIdx && targetIdx !== -1) {
-            if (timerRef.current) clearTimeout(timerRef.current);
-
-            if (shouldAutoClose.current) {
-                timerRef.current = setTimeout(() => {
-                    handleToggleExpand(false, false);
-                    timerRef.current = null;
-                }, 2500);
-            }
-        } else {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            timerRef.current = null;
-        }
-
-        return () => {
-            if (timerRef.current) clearTimeout(timerRef.current);
-        };
-    }, [displayIdx, selectedLevel, handleToggleExpand]);
-
     // ------------------------------------------------------------------------
-    // Handlers
-    // ------------------------------------------------------------------------
-
-    const handleNodeClick = (e: React.MouseEvent, lv: string) => {
-        e.stopPropagation();
-        if (!onLevelSelect) return;
-
-        shouldAutoClose.current = true;
-
-        setBouncingLevel(lv);
-        setTimeout(() => setBouncingLevel(null), 500);
-
-        const newLevel = selectedLevel === lv ? '' : lv;
-        onLevelSelect(newLevel);
-
-        if (newLevel) {
-            sessionStorage.setItem(SESSION_KEY, newLevel);
-            handleToggleExpand(true, false);
-        } else {
-            sessionStorage.removeItem(SESSION_KEY);
-            handleToggleExpand(true, false);
-        }
-    };
-
-    // ------------------------------------------------------------------------
-    // Render
+    // Render Variables
     // ------------------------------------------------------------------------
 
     const targetIdx = selectedLevel ? LEVELS.indexOf(selectedLevel) : -1;
@@ -224,7 +190,7 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
 
     return (
         <section className={styles.pathContainer}>
-            <header className={styles.pathHeader} onClick={() => handleToggleExpand(undefined, true)}>
+            <header className={styles.pathHeader} onClick={() => handleToggleExpand()}>
                 <div className={styles.headerTitle}>
                     <div className={styles.iconBox}><Map size={24} strokeWidth={2} /></div>
                     <div className={styles.headerTextGroup}>
@@ -238,13 +204,13 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
                                         <span>{selectedLevel}</span>
                                     </div>
                                 </>
-                            ) : <span className={styles.subtitleText}>Hãy chọn cấp độ</span>}
+                            ) : <span className={styles.subtitleText}>Chọn cấp độ bài tập</span>}
                         </div>
                     </div>
                 </div>
                 <button
                     className={styles.toggleButton}
-                    onClick={(e) => { e.stopPropagation(); handleToggleExpand(undefined, true); }}
+                    onClick={(e) => { e.stopPropagation(); handleToggleExpand(); }}
                     aria-label={isExpanded ? "Thu gọn lộ trình" : "Mở rộng lộ trình"}
                 >
                     {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
