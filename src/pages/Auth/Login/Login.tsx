@@ -3,19 +3,13 @@ import type { FormEvent, ChangeEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
-import { useModalClose } from '../../../components/layouts/HomeLayout/HomeLayout';
+import { useModalClose } from '../../../layouts/HomeLayout/HomeLayout';
 import styles from './Login.module.css';
+import { LordIconElement } from '../../../types/lordicon';
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface FormData {
     email: string;
@@ -275,7 +269,6 @@ const Login: React.FC = () => {
             <div className={styles.loginFormOverlay} aria-hidden="true" />
 
             <div className={styles.loginFormContent}>
-                {/* @ts-ignore */}
                 <lord-icon
                     ref={avatarIconRef}
                     src={UI_CONFIG.ICONS.AVATAR}
@@ -335,7 +328,7 @@ const Login: React.FC = () => {
                                 disabled={isLoading}
                                 aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                             >
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.EYE}
                                     state={isPasswordVisible ? 'hover-look-around' : 'hover-lashes'}

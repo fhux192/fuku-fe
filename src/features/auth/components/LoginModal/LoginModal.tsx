@@ -4,17 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
 import styles from './LoginModal.module.css';
+import { LordIconElement } from '../../../../types/lordicon';
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -364,7 +358,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
 
                     <div className={styles.loginFormContent}>
                         {/* Avatar icon */}
-                        {/* @ts-ignore */}
+                        
                         <lord-icon
                             ref={avatarIconRef}
                             src={UI_CONFIG.ICONS.AVATAR}
@@ -426,7 +420,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
                                         disabled={isLoading}
                                         aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                                     >
-                                        {/* @ts-ignore */}
+                                        
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
                                             state={isPasswordVisible ? 'hover-look-around' : 'hover-lashes'}

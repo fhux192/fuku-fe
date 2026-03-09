@@ -4,18 +4,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import styles from './Register.module.css';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
-import { useModalClose } from '../../../components/layouts/HomeLayout/HomeLayout';
+import { useModalClose } from '../../../layouts/HomeLayout/HomeLayout';
+import { LordIconElement } from '../../../types/lordicon';
 
 // ============================================================================
 // Type Definitions
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface FormData {
     name: string;
@@ -208,7 +202,7 @@ const Register: React.FC = () => {
             <div className={styles.registerFormOverlay}></div>
 
             <div className={styles.registerFormContent}>
-                {/* @ts-ignore */}
+                
                 <lord-icon
                     ref={avatarIconRef}
                     src="https://cdn.lordicon.com/hroklero.json"
@@ -272,7 +266,7 @@ const Register: React.FC = () => {
                                 onClick={togglePasswordVisibility}
                                 className={styles.togglePasswordBtn}
                             >
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
                                     state={showPassword ? 'hover-look-around' : 'hover-lashes'}
@@ -303,7 +297,7 @@ const Register: React.FC = () => {
                                 onClick={toggleConfirmPasswordVisibility}
                                 className={styles.togglePasswordBtn}
                             >
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src="https://cdn.lordicon.com/ntfnmkcn.json"
                                     state={showConfirmPassword ? 'hover-look-around' : 'hover-lashes'}

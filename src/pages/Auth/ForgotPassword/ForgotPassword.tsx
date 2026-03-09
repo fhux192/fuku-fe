@@ -4,13 +4,7 @@ import { Link } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 import styles from './ForgotPassword.module.css';
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
+import { LordIconElement } from '../../../types/lordicon';
 
 interface UIConfig {
     API: {
@@ -122,7 +116,7 @@ function ForgotPassword() {
             <div className={styles.forgotPasswordFormOverlay} aria-hidden="true" />
 
             <div className={styles.forgotPasswordFormContent}>
-                {/* @ts-ignore */}
+                
                 <lord-icon
                     ref={avatarIconRef}
                     src={UI_CONFIG.ICONS.AVATAR}

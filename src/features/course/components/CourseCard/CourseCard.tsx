@@ -73,7 +73,7 @@ interface CourseStatProps {
 
 const CourseStat: React.FC<CourseStatProps> = React.memo(({ iconSrc, value, label }) => (
     <div className={styles.stat} aria-label={label}>
-        {/* @ts-ignore */}
+        
         <lord-icon
             src={iconSrc}
             trigger="hover"

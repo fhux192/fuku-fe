@@ -13,14 +13,13 @@ import VerifyEmail from './pages/Auth/VerifyEmail/VerifyEmail';
 import Login from './pages/Auth/Login/Login';
 import ForgotPassword from './pages/Auth/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/Auth/ResetPassword/ResetPassword';
-import KanaReference from './pages/KanaReference/KanaReference';
-import CoursePage from './components/layouts/DashboardLayout/pages/CoursePage/CoursePage';
-import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import History from "./components/layouts/DashboardLayout/pages/HistoryPage/HistoryPage";
+import CoursePage from './pages/Course/CoursePage';
+import Profile from "./pages/Profile/Profile";
+import History from "./pages/History/History";
 
 // Layouts
-import HomeLayout from './components/layouts/HomeLayout/HomeLayout';
-import DashboardLayout from './components/layouts/DashboardLayout/DashboardLayout';
+import HomeLayout from './layouts/HomeLayout/HomeLayout';
+import DashboardLayout from './layouts/DashboardLayout/DashboardLayout';
 
 import './App.css';
 
@@ -35,7 +34,6 @@ const ROUTES = {
     RESET_PASSWORD: '/reset-password',
     VERIFY_EMAIL: '/verify-email',
     ROADMAP: '/roadmap',
-    KANA_REFERENCE: '/kana-reference',
     HOME_COURSE: '/home/course',
     PROFILE: '/profile',
     HOME_HISTORY:'/home/history',
@@ -53,10 +51,6 @@ const ROUTES = {
 // Components
 // ============================================================================
 
-/**
- * Protects routes requiring authentication
- * Redirects to login if token not found
- */
 // const PrivateRoute: FC<PrivateRouteProps> = ({ children }) => {
 //     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
 //     return token ? <>{children}</> : <Navigate to={ROUTES.LOGIN} replace />;
@@ -87,8 +81,7 @@ const App: FC = () => {
                     {/* Standalone routes */}
                     <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
                     <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-                    <Route path={ROUTES.KANA_REFERENCE} element={<KanaReference />} />
-                    <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                    <Route path={ROUTES.PROFILE} element={<Profile />} />
 
                     {/* Default redirect */}
                     <Route path={ROUTES.ROOT} element={<Navigate to={ROUTES.LOGIN} replace />} />

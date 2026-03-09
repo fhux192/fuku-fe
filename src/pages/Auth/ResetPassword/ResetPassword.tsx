@@ -6,17 +6,12 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
 import styles from './ResetPassword.module.css';
+import { LordIconElement } from '../../../types/lordicon';
+
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface FormData {
     newPassword: string;

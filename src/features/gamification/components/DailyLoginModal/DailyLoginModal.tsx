@@ -198,7 +198,7 @@ const DailyLoginModal: React.FC<DailyLoginModalProps> = ({
                         <div className={styles.statsGrid}>
                             {/* Streak Card */}
                             <div className={styles.statCard}>
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.FIRE}
                                     trigger="loop"
@@ -214,7 +214,7 @@ const DailyLoginModal: React.FC<DailyLoginModalProps> = ({
 
                             {/* XP Card */}
                             <div className={styles.statCard}>
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.STAR}
                                     trigger="loop"
@@ -230,7 +230,7 @@ const DailyLoginModal: React.FC<DailyLoginModalProps> = ({
                         {/* Level Up Badge */}
                         {leveledUp && (
                             <div className={styles.levelUpBadge}>
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.CROWN}
                                     trigger="loop"
@@ -244,7 +244,7 @@ const DailyLoginModal: React.FC<DailyLoginModalProps> = ({
                         {/* Milestone Banner */}
                         {isMilestone() && !leveledUp && (
                             <div className={styles.milestoneBanner}>
-                                {/* @ts-ignore */}
+                                
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.TROPHY}
                                     trigger="loop"

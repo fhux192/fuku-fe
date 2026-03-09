@@ -108,7 +108,7 @@ const TaskList: React.FC<TaskListProps> = ({
     const progressPercent = tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0;
 
     const isDefault = !selectedLevel;
-    const headerColor = isDefault ? '#0f172a' : (LEVEL_COLORS[selectedLevel!] || '#94a3b8');
+    const headerColor = isDefault ? '#ffffff' : (LEVEL_COLORS[selectedLevel!] || '#94a3b8');
 
     // ------------------------------------------------------------------------
     // Render
@@ -124,7 +124,7 @@ const TaskList: React.FC<TaskListProps> = ({
                     <div className={styles.headerText}>
                         <h2 className={styles.title}>Danh sách bài tập</h2>
                         <div
-                            className={styles.headerBadge}
+                            className={styles.currentBadge}
                             style={{
                                 color: headerColor,
                                 backgroundColor: `${headerColor}1A`,
@@ -195,7 +195,7 @@ const TaskList: React.FC<TaskListProps> = ({
                                 </div>
 
                                 <div className={styles.iconWrapper}>
-                                    {/* @ts-ignore */}
+                                    
                                     <lord-icon
                                         src={iconSrc}
                                         trigger="hover"

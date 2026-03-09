@@ -67,7 +67,7 @@ const Toast: React.FC<ToastProps> = ({
         <div className={`${styles.toastContainer} ${styles[type]}`}>
             <div className={styles.toastContent}>
                 <div className={styles.iconWrapper}>
-                    {/* @ts-ignore */}
+                    
                     <lord-icon
                         src={TOAST_ICONS[type]}
                         trigger="loop"

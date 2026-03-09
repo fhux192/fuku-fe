@@ -3,17 +3,12 @@ import type { FormEvent, ChangeEvent } from 'react';
 import lottie from 'lottie-web';
 import { defineElement, Element } from '@lordicon/element';
 import styles from './RegisterModal.module.css';
+import { LordIconElement } from '../../../../types/lordicon';
+
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface RegisterModalProps {
     isOpen: boolean;
@@ -351,7 +346,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                 <div className={styles.registerFormWrapper}>
                     <div className={styles.registerFormContent}>
                         {/* Avatar icon */}
-                        {/* @ts-ignore */}
+                        
                         <lord-icon
                             ref={avatarIconRef}
                             src={UI_CONFIG.ICONS.AVATAR}
@@ -433,7 +428,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                                         tabIndex={-1}
                                         aria-label={showPassword ? "Hide password" : "Show password"}
                                     >
-                                        {/* @ts-ignore */}
+                                        
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
                                             state={showPassword ? 'hover-look-around' : 'hover-lashes'}
@@ -466,7 +461,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                                         tabIndex={-1}
                                         aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                                     >
-                                        {/* @ts-ignore */}
+                                        
                                         <lord-icon
                                             src={UI_CONFIG.ICONS.EYE}
                                             state={showConfirmPassword ? 'hover-look-around' : 'hover-lashes'}

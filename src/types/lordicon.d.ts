@@ -1,6 +1,17 @@
-import React from 'react';
+// ============================================================================
+// src/types/lordicon.d.ts
+// ============================================================================
+import * as React from 'react';
 
-declare global {
+export interface LordIconElement extends HTMLElement {
+    playerInstance?: {
+        play: () => void;
+        stop: () => void;
+        isPlaying: boolean;
+    };
+}
+
+declare module 'react' {
     namespace JSX {
         interface IntrinsicElements {
             'lord-icon': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
@@ -10,6 +21,8 @@ declare global {
                 delay?: string | number;
                 state?: string;
                 style?: React.CSSProperties;
+                ref?: React.Ref<LordIconElement | null>;
+                class?: string;
             };
         }
     }

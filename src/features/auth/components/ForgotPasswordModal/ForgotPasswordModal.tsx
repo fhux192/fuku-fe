@@ -4,17 +4,11 @@ import type { FormEvent, ChangeEvent } from 'react';
 import lottie from 'lottie-web';
 import { defineElement} from '@lordicon/element';
 import styles from './ForgotPasswordModal.module.css';
+import { LordIconElement } from '../../../../types/lordicon';
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface LordIconElement extends HTMLElement {
-    playerInstance?: {
-        play: () => void;
-        isPlaying: boolean;
-    };
-}
 
 interface ForgotPasswordModalProps {
     isOpen: boolean;
@@ -200,7 +194,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 <div className={styles.forgotPasswordFormWrapper}>
                     <div className={styles.forgotPasswordFormContent}>
                         {/* Avatar icon */}
-                        {/* @ts-ignore */}
+                        
                         <lord-icon
                             ref={avatarIconRef}
                             src={UI_CONFIG.ICONS.AVATAR}

@@ -4,12 +4,12 @@
    Tokens & Variables
    ============================================================================ */
 :root {
-    --lp-bg-surface: #ffffff;
-    --lp-primary: #1a1a2e;
-    --lp-accent: #4ade80;
-    --lp-locked: #f1f5f9;
-    --lp-text-main: #1e293b;
-    --lp-text-sub: #64748b;
+    --lp-bg-surface: var(--color-primary-dark);
+    --lp-primary: #ffffff;
+    --lp-accent: var(--color-accent);
+    --lp-locked: rgba(255, 255, 255, 0.05);
+    --lp-text-main: #f8fafc;
+    --lp-text-sub: #94a3b8;
     --lp-line-height: 4px;
     --lp-node-outer: 72px;
     --lp-node-size: 60px;
@@ -18,14 +18,14 @@
     --lp-track-height: 160px;
     --lp-track-height-mobile: 130px;
     --lp-scrollbar-height: 4px;
-    --lp-scrollbar-thumb: #cbd5e1;
-    --lp-scrollbar-thumb-hover: #94a3b8;
+    --lp-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --lp-scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
 }
 
 /* ============================================================================
    Level Themes
    ============================================================================ */
-.theme40 { --lp-accent: #4ade80; }
+.theme40 { --lp-accent: var(--color-accent); }
 .theme50 { --lp-accent: #3b82f6; }
 .theme60 { --lp-accent: #a855f7; }
 .theme65 { --lp-accent: #f43f5e; }
@@ -39,8 +39,8 @@
 .pathContainer {
     position: relative;
     padding: 24px 16px;
-    background: var(--lp-bg-surface);
-    border: 1px solid #e2e8f0;;
+    background: #1a1a2e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 20px;
     font-family: "Google Sans Flex", sans-serif;
     overflow-x: clip;
@@ -48,14 +48,21 @@
 }
 
 /* ============================================================================
-   Header Area
+   Header Area (ĐÃ MỞ RỘNG VÙNG CLICK)
    ============================================================================ */
 .pathHeader {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     position: relative;
-    margin-bottom: 20px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    padding: 12px;
+    margin: -12px -12px 0 -12px;
+    border-radius: 16px;
+    transition: background-color 0.2s ease;
 }
 
 .headerTitle {
@@ -70,9 +77,9 @@
     justify-content: center;
     width: 42px;
     height: 42px;
-    margin-left: 16px;
-    background: rgba(26, 26, 46, 0.04);
-    border: 1px solid rgba(26, 26, 46, 0.05);
+    margin-left: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     color: var(--lp-primary);
     flex-shrink: 0;
@@ -97,7 +104,7 @@
 .subtitleWrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
     min-height: 24px;
 }
 
@@ -121,19 +128,51 @@
     animation: fadeIn 0.25s ease;
 }
 
+.toggleButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin-right: 4px;
+    background: transparent;
+    border-radius: 50%;
+    border: none;
+    color: var(--lp-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-3px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================================================
-   Track & Scroll Area
+   Track & Scroll Area (Container Animations)
    ============================================================================ */
 .trackWrapper {
     position: relative;
-    height: var(--lp-track-height);
     z-index: 10;
-    overflow-y: visible;
+    overflow: hidden;
+    transition: max-height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease-out,
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transform-origin: top center;
+}
+
+.trackExpanded {
+    max-height: var(--lp-track-height);
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    pointer-events: auto;
+}
+
+.trackCollapsed {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-10px) scaleY(0.95);
+    pointer-events: none;
 }
 
 .trackScroll {
@@ -186,6 +225,36 @@
     align-items: center;
     position: relative;
     flex-shrink: 0;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+}
+
+.trackExpanded .pathItem {
+    animation: bounceInNode 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.pathItem:nth-child(1) { animation-delay: 0.05s; }
+.pathItem:nth-child(2) { animation-delay: 0.10s; }
+.pathItem:nth-child(3) { animation-delay: 0.15s; }
+.pathItem:nth-child(4) { animation-delay: 0.20s; }
+.pathItem:nth-child(5) { animation-delay: 0.25s; }
+.pathItem:nth-child(6) { animation-delay: 0.30s; }
+.pathItem:nth-child(7) { animation-delay: 0.35s; }
+.pathItem:nth-child(8) { animation-delay: 0.40s; }
+
+@keyframes bounceInNode {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.4);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(-5px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .connector {
@@ -205,11 +274,12 @@
     inset: 0;
     background: var(--lp-accent);
     clip-path: inset(0 100% 0 0);
-    transition: clip-path 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.connectorActive::after {
+.trackExpanded .connectorActive::after {
     clip-path: inset(0 0 0 0);
+    transition-delay: 0.2s;
 }
 
 .nodeWrapper {
@@ -231,7 +301,7 @@
     align-items: center;
     justify-content: center;
     width: var(--lp-node-outer);
-    height: var(--lp-node-outer);
+    height: 100px;
     position: relative;
     z-index: 2;
     flex-shrink: 0;
@@ -243,43 +313,41 @@
     justify-content: center;
     width: var(--lp-node-size);
     height: var(--lp-node-size);
-    background: #ffffff;
-    border: 2px solid #e2e8f0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
     position: relative;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Node States */
 .nodeCircleSelected {
-    background: linear-gradient(135deg, var(--lp-primary) 0%, #2d2d44 100%);
     border-color: var(--lp-accent);
-    transform: scale(1.08);
+    transform: scale(1.02);
     animation: popSelect 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .nodeCirclePassed {
-    background: #1a1a2e;
     border-color: var(--lp-accent);
 }
 
-/* Animations */
-.nodeBounce { z-index: 20; }
+.nodeBounce { z-index: 999; }
 .nodeBounce .nodeCircleOuter {
-    animation: bounceSelect 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    animation: clickBounce 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-@keyframes bounceSelect {
+@keyframes clickBounce {
     0%   { transform: scale(1)    translateY(0); }
-    25%  { transform: scale(1.12) translateY(-6px); }
-    50%  { transform: scale(0.96) translateY(2px); }
-    75%  { transform: scale(1.04) translateY(-2px); }
+    25%  { transform: scale(1.15) translateY(-8px); }
+    50%  { transform: scale(0.92) translateY(3px); }
+    75%  { transform: scale(1.05) translateY(-2px); }
     100% { transform: scale(1)    translateY(0); }
 }
 
+@keyframes popSelect {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { transform: scale(1.08); }
+}
 
-
-/* Labels */
 .nodeInfo {
     width: var(--lp-node-outer);
     text-align: center;
@@ -304,67 +372,13 @@
     font-weight: 700;
 }
 
-/* ============================================================================
-   Navigation Controls
-   ============================================================================ */
-.navBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    width: 34px;
-    height: 34px;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(26, 26, 46, 0.08);
-    border-radius: 50%;
-    color: var(--lp-text-main);
-    cursor: pointer;
-    z-index: 20;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-50%);
-    transition: all 0.2s ease;
-}
-
-.navPrev { left: 10px; }
-.navNext { right: 10px; }
-
-/* ============================================================================
-   Interactive States & Media Queries
-   ============================================================================ */
 @media (hover: hover) and (pointer: fine) {
-    .nodeWrapper:hover {
-        transform: translateY(-3px);
-    }
-
-    .statusUnselected .nodeWrapper:hover .nodeCircle {
-        border-color: var(--lp-accent);
-        transform: scale(1.04);
-    }
-
-    .statusPassed .nodeWrapper:hover .nodeCircle {
-        transform: scale(1.04);
-    }
-
     .statusUnselected .nodeWrapper:hover .nodeLabel {
         color: var(--lp-accent);
     }
-
-    .pathContainer:hover .navBtn {
-        opacity: 1;
-        pointer-events: auto;
+    .nodeWrapper:hover {
+        transform: translateY(-3px);
     }
-
-    .navBtn:hover {
-        background: var(--lp-primary);
-        color: #ffffff;
-        border-color: transparent;
-        box-shadow: 0 6px 16px rgba(26, 26, 46, 0.2);
-        transform: translateY(-50%) scale(1.05);
-    }
-
     .trackScrollMobile::-webkit-scrollbar-thumb:hover {
         background: var(--lp-scrollbar-thumb-hover);
     }
@@ -377,30 +391,41 @@
 
 @media (max-width: 650px) {
     .pathHeader {
-        flex-direction: column;
-        align-items: flex-start;
+        padding: 8px;
+        margin: -8px -8px 16px -8px;
+        border-radius: 12px;
+    }
+
+    .headerTitle {
+        flex-grow: 1;
         gap: 12px;
-        margin-bottom: 12px;
     }
 
-    .iconBox { margin-left: 0; }
+    .iconBox {
+        margin-left: 4px;
+        width: 36px;
+        height: 36px;
+    }
+
     .title { font-size: 1.1rem; }
-
-    .trackWrapper {
-        height: calc(var(--lp-track-height-mobile) + 16px);
+    .subtitleText { font-size: 0.8rem; }
+    .currentBadge {
+        font-size: 0.75rem;
+        padding: 2px 10px;
     }
 
-    .nodeCircleOuter, .nodeWrapper, .nodeInfo {
-        width: var(--lp-node-outer-mobile);
+    .toggleButton {
+        width: 28px;
+        height: 28px;
+        margin-right: 0;
     }
 
+    .trackExpanded { max-height: calc(var(--lp-track-height-mobile) + 16px); }
+    .trackCollapsed { max-height: 0; }
+
+    .nodeCircleOuter, .nodeWrapper, .nodeInfo { width: var(--lp-node-outer-mobile); }
     .nodeCircleOuter { height: var(--lp-node-outer-mobile); }
-
-    .nodeCircle {
-        width: var(--lp-node-size-mobile);
-        height: var(--lp-node-size-mobile);
-    }
-
+    .nodeCircle { width: var(--lp-node-size-mobile); height: var(--lp-node-size-mobile); }
     .nodeWrapper { gap: 8px; }
     .nodeLabel { font-size: 0.75rem; }
     .connector { width: 24px; margin: 0 4px; }
