@@ -8,19 +8,18 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: clamp(16px, 3vw, 32px);
     min-height: 100vh;
     font-family: "Google Sans Flex", sans-serif;
-    color: var(--color-text-dark);
+    color: #f8fafc;
 }
 
 /* ============================================================================
-   Layout Grid (Tỉ lệ 3:7 trên Desktop)
+   Layout Grid
    ============================================================================ */
 
 .layoutGrid {
     display: grid;
-    grid-template-columns: 1fr; /* Mobile: 1 cột */
+    grid-template-columns: 1fr;
     gap: 24px;
     width: 100%;
     max-width: 1300px;
@@ -29,11 +28,10 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* Tablet: Giữ 1 cột nhưng tăng kích thước */
 @media (min-width: 601px) and (max-width: 1023px) {
     .layoutGrid {
         gap: 20px;
@@ -52,7 +50,6 @@
     .calFooter { font-size: clamp(0.75rem, 2vw, 0.8rem); }
 }
 
-/* Desktop: Lưới 3fr - 7fr */
 @media (min-width: 1024px) {
     .layoutGrid {
         grid-template-columns: minmax(280px, 3fr) 7fr;
@@ -61,12 +58,12 @@
 
     .leftColumn {
         position: sticky;
-        top: 80px; /* Dính lại khi cuộn cột phải */
+        top: 80px;
     }
 }
 
 /* ============================================================================
-   CỘT TRÁI (30%) - User Card & Mini Calendar
+   Left Column
    ============================================================================ */
 
 .leftColumn {
@@ -76,23 +73,26 @@
 }
 
 .userCard, .calendarWidget {
-    background: var(--color-surface-white);
+    background: #1a1a2e;
     border-radius: 20px;
     padding: 20px;
-    border: 1px solid rgba(26, 26, 46, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* --- User Card --- */
+/* ============================================================================
+   User Card
+   ============================================================================ */
+
 .greeting {
     margin: 0 0 4px 0;
     font-family: "MuseoModerno", sans-serif;
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--color-primary-dark);
+    color: #ffffff;
 }
 
 .highlight {
-    background: #1a1a2e;
+    background: #ffffff;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -100,7 +100,7 @@
 .miniStatsRow {
     display: flex;
     align-items: center;
-    background: #1a1a2e;
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     padding: 12px;
 }
@@ -131,23 +131,26 @@
     font-size: 1.2rem;
     font-weight: 800;
     line-height: 1;
-    color: var(--color-surface-white);
+    color: #f8fafc;
 }
 
 .msLabel {
     font-size: 0.75rem;
     font-weight: 600;
-    color: var(--color-text-muted);
+    color: #94a3b8;
 }
 
 .miniStatDivider {
     width: 1px;
     height: 35px;
-    background: var(--color-surface-white);
+    background: rgba(255, 255, 255, 0.1);
     margin: 0 10px;
 }
 
-/* --- Compact Calendar --- */
+/* ============================================================================
+   Compact Calendar
+   ============================================================================ */
+
 .calendarWidget {
     padding: 16px;
 }
@@ -160,9 +163,12 @@
 }
 
 .calMonthLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-weight: 800;
     font-size: 0.95rem;
-    color: var(--color-primary-dark);
+    color: #ffffff;
 }
 
 .calControls {
@@ -171,20 +177,20 @@
 }
 
 .calControls button {
-    background: var(--color-surface);
+    background: rgba(255, 255, 255, 0.05);
     border: none;
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    color: var(--color-primary-dark);
+    color: #ffffff;
     font-weight: bold;
     cursor: pointer;
     transition: var(--transition-smooth);
 }
 
 .calControls button:hover:not(:disabled) {
-    background: var(--color-accent);
-    color: var(--color-text-dark);
+    background: var(--color-accent, #4ade80);
+    color: #ffffff;
 }
 
 .calGrid {
@@ -197,7 +203,7 @@
     text-align: center;
     font-size: 0.7rem;
     font-weight: 700;
-    color: var(--color-text-muted);
+    color: #94a3b8;
     padding-bottom: 8px;
 }
 
@@ -210,7 +216,8 @@
     font-weight: 600;
     border-radius: 8px;
     background: transparent;
-    color: var(--color-text-dark);
+    color: #f8fafc;
+    transition: all 0.2s ease;
 }
 
 .calDimmed {
@@ -218,14 +225,14 @@
 }
 
 .calToday {
-    background: var(--color-surface);
-    color: var(--color-primary-dark);
-    border: 1px solid rgba(26, 26, 46, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .calLogged {
     background: rgba(74, 222, 128, 0.2);
-    color: #15803d;
+    color: #4ade80;
     font-weight: 800;
 }
 
@@ -233,26 +240,24 @@
     margin-top: 16px;
     text-align: center;
     font-size: 0.8rem;
-    color: var(--color-text-muted);
+    color: #94a3b8;
     padding-top: 12px;
-    border-top: 1px dashed rgba(26, 26, 46, 0.1);
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
 .calFooter strong {
-    color: var(--color-accent);
+    color: var(--color-accent, #4ade80);
     font-size: 0.9rem;
 }
 
 /* ============================================================================
-   CỘT PHẢI (70%) - Activity List
+   Right Column
    ============================================================================ */
 
 .activityPanel {
-    background: var(--color-surface-white);
-    border-radius: 20px;
+    background: #1a1a2e;
     padding: clamp(20px, 3vw, 32px);
-    box-shadow: 0 4px 20px rgba(26, 26, 46, 0.03);
-    border: 1px solid rgba(26, 26, 46, 0.05);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
     min-height: 100%;
 }
 
@@ -261,7 +266,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-    border-bottom: 1px solid rgba(26, 26, 46, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 16px;
 }
 
@@ -270,16 +275,16 @@
     font-family: "MuseoModerno", sans-serif;
     font-size: clamp(1.25rem, 2vw, 1.25rem);
     font-weight: 800;
-    color: var(--color-primary-dark);
+    color: #ffffff;
 }
 
 .filterPill {
     font-size: 0.8rem;
     font-weight: 600;
     padding: 6px 12px;
-    background: rgba(26, 26, 46, 0.03);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 20px;
-    color: var(--color-text-muted);
+    color: #94a3b8;
 }
 
 .activityList {
@@ -288,25 +293,31 @@
     gap: 12px;
 }
 
-/* --- Activity Item Styling --- */
+/* ============================================================================
+   Activity Item Styling
+   ============================================================================ */
+
 .activityItem {
     display: flex;
     align-items: center;
     padding: 16px;
     background: transparent;
-    border: 1px solid rgba(26, 26, 46, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .activityItem:hover {
-    background: var(--color-surface);
-    border-color: rgba(26, 26, 46, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
     transform: translateX(4px);
-    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Icons for List */
+/* ============================================================================
+   Icons for List
+   ============================================================================ */
+
 .actIconWrapper {
     display: flex;
     justify-content: center;
@@ -322,20 +333,23 @@
 .bg_practice { background: rgba(37, 99, 235, 0.1); }
 .bg_exam { background: rgba(220, 38, 38, 0.1); }
 
-/* Item Content */
+/* ============================================================================
+   Item Content
+   ============================================================================ */
+
 .actContent {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
-    min-width: 0; /* Prevents text overflow breaking layout */
+    min-width: 0;
 }
 
 .actTitle {
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
-    color: var(--color-text-dark);
+    color: #f8fafc;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -346,13 +360,16 @@
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    color: var(--color-text-muted);
+    color: #94a3b8;
     font-weight: 500;
 }
 
 .actDot { opacity: 0.5; }
 
-/* XP Badge */
+/* ============================================================================
+   XP Badge
+   ============================================================================ */
+
 .actXp {
     display: flex;
     align-items: center;
@@ -363,22 +380,25 @@
 .xpText {
     padding: 6px 12px;
     background: rgba(74, 222, 128, 0.15);
-    color: #15803d;
+    color: #4ade80;
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 800;
     font-family: "MuseoModerno", sans-serif;
 }
 
-/* --- Load More Button --- */
+/* ============================================================================
+   Load More Button
+   ============================================================================ */
+
 .loadMoreBtn {
     margin-top: 16px;
     padding: 14px;
     width: 100%;
     background: transparent;
-    border: 1px dashed rgba(26, 26, 46, 0.15);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    color: var(--color-text-muted);
+    color: #94a3b8;
     font-family: "Google Sans Flex", sans-serif;
     font-weight: 700;
     font-size: 0.9rem;
@@ -387,28 +407,27 @@
 }
 
 .loadMoreBtn:hover {
-    background: rgba(26, 26, 46, 0.02);
-    border-color: var(--color-primary-dark);
-    color: var(--color-primary-dark);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #ffffff;
+    color: #ffffff;
 }
 
 /* ============================================================================
    Loading, Error, Unauth States
    ============================================================================ */
 
-.calLoading { display: flex; justify-content: center; padding: 40px 0; }
-.spinnerMini {
-    width: 24px; height: 24px;
-    border: 3px solid rgba(74, 222, 128, 0.2);
-    border-top-color: var(--color-accent);
+.spinner {
+    width: 40px; height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--color-accent, #4ade80);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
 
-.spinner {
-    width: 40px; height: 40px;
-    border: 4px solid rgba(74, 222, 128, 0.2);
-    border-top-color: var(--color-accent);
+.spinnerTiny {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--color-accent, #4ade80);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -416,7 +435,7 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .errorMini {
-    font-size: 0.8rem; color: #dc2626; text-align: center; margin-bottom: 10px;
+    font-size: 0.8rem; color: #f43f5e; text-align: center; margin-bottom: 10px;
 }
 
 .unauthContent {
@@ -443,7 +462,6 @@
     .actContent { min-width: 50%; }
     .actTitle { font-size: 0.95rem; }
 
-    /* XP moves to bottom on very small screens */
     .actXp {
         width: 100%;
         justify-content: flex-end;
@@ -470,7 +488,6 @@
     .btnPrimary { padding: 10px 20px; font-size: 0.9rem; }
 }
 
-/* Extra small mobile (e.g., <400px) */
 @media (max-width: 400px) {
     .container { padding: 12px; padding-bottom: 80px; }
     .layoutGrid { gap: 12px; }

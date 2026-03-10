@@ -38,10 +38,10 @@
    ============================================================================ */
 .pathContainer {
     position: relative;
-    padding: 24px 16px;
+    padding: 24px 16px 16px 16px;
     background: #1a1a2e;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-top-radius: 54px;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0;
     font-family: "Google Sans Flex", sans-serif;
     overflow-x: clip;
     overflow-y: visible;
@@ -391,7 +391,8 @@
 
 @media (max-width: 650px) {
 
-    .pathContainer { padding-bottom: 0; border-radius:0;}
+    .pathContainer { padding-bottom: 0; border-radius:0;
+        border: 0;}
     .trackWrapper {
         mask-image: linear-gradient(to right, transparent, black 0%, black 90%, transparent);
     }

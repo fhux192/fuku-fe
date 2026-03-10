@@ -1,7 +1,3 @@
-// ============================================================================
-// History.tsx
-// ============================================================================
-
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import lottie from 'lottie-web';
@@ -25,7 +21,7 @@ interface LoginStreakData {
     longestStreak: number;
     totalLoginDays: number;
     lastLoginDate: string | null;
-    loginDatesThisMonth: string[]; // Format: YYYY-MM-DD
+    loginDatesThisMonth: string[];
 }
 
 interface CalendarDay {
@@ -85,13 +81,9 @@ const MOCK_ACTIVITIES: ActivityItem[] = [
 ];
 
 // ============================================================================
-// Custom Hooks
+// Custom Hooks & Isolated Components
 // ============================================================================
 
-/**
- * Hook to animate a number counting up from 0 to a target value smoothly.
- * Fixed to prevent React re-render overload.
- */
 const useCountUp = (endValue: number, duration: number = 2000) => {
     const [count, setCount] = useState(0);
 
@@ -109,17 +101,15 @@ const useCountUp = (endValue: number, duration: number = 2000) => {
             const elapsed = timestamp - startTimestamp;
             const progress = Math.min(elapsed / duration, 1);
 
-            // Cubic ease-out: chạy nhanh ở đầu, chậm mượt về cuối
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const currentValue = Math.round(easeOut * endValue);
 
-            // CHỈ update state khi con số thực sự thay đổi (Tránh gây đơ/lag UI do render 60fps)
             setCount(prev => (prev !== currentValue ? currentValue : prev));
 
             if (progress < 1) {
                 animationFrameId = requestAnimationFrame(step);
             } else {
-                setCount(endValue); // Ép chắc chắn về đúng số liệu gốc khi hết thời gian
+                setCount(endValue);
             }
         };
 
@@ -129,6 +119,11 @@ const useCountUp = (endValue: number, duration: number = 2000) => {
     }, [endValue, duration]);
 
     return count;
+};
+
+const AnimatedNumber: React.FC<{ endValue: number; duration?: number }> = ({ endValue, duration = 2000 }) => {
+    const count = useCountUp(endValue, duration);
+    return <>{count}</>;
 };
 
 // ============================================================================
@@ -201,10 +196,6 @@ const History: React.FC = () => {
     const [streakData, setStreakData] = useState<LoginStreakData>(EMPTY_STREAK);
     const [activities] = useState<ActivityItem[]>(MOCK_ACTIVITIES);
 
-    // Chạy số trong đúng 2 giây (2000ms)
-    const animatedStreak = useCountUp(streakData.currentStreak, 2000);
-    const animatedTotalDays = useCountUp(streakData.totalLoginDays, 2000);
-
     // =========================================================================
     // Effects
     // =========================================================================
@@ -246,7 +237,6 @@ const History: React.FC = () => {
 
             const result = await response.json();
             const data: LoginStreakData = result.success && result.data ? result.data : result;
-
 
             setStreakData(data);
         } catch (error) {
@@ -363,7 +353,7 @@ const History: React.FC = () => {
             <div className={styles.layoutGrid}>
 
                 {/* ============================================================
-                    CỘT TRÁI (30%) - Lịch Mini & Thông tin
+                    Left Column
                 ============================================================ */}
                 <aside className={styles.leftColumn}>
                     <div className={styles.userCard}>
@@ -372,7 +362,6 @@ const History: React.FC = () => {
                         <div className={styles.miniStatsRow}>
                             <div className={styles.miniStat}>
                                 <div className={styles.msIcon}>
-                                    
                                     <lord-icon
                                         src={UI_CONFIG.ICONS.FIRE}
                                         trigger="loop"
@@ -382,7 +371,9 @@ const History: React.FC = () => {
                                     />
                                 </div>
                                 <div className={styles.msInfo}>
-                                    <span className={styles.msValue}>{animatedStreak}</span>
+                                    <span className={styles.msValue}>
+                                        <AnimatedNumber endValue={streakData.currentStreak} />
+                                    </span>
                                     <span className={styles.msLabel}>Liên tục</span>
                                 </div>
                             </div>
@@ -391,7 +382,6 @@ const History: React.FC = () => {
 
                             <div className={styles.miniStat}>
                                 <div className={styles.msIcon}>
-                                    
                                     <lord-icon
                                         src={UI_CONFIG.ICONS.STAR}
                                         trigger="loop"
@@ -401,7 +391,9 @@ const History: React.FC = () => {
                                     />
                                 </div>
                                 <div className={styles.msInfo}>
-                                    <span className={styles.msValue}>{animatedTotalDays}</span>
+                                    <span className={styles.msValue}>
+                                        <AnimatedNumber endValue={streakData.totalLoginDays} />
+                                    </span>
                                     <span className={styles.msLabel}>Tổng ngày</span>
                                 </div>
                             </div>
@@ -412,6 +404,7 @@ const History: React.FC = () => {
                         <div className={styles.calendarHeader}>
                             <div className={styles.calMonthLabel}>
                                 {MONTH_NAMES[currentDate.getMonth()]} {currentDate.getFullYear()}
+                                {isLoading && <div className={styles.spinnerTiny} />}
                             </div>
                             <div className={styles.calControls}>
                                 <button onClick={handlePrevMonth} disabled={isLoading}>&lt;</button>
@@ -421,29 +414,26 @@ const History: React.FC = () => {
 
                         {fetchError && <div className={styles.errorMini}>{fetchError}</div>}
 
-                        {isLoading ? (
-                            <div className={styles.calLoading}><div className={styles.spinnerMini} /></div>
-                        ) : (
-                            <div className={styles.calGrid}>
-                                {WEEK_DAYS.map(day => <div key={day} className={styles.calWeekday}>{day}</div>)}
-                                {calendarDays.map((dayObj, i) => {
-                                    const isCur = dayObj.month === 'current';
-                                    return (
-                                        <div
-                                            key={i}
-                                            className={[
-                                                styles.calCell,
-                                                !isCur ? styles.calDimmed : '',
-                                                dayObj.isToday ? styles.calToday : '',
-                                                dayObj.isLogged && isCur ? styles.calLogged : ''
-                                            ].filter(Boolean).join(' ')}
-                                        >
-                                            {dayObj.date}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
+                        <div className={styles.calGrid}>
+                            {WEEK_DAYS.map(day => <div key={day} className={styles.calWeekday}>{day}</div>)}
+                            {calendarDays.map((dayObj, i) => {
+                                const isCur = dayObj.month === 'current';
+                                return (
+                                    <div
+                                        key={i}
+                                        className={[
+                                            styles.calCell,
+                                            !isCur ? styles.calDimmed : '',
+                                            dayObj.isToday ? styles.calToday : '',
+                                            dayObj.isLogged && isCur ? styles.calLogged : ''
+                                        ].filter(Boolean).join(' ')}
+                                    >
+                                        {dayObj.date}
+                                    </div>
+                                );
+                            })}
+                        </div>
+
                         <div className={styles.calFooter}>
                             Điểm danh tháng này: <strong>{streakData.loginDatesThisMonth.length}</strong> ngày
                         </div>
@@ -451,7 +441,7 @@ const History: React.FC = () => {
                 </aside>
 
                 {/* ============================================================
-                    CỘT PHẢI (70%) - Danh sách bài đã làm
+                    Right Column
                 ============================================================ */}
                 <main className={styles.rightColumn}>
                     <div className={styles.activityPanel}>
