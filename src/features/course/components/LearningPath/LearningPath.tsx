@@ -213,7 +213,7 @@ const LearningPath: React.FC<LearningPathProps> = ({ courses, selectedLevel, onL
                     onClick={(e) => { e.stopPropagation(); handleToggleExpand(); }}
                     aria-label={isExpanded ? "Thu gọn lộ trình" : "Mở rộng lộ trình"}
                 >
-                    {isExpanded ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                    {isExpanded ? <ChevronUp size={30} /> : <ChevronDown size={30} />}
                 </button>
             </header>
 

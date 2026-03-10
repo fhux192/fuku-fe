@@ -101,7 +101,7 @@ const CoursePage: React.FC = () => {
                         onLevelSelect={(lv) => setSelectedLevel(lv)}
                     />
 
-                    <section style={{ marginTop: '24px' }}>
+                    <section >
                         <div className={styles.taskListContainer}>
                             <TaskList
                                 tasks={filteredTasks}

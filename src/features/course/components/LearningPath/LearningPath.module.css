@@ -7,9 +7,9 @@
     --lp-bg-surface: var(--color-primary-dark);
     --lp-primary: #ffffff;
     --lp-accent: var(--color-accent);
-    --lp-locked: rgba(255, 255, 255, 0.05);
+    --lp-locked: rgba(255, 255, 255, 0.1);
     --lp-text-main: #f8fafc;
-    --lp-text-sub: #94a3b8;
+    --lp-text-sub: #cbd5e1;
     --lp-line-height: 4px;
     --lp-node-outer: 72px;
     --lp-node-size: 60px;
@@ -18,8 +18,8 @@
     --lp-track-height: 160px;
     --lp-track-height-mobile: 130px;
     --lp-scrollbar-height: 4px;
-    --lp-scrollbar-thumb: rgba(255, 255, 255, 0.2);
-    --lp-scrollbar-thumb-hover: rgba(255, 255, 255, 0.4);
+    --lp-scrollbar-thumb: rgba(255, 255, 255, 0.3);
+    --lp-scrollbar-thumb-hover: rgba(255, 255, 255, 0.5);
 }
 
 /* ============================================================================
@@ -40,8 +40,8 @@
     position: relative;
     padding: 24px 16px;
     background: #1a1a2e;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top-radius: 54px;
     font-family: "Google Sans Flex", sans-serif;
     overflow-x: clip;
     overflow-y: visible;
@@ -77,8 +77,8 @@
     width: 42px;
     height: 42px;
     margin-left: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     color: var(--lp-primary);
     flex-shrink: 0;
@@ -313,7 +313,7 @@
     justify-content: center;
     width: var(--lp-node-size);
     height: var(--lp-node-size);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     position: relative;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -390,6 +390,8 @@
 }
 
 @media (max-width: 650px) {
+
+    .pathContainer { padding-bottom: 0; border-radius:0;}
     .trackWrapper {
         mask-image: linear-gradient(to right, transparent, black 0%, black 90%, transparent);
     }
