@@ -5,7 +5,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=MuseoModerno:wght@400;600;700;800&display=swap');
 
 :root {
-    --c-dark:    #1a1a2e;
+    --c-dark:    #0d172f;
     --c-surface: #ffffff;
     --c-bg:      #f8fafc;
     --c-border:  rgba(26, 26, 46, 0.08);

@@ -234,7 +234,7 @@ const DailyLoginModal: React.FC<DailyLoginModalProps> = ({
                                 <lord-icon
                                     src={UI_CONFIG.ICONS.CROWN}
                                     trigger="loop"
-                                    colors="primary:#1a1a2e,secondary:#fbbf24"
+                                    colors="primary:#0d172f,secondary:#fbbf24"
                                     style={{ width: '40px', height: '40px' }}
                                 />
                                 <span className={styles.badgeText}>{currentRank}</span>

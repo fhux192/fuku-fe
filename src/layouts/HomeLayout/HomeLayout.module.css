@@ -68,7 +68,7 @@
    Logo Section
    ============================================================================ */
 
-.desktopLogo {
+.logoImage {
     display: none;
     top: 70px;
     left: 40px;
@@ -79,8 +79,19 @@
     transition: transform 0.3s ease;
 }
 
-.desktopLogo:hover {
-    transform: scale(1.05);
+.logoImage:hover {
+    transform: scale(1.08) rotate(5deg);
+}
+
+.logoMobileImage {
+    display: block;
+    top: 70px;
+    left: 40px;
+    z-index: 50;
+    width: clamp(50px, 8vw, 70px);
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
 .mobileHeader {
@@ -98,18 +109,6 @@
 .logoContainerMobile {
     display: flex;
     align-items: center;
-}
-
-.logoImage {
-    width: clamp(40px, 10vw, 50px);
-    height: clamp(40px, 10vw, 50px);
-    object-fit: contain;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.logoImage:hover {
-    transform: scale(1.05);
 }
 
 /* ============================================================================
@@ -133,7 +132,7 @@
     align-items: center;
     width: 100%;
     min-height: calc(100vh - 40px);
-    padding: var(--spacing-lg) var(--spacing-sm);
+    padding: var(--spacing-lg) 0;
     overflow: hidden;
     background-color: var(--color-primary-dark);
     border-radius: 0;
@@ -450,7 +449,7 @@
     .authContainer { display: grid; grid-template-columns: 2.2fr 1fr; gap: 0; padding-top: 40px; transition: var(--transition-smooth); }
     .authContainer.rightsideHidden { grid-template-columns: 1fr 0fr; }
     .webflowBanner { font-size: 1.1rem; }
-    .desktopLogo { display: block; }
+    .logoImage { display: block; }
     .leftSideWrapper { max-height: calc(100vh - 60px); padding: 20px 0 20px 20px; transition: var(--transition-smooth); }
     .authContainer.rightsideHidden .leftSideWrapper { padding: 0; }
     .leftSide { min-height: 100%; border-radius: 30px; transition: var(--transition-smooth); }

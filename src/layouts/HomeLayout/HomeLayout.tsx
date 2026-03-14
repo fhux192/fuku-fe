@@ -280,7 +280,7 @@ const HomeLayout: React.FC = () => {
                     <img
                         src={logo}
                         alt="Fuku Logo"
-                        className={styles.desktopLogo}
+                        className={styles.logoImage}
                         onClick={handleLogoClick}
                         onKeyDown={handleLogoKeyDown}
                         role="button"
@@ -292,7 +292,7 @@ const HomeLayout: React.FC = () => {
                             <img
                                 src={logo}
                                 alt="Fuku Logo"
-                                className={styles.logoImage}
+                                className={styles.logoMobileImage}
                                 onClick={handleLogoClick}
                             />
                         </div>

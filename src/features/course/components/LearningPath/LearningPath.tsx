@@ -65,7 +65,7 @@ const LordIconNode: React.FC<{ nodeState: NodeState; colorPrimary: string }> = (
         el.setAttribute('stroke', 'bold');
 
         const primaryColor = nodeState === 'unselected' ? '#94a3b8' : colorPrimary;
-        const secondaryColor = nodeState === 'selected' ? '#ffffff' : nodeState === 'passed' ? '#1a1a2e' : '#cbd5e1';
+        const secondaryColor = nodeState === 'selected' ? '#ffffff' : nodeState === 'passed' ? '#0d172f' : '#cbd5e1';
 
         el.setAttribute('colors', `primary:${primaryColor},secondary:${secondaryColor}`);
         el.setAttribute('style', 'width:30px;height:30px;display:block;flex-shrink:0');

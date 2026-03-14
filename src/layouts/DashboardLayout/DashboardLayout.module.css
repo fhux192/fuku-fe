@@ -9,14 +9,14 @@
     --sidebar-width: 280px;
     --sidebar-mini-width: 80px;
     --mobile-nav-height: 70px;
-    --color-primary-dark: #1a1a2e;
+    --color-primary-dark: #0d172f;
     --color-primary-darker: #16162a;
     --color-surface: #fafafa;
     --color-surface-white: #ffffff;
     --color-accent: #4ade80;
     --color-accent-light: #86efac;
     --color-text-light: #ffffff;
-    --color-text-dark: #1a1a2e;
+    --color-text-dark: #0d172f;
     --color-text-subtle: rgba(255, 255, 255, 0.6);
     --color-text-muted: #6b7280;
     --color-error: #dc2626;
@@ -87,7 +87,7 @@ body {
 .sidebar {
     width: var(--sidebar-width);
     height: 100%;
-    background: #1a1a2e;
+    background: #0d172f;
     display: flex;
     flex-direction: column;
     padding: 32px 20px;
@@ -111,7 +111,6 @@ body {
     object-fit: contain;
     cursor: pointer;
     transition: transform 0.3s ease;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
 }
 
 .logoImage:hover {
@@ -422,7 +421,7 @@ body {
     text-align: center;
     padding: 8px;
     background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    color: #1a1a2e;
+    color: #0d172f;
     border-radius: 8px;
     animation: glow 2s ease-in-out infinite;
 }
@@ -439,7 +438,7 @@ body {
 .mainDisplay {
     flex-grow: 1;
     height: 100%;
-    background-color: #1a1a2e;
+    background-color: #0d172f;
     overflow-y: auto;
     position: relative;
     transition: padding 0.3s ease;

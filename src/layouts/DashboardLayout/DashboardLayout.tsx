@@ -352,7 +352,7 @@ const DashboardLayout: React.FC = () => {
 
             <aside className={`${styles.sidebar} ${isMobile ? (isNavVisible ? styles.sidebarVisible : styles.sidebarHidden) : ''}`}>
                 <div className={styles.logoArea}>
-                    <img src={logo} alt="Fuku Logo" className={styles.logoImage} onClick={() => navigate('/home')} />
+                    <img src={logo} alt="Fuku Logo" className={styles.logoImage} onClick={() => navigate('/')} />
                 </div>
                 <div className={styles.timeDisplay}>
                     <div className={styles.currentTime}>{formatTime(currentTime)}</div>

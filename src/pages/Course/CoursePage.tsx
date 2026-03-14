@@ -2,8 +2,10 @@ import React, { useEffect, useState, useMemo } from 'react';
 import lottie from 'lottie-web';
 import { defineElement } from '@lordicon/element';
 
+import InProgressTasks from "../../features/course/components/InProgressTasks/InProgressTasks";
 import LearningPath from '../../features/course/components/LearningPath/LearningPath';
 import TaskList, { Task } from '../../features/course/components/TaskList/TaskList';
+
 import Roadmap from '../Roadmap/Roadmap';
 import { Course } from '../../features/course/course.types';
 
@@ -95,12 +97,17 @@ const CoursePage: React.FC = () => {
         <>
             {!showRoadmap && (
                 <div className={styles.pageContainer}>
+
+
                     <LearningPath
                         courses={GENERATED_COURSES}
                         selectedLevel={selectedLevel}
                         onLevelSelect={(lv) => setSelectedLevel(lv)}
                     />
-
+                    <InProgressTasks tasks={filteredTasks}
+                                     selectedTaskId={selectedTaskId}
+                                     onTaskSelect={(taskId) => {
+                                         setSelectedTaskId(taskId)}}/>
                     <section >
                         <div className={styles.taskListContainer}>
                             <TaskList
