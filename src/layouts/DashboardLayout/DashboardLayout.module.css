@@ -35,7 +35,7 @@
     --avatar-font-mobile: 0.75rem;
     --avatar-font-mobile-small: 0.75rem;
 
-    --fab-size: 70px;
+    --fab-size: 60px;
     --fab-action-size: 56px;
     --fab-gap: 70px;
     --fab-offset: 24px;
@@ -445,7 +445,7 @@ body {
     scroll-behavior: smooth;
 }
 
-.mainDisplay::-webkit-scrollbar { width: 8px; }
+.mainDisplay::-webkit-scrollbar { width: 0; }
 .mainDisplay::-webkit-scrollbar-track { background: transparent; }
 .mainDisplay::-webkit-scrollbar-thumb { background: rgba(26, 26, 46, 0.1); border-radius: 4px; }
 .mainDisplay::-webkit-scrollbar-thumb:hover { background: rgba(26, 26, 46, 0.15); }
@@ -694,31 +694,31 @@ body {
     justify-content: center;
 }
 
-/* Pulse ring animation */
-.fabPulse {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 50%;
-    border: 2px solid var(--color-accent);
-    animation: fabPulseRing 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-    pointer-events: none;
-}
+/*!* Pulse ring animation *!*/
+/*.fabPulse {*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    right: 0;*/
+/*    bottom: 0;*/
+/*    border-radius: 50%;*/
+/*    border: 2px solid var(--color-accent);*/
+/*    animation: fabPulseRing 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;*/
+/*    pointer-events: none;*/
+/*}*/
 
-@keyframes fabPulseRing {
-    0% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
-    100% {
-        transform: scale(1.8);
-        opacity: 0;
-    }
-}
+/*@keyframes fabPulseRing {*/
+/*    0% {*/
+/*        transform: scale(1);*/
+/*        opacity: 0.6;*/
+/*    }*/
+/*    100% {*/
+/*        transform: scale(1.8);*/
+/*        opacity: 0;*/
+/*    }*/
+/*}*/
 
-/* Hide pulse when open */
+/*!* Hide pulse when open *!*/
 .fabMainBtnOpen .fabPulse {
     animation: none;
     opacity: 0;
@@ -996,7 +996,7 @@ body {
 
 @media (max-width: 649px) {
     :root {
-        --fab-size: 70px;
+        --fab-size: 60px;
         --fab-action-size: 50px;
         --fab-gap: 60px;
         --fab-offset: 2px;

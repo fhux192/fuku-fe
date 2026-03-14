@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Zap } from 'lucide-react';
+import { Play, Zap, History } from 'lucide-react';
 import styles from './InProgressTasks.module.css';
 
 export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
@@ -81,7 +81,7 @@ const InProgressTasks: React.FC<InProgressTasksProps> = ({
             <header className={styles.pageHeader}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerIcon}>
-                        <Play size={24} strokeWidth={2} fill="#ffffff" />
+                        <History size={24} strokeWidth={2} />
                     </div>
                     <div className={styles.headerText}>
                         <h2 className={styles.title}>Bài tập đang làm</h2>

@@ -2,7 +2,7 @@
 
 :root {
     --color-surface-white: #ffffff;
-    --color-surface75: rgba(255, 255, 255, 0.3);
+    --color-surface75: rgb(240, 240, 240);
     --color-just-black: #011d07;
     --color-shockingly-green: #95d600;
     --color-primary-dark: #0d172f;

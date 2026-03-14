@@ -2,7 +2,8 @@
 
 .container {
     background: #0d172f;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
     padding: 24px 16px;
     font-family: "Google Sans Flex", sans-serif;
     box-sizing: border-box;

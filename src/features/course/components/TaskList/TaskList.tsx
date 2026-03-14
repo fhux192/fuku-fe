@@ -1,10 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { BookOpen, RotateCcw, Play, Zap, Search } from 'lucide-react';
+import { BookOpen, RefreshCw, Play, Zap, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './TaskList.module.css';
-
-// ============================================================================
-// Types & Interfaces
-// ============================================================================
 
 export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
 
@@ -24,11 +20,8 @@ interface TaskListProps {
     selectedLevel?: string;
 }
 
-// ============================================================================
-// Constants & Configurations
-// ============================================================================
-
 const SESSION_KEY = 'fuku_taskList_selectedTask';
+const TASKS_PER_PAGE = 20;
 
 const LEVEL_COLORS: Record<string, string> = {
     'IELTS 4.0': '#4ade80',
@@ -65,10 +58,6 @@ const AVATAR_OPTIONS = [
     "https://cdn.lordicon.com/etuixrny.json"
 ];
 
-// ============================================================================
-// Main Component
-// ============================================================================
-
 const TaskList: React.FC<TaskListProps> = ({
                                                tasks,
                                                selectedTaskId,
@@ -76,17 +65,11 @@ const TaskList: React.FC<TaskListProps> = ({
                                                selectedLevel,
                                            }) => {
 
-    // ------------------------------------------------------------------------
-    // State & Refs
-    // ------------------------------------------------------------------------
-
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
     const searchWrapperRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLElement>(null);
     const originalScrollPos = useRef<number>(0);
-
-    // ------------------------------------------------------------------------
-    // Lifecycle
-    // ------------------------------------------------------------------------
 
     useEffect(() => {
         const savedTask = sessionStorage.getItem(SESSION_KEY);
@@ -98,10 +81,6 @@ const TaskList: React.FC<TaskListProps> = ({
         }
     }, [tasks, selectedTaskId, onTaskSelect]);
 
-    // ------------------------------------------------------------------------
-    // Handlers
-    // ------------------------------------------------------------------------
-
     const handleTaskClick = (task: Task) => {
         if (!onTaskSelect) return;
         onTaskSelect(task.id);
@@ -110,6 +89,7 @@ const TaskList: React.FC<TaskListProps> = ({
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
+        setCurrentPage(1);
     };
 
     const handleSearchFocus = () => {
@@ -137,9 +117,18 @@ const TaskList: React.FC<TaskListProps> = ({
         }
     };
 
-    // ------------------------------------------------------------------------
-    // Logic
-    // ------------------------------------------------------------------------
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+
+        setTimeout(() => {
+            if (containerRef.current) {
+                containerRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }, 50);
+    };
 
     const filteredTasks = tasks.filter(task =>
         task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -155,12 +144,12 @@ const TaskList: React.FC<TaskListProps> = ({
 
     const gridTasks = filteredTasks.filter(task => task.status !== 'in_progress');
 
-    // ------------------------------------------------------------------------
-    // Render
-    // ------------------------------------------------------------------------
+    const totalPages = Math.ceil(gridTasks.length / TASKS_PER_PAGE);
+    const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
+    const paginatedTasks = gridTasks.slice(startIndex, startIndex + TASKS_PER_PAGE);
 
     return (
-        <section className={styles.container}>
+        <section className={styles.container} ref={containerRef}>
             <header className={styles.pageHeader}>
                 <div className={styles.headerLeft}>
                     <div className={styles.headerIcon}>
@@ -219,10 +208,10 @@ const TaskList: React.FC<TaskListProps> = ({
             </div>
 
             <div className={styles.taskGrid}>
-                {gridTasks.length === 0 ? (
+                {paginatedTasks.length === 0 ? (
                     <div className={styles.emptyState}>Không có bài tập phù hợp.</div>
                 ) : (
-                    gridTasks.map((task, index) => {
+                    paginatedTasks.map((task, index) => {
                         const isSelected = task.id === selectedTaskId;
                         const isCompleted = task.status === 'completed';
 
@@ -230,7 +219,8 @@ const TaskList: React.FC<TaskListProps> = ({
                             ? LEVEL_COLORS[task.level]
                             : (isDefault ? '#3b82f6' : headerColor);
 
-                        const iconSrc = AVATAR_OPTIONS[index % AVATAR_OPTIONS.length];
+                        const absoluteIndex = startIndex + index;
+                        const iconSrc = AVATAR_OPTIONS[absoluteIndex % AVATAR_OPTIONS.length];
 
                         return (
                             <div
@@ -257,9 +247,9 @@ const TaskList: React.FC<TaskListProps> = ({
 
                                 <div className={styles.iconWrapper}>
                                     <lord-icon
+                                        key={task.id}
                                         src={iconSrc}
-                                        trigger="hover"
-                                        style={{ width: '100px', height: '100px', filter: isCompleted ? 'grayscale(1)' : 'none' }}
+                                        trigger={isCompleted ? "none" : "hover"}
                                     />
                                 </div>
 
@@ -277,7 +267,7 @@ const TaskList: React.FC<TaskListProps> = ({
                                 <div className={styles.cardFooter}>
                                     {isCompleted ? (
                                         <button className={styles.btnRetake}>
-                                            <RotateCcw size={16} />
+                                            <RefreshCw size={16} />
                                             <span>Làm lại</span>
                                         </button>
                                     ) : (
@@ -292,6 +282,30 @@ const TaskList: React.FC<TaskListProps> = ({
                     })
                 )}
             </div>
+
+            {totalPages > 1 && (
+                <div className={styles.pagination}>
+                    <button
+                        className={styles.pageBtn}
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        <ChevronLeft size={16} />
+                        <span>Trước</span>
+                    </button>
+                    <span className={styles.pageInfo}>
+                        Trang {currentPage} / {totalPages}
+                    </span>
+                    <button
+                        className={styles.pageBtn}
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        <span>Sau</span>
+                        <ChevronRight size={16} />
+                    </button>
+                </div>
+            )}
         </section>
     );
 };
