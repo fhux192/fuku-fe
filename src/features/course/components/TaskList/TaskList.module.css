@@ -170,12 +170,12 @@
     z-index: 0;
 }
 
-.iconWrapper{
+.iconWrapper lord-icon {
     width: 100px;
     height: 100px;
 }
 
-.completedCard .iconWrapper  {
+.completedCard .iconWrapper lord-icon {
     filter: grayscale(1);
 }
 
@@ -377,7 +377,7 @@
         font-size: 0.65rem;
     }
 
-    .iconWrapper   {
+    .iconWrapper lord-icon {
         width: 85px;
         height: 85px;
     }
@@ -395,7 +395,7 @@
     .taskGrid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
     .taskCard { padding: 0.6rem; min-height: 12.9rem; border-radius: 0.8rem; }
 
-    .iconWrapper   {
+    .iconWrapper lord-icon {
         width: 70px;
         height: 70px;
     }
