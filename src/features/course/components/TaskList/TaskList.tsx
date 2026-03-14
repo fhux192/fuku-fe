@@ -1,6 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { BookOpen, RefreshCw, Play, Zap, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import styles from './TaskList.module.css';
+import { useParentHoverLordIcon } from '../../../../hooks/useParentHoverLordIcon';
+import { LordIconElement } from '../../../../types/lordicon';
+import TaskRequirementModal from '../TaskRequirementModal/TaskRequirementModal';
 
 export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
 
@@ -21,7 +24,7 @@ interface TaskListProps {
 }
 
 const SESSION_KEY = 'fuku_taskList_selectedTask';
-const TASKS_PER_PAGE = 20;
+const TASKS_PER_PAGE = 16;
 
 const LEVEL_COLORS: Record<string, string> = {
     'IELTS 4.0': '#4ade80',
@@ -64,71 +67,17 @@ const TaskList: React.FC<TaskListProps> = ({
                                                onTaskSelect,
                                                selectedLevel,
                                            }) => {
-
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
+    const [showRequirementModal, setShowRequirementModal] = useState(false);
+    const [modalTask, setModalTask] = useState<Task | null>(null);
+    const [modalIconSrc, setModalIconSrc] = useState<string>('');
+
     const searchWrapperRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLElement>(null);
-    const originalScrollPos = useRef<number>(0);
 
-    useEffect(() => {
-        const savedTask = sessionStorage.getItem(SESSION_KEY);
-        if (savedTask && !selectedTaskId && onTaskSelect) {
-            const taskExists = tasks.find(t => t.id === savedTask);
-            if (taskExists) {
-                onTaskSelect(savedTask);
-            }
-        }
-    }, [tasks, selectedTaskId, onTaskSelect]);
-
-    const handleTaskClick = (task: Task) => {
-        if (!onTaskSelect) return;
-        onTaskSelect(task.id);
-        sessionStorage.setItem(SESSION_KEY, task.id);
-    };
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleSearchFocus = () => {
-        if (window.innerWidth <= 768) {
-            originalScrollPos.current = window.scrollY;
-
-            if (searchWrapperRef.current) {
-                const elementPosition = searchWrapperRef.current.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.scrollY - 10;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }
-    };
-
-    const handleSearchBlur = () => {
-        if (window.innerWidth <= 768) {
-            window.scrollTo({
-                top: originalScrollPos.current,
-                behavior: 'smooth'
-            });
-        }
-    };
-
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage);
-
-        setTimeout(() => {
-            if (containerRef.current) {
-                containerRef.current.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        }, 50);
-    };
+    const cardParentRefs = useRef<Record<string, HTMLElement | null>>({});
+    const iconRefs = useRef<Record<string, LordIconElement | null>>({});
 
     const filteredTasks = tasks.filter(task =>
         task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -147,6 +96,102 @@ const TaskList: React.FC<TaskListProps> = ({
     const totalPages = Math.ceil(gridTasks.length / TASKS_PER_PAGE);
     const startIndex = (currentPage - 1) * TASKS_PER_PAGE;
     const paginatedTasks = gridTasks.slice(startIndex, startIndex + TASKS_PER_PAGE);
+
+    const visibleTaskIds = useMemo(() =>
+            paginatedTasks
+                .filter(task => task.status !== 'completed')
+                .map(t => t.id),
+        [paginatedTasks]
+    );
+
+    useParentHoverLordIcon(cardParentRefs, iconRefs, visibleTaskIds);
+
+    useEffect(() => {
+        const currentIds = new Set(visibleTaskIds);
+        Object.keys(cardParentRefs.current).forEach(id => {
+            if (!currentIds.has(id)) {
+                cardParentRefs.current[id] = null;
+                delete cardParentRefs.current[id];
+            }
+        });
+        Object.keys(iconRefs.current).forEach(id => {
+            if (!currentIds.has(id)) {
+                iconRefs.current[id] = null;
+                delete iconRefs.current[id];
+            }
+        });
+    }, [visibleTaskIds]);
+
+    useEffect(() => {
+        const savedTask = sessionStorage.getItem(SESSION_KEY);
+        if (savedTask && !selectedTaskId && onTaskSelect) {
+            const taskExists = tasks.find(t => t.id === savedTask);
+            if (taskExists) {
+                onTaskSelect(savedTask);
+            }
+        }
+    }, [tasks, selectedTaskId, onTaskSelect]);
+
+    const handleTaskClick = (task: Task, iconSrc: string) => {
+        if (!onTaskSelect) return;
+        if (task.status === 'completed') {
+            onTaskSelect(task.id);
+            sessionStorage.setItem(SESSION_KEY, task.id);
+        } else {
+            setModalTask(task);
+            setModalIconSrc(iconSrc);
+            setShowRequirementModal(true);
+        }
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1);
+    };
+
+    const handleSearchFocus = () => {
+        // Chỉ tự động scroll khi trên thiết bị di động (chiều rộng <= 768px)
+        const isMobile = window.innerWidth <= 768;
+
+        if (isMobile) {
+            setTimeout(() => {
+                if (searchWrapperRef.current) {
+                    searchWrapperRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 150);
+        }
+    };
+
+    const handleSearchBlur = () => {
+    };
+
+    const handlePageChange = (newPage: number) => {
+        setCurrentPage(newPage);
+        setTimeout(() => {
+            if (containerRef.current) {
+                containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 50);
+    };
+
+    const getPageNumbers = (current: number, total: number) => {
+        if (total <= 5) return Array.from({ length: total }, (_, i) => i + 1);
+        if (current <= 3) return [1, 2, 3, 4, '...', total];
+        if (current >= total - 2) return [1, '...', total - 3, total - 2, total - 1, total];
+        return [1, '...', current - 1, current, current + 1, '...', total];
+    };
+
+    const handleStartTask = () => {
+        if (modalTask && onTaskSelect) {
+            onTaskSelect(modalTask.id);
+            sessionStorage.setItem(SESSION_KEY, modalTask.id);
+        }
+        setShowRequirementModal(false);
+        setModalTask(null);
+    };
 
     return (
         <section className={styles.container} ref={containerRef}>
@@ -225,8 +270,9 @@ const TaskList: React.FC<TaskListProps> = ({
                         return (
                             <div
                                 key={task.id}
+                                ref={(el) => { cardParentRefs.current[task.id] = el; }}
                                 className={`${styles.taskCard} ${isSelected ? styles.selected : ''} ${isCompleted ? styles.completedCard : ''}`}
-                                onClick={() => handleTaskClick(task)}
+                                onClick={() => handleTaskClick(task, iconSrc)}
                             >
                                 <div className={styles.cardHeader}>
                                     <span
@@ -247,9 +293,10 @@ const TaskList: React.FC<TaskListProps> = ({
 
                                 <div className={styles.iconWrapper}>
                                     <lord-icon
-                                        key={task.id}
+                                        ref={(el: unknown) => { iconRefs.current[task.id] = el as LordIconElement; }}
                                         src={iconSrc}
-                                        trigger={isCompleted ? "none" : "hover"}
+                                        trigger={isCompleted ? undefined : "hover"}
+                                        className={styles.lordIcon}
                                     />
                                 </div>
 
@@ -291,21 +338,43 @@ const TaskList: React.FC<TaskListProps> = ({
                         disabled={currentPage === 1}
                     >
                         <ChevronLeft size={16} />
-                        <span>Trước</span>
+                        <span className={styles.pageText}>Trước</span>
                     </button>
-                    <span className={styles.pageInfo}>
-                        Trang {currentPage} / {totalPages}
-                    </span>
+
+                    <div className={styles.pageNumbers}>
+                        {getPageNumbers(currentPage, totalPages).map((page, index) => (
+                            <button
+                                key={index}
+                                className={`${styles.numberBtn} ${page === currentPage ? styles.activePage : ''} ${page === '...' ? styles.dots : ''}`}
+                                onClick={() => typeof page === 'number' ? handlePageChange(page) : undefined}
+                                disabled={page === '...'}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </div>
+
                     <button
                         className={styles.pageBtn}
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
                     >
-                        <span>Sau</span>
+                        <span className={styles.pageText}>Sau</span>
                         <ChevronRight size={16} />
                     </button>
                 </div>
             )}
+
+            <TaskRequirementModal
+                isOpen={showRequirementModal}
+                onClose={() => {
+                    setShowRequirementModal(false);
+                    setModalTask(null);
+                }}
+                task={modalTask}
+                iconSrc={modalIconSrc}
+                onStartTask={handleStartTask}
+            />
         </section>
     );
 };

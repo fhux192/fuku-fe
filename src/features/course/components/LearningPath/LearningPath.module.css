@@ -76,7 +76,7 @@
     justify-content: center;
     width: 42px;
     height: 42px;
-    margin-left: 12px;
+    margin-left: 16px;
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
@@ -402,7 +402,7 @@
     }
     .pathHeader {
         padding: 8px;
-        margin: -8px -8px 16px -8px;
+        margin: -8px -8px 0 -8px;
         border-radius: 12px;
     }
 
@@ -412,7 +412,7 @@
     }
 
     .iconBox {
-        margin-left: 4px;
+        margin-left: 0;
         width: 42px;
         height: 42px;
     }

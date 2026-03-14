@@ -144,6 +144,8 @@
     align-items: center;
     justify-content: center;
     animation: fadeIn 0.3s ease;
+    /* Thêm pointer-events: none để sự kiện chuột có thể xuyên qua lớp này tới lord-icon bên dưới */
+    pointer-events: none;
 }
 
 .overlayCircle {
@@ -210,7 +212,7 @@
 
 @media (max-width: 480px) {
     .container {
-        padding: 20px 1rem;
+        padding: 20px 16px;
         border: none;
         border-top: 1px solid rgba(255, 255, 255, 0.15);
     }

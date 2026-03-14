@@ -61,7 +61,8 @@ interface DailyLoginData {
 // ============================================================================
 const NAV_ITEMS: NavItem[] = [
     { path: '/home', label: 'Diễn đàn', icon: 'https://cdn.lordicon.com/oeotfwsx.json', title: 'Diễn đàn', requiresAuth: false },
-    { path: '/home/course', label: 'Bài học', icon: 'https://cdn.lordicon.com/hjrbjhnq.json', title: 'Bài học', requiresAuth: false },
+    { path: '/home/course', label: 'Bài tập', icon: 'https://cdn.lordicon.com/hjrbjhnq.json', title: 'Bài học', requiresAuth: false },
+    { path: '/home/shop', label: 'Vật phẩm', icon: 'https://cdn.lordicon.com/zmvzumis.json', title: 'Lịch sử', requiresAuth: true },
     { path: '/home/history', label: 'Lịch sử', icon: 'https://cdn.lordicon.com/ibjcmcbv.json', title: 'Lịch sử', requiresAuth: true }
 ];
 

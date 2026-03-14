@@ -55,7 +55,7 @@ const CoursePage: React.FC = () => {
             return {
                 id: `task_${i}`,
                 code: `EN-${randomLv.split(' ')[1]}-${100 + i}`,
-                title: `${randomSkill} ${randomType} - Unit ${i + 1}`,
+                title: `${randomSkill} ${randomType} `,
                 status: i % Math.floor(Math.random() * 7) === 0 ? 'completed' : i % 4 === 1 ? 'in_progress' : 'not_started',
                 score: i % 4 === 0 ? Math.floor(Math.random() * 9) + 1 : undefined,
                 level: randomLv,

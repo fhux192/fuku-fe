@@ -28,16 +28,12 @@
     --modal-border-radius: 40px;
     --group-gap: 18px;
 
-    /* Typography */
-    --title-size: clamp(24px, 5vw, 28px);
     --text-size: clamp(14px, 3.5vw, 16px);
-    --small-text: clamp(13px, 3vw, 14px);
+    --small-text: clamp(16px, 3vw, 14px);
 
-    /* Button */
     --button-width: 100%;
     --button-min-width: 140px;
 
-    /* Touch targets */
     --touch-target: 44px;
 
     /* Animation - Bouncy physics from LoginModal */

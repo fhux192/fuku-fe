@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { Play, Zap, History } from 'lucide-react';
 import styles from './InProgressTasks.module.css';
+import { useParentHoverLordIcon } from '../../../../hooks/useParentHoverLordIcon';
+import { LordIconElement } from '../../../../types/lordicon';
 
 export type TaskStatus = 'completed' | 'in_progress' | 'not_started';
 
@@ -61,8 +63,34 @@ const InProgressTasks: React.FC<InProgressTasksProps> = ({
                                                              selectedTaskId,
                                                              onTaskSelect,
                                                          }) => {
-
     const inProgressTasks = tasks.filter(task => task.status === 'in_progress');
+
+    const cardParentRefs = useRef<Record<string, HTMLElement | null>>({});
+    const iconRefs = useRef<Record<string, LordIconElement | null>>({});
+
+    const visibleTaskIds = useMemo(() =>
+            inProgressTasks.map(t => t.id),
+        [inProgressTasks]
+    );
+
+    useParentHoverLordIcon(cardParentRefs, iconRefs, visibleTaskIds);
+
+    useEffect(() => {
+        const currentIds = new Set(visibleTaskIds);
+
+        Object.keys(cardParentRefs.current).forEach(id => {
+            if (!currentIds.has(id)) {
+                cardParentRefs.current[id] = null;
+                delete cardParentRefs.current[id];
+            }
+        });
+        Object.keys(iconRefs.current).forEach(id => {
+            if (!currentIds.has(id)) {
+                iconRefs.current[id] = null;
+                delete iconRefs.current[id];
+            }
+        });
+    }, [visibleTaskIds]);
 
     const handleTaskClick = (task: Task) => {
         if (!onTaskSelect) return;
@@ -109,10 +137,13 @@ const InProgressTasks: React.FC<InProgressTasksProps> = ({
                             : '#3b82f6';
 
                         const iconSrc = AVATAR_OPTIONS[index % AVATAR_OPTIONS.length];
+                        const cardId = `fuku-inprogress-card-${task.id}`;
 
                         return (
                             <div
+                                id={cardId}
                                 key={task.id}
+                                ref={(el) => { cardParentRefs.current[task.id] = el; }}
                                 className={`${styles.taskCard} ${isSelected ? styles.selected : ''}`}
                                 onClick={() => handleTaskClick(task)}
                             >
@@ -130,8 +161,11 @@ const InProgressTasks: React.FC<InProgressTasksProps> = ({
 
                                 <div className={styles.iconWrapper}>
                                     <lord-icon
+                                        ref={(el: unknown) => { iconRefs.current[task.id] = el as LordIconElement; }}
                                         src={iconSrc}
                                         trigger="hover"
+                                        // @ts-ignore
+                                        target={`#${cardId}`}
                                         style={{ width: '90px', height: '90px' }}
                                     />
                                     <div className={styles.inProgressOverlay}>

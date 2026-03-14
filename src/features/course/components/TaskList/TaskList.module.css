@@ -9,7 +9,7 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-right: 0;
     padding: 24px 16px;
-    min-height: 50vh;
+    min-height: 100vh;
     font-family: "Google Sans Flex", sans-serif;
     box-sizing: border-box;
     max-width: 1300px;
@@ -78,7 +78,7 @@
     outline: none;
     color: #f8fafc;
     font-family: "Google Sans Flex", sans-serif;
-    font-size: clamp(16px, 3.5vw, 17px);
+    font-size: 16px;
     font-weight: 600;
     transition: border-color 0.3s ease, transform 0.2s ease;
 }
@@ -170,12 +170,12 @@
     z-index: 0;
 }
 
-.iconWrapper lord-icon {
+.lordIcon {
     width: 100px;
     height: 100px;
 }
 
-.completedCard .iconWrapper lord-icon {
+.completedCard .iconWrapper .lordIcon {
     filter: grayscale(1);
 }
 
@@ -275,7 +275,7 @@
     font-size: 0.8rem;
     cursor: pointer;
     border: none;
-    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
 }
 
 .btnRetake {
@@ -333,11 +333,12 @@
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
 }
 
 .pageBtn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
     transform: translateY(-2px);
 }
 
@@ -352,11 +353,57 @@
     background: transparent;
 }
 
-.pageInfo {
-    font-size: 0.95rem;
-    font-weight: 700;
+.pageNumbers {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.numberBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.5rem;
     color: #cbd5e1;
     font-family: "Google Sans Flex", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.numberBtn:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.numberBtn:active:not(:disabled) {
+    transform: scale(0.96);
+    box-shadow: none;
+}
+
+.activePage {
+    background: var(--gradient-accent, linear-gradient(135deg, #4ade80 0%, #86efac 100%)) !important;
+    color: #0f172a !important;
+    border-color: transparent !important;
+    font-weight: 800;
+}
+
+.dots {
+    background: transparent !important;
+    border: none !important;
+    cursor: default;
+    color: #64748b;
+}
+
+.dots:hover {
+    transform: none !important;
 }
 
 @media (max-width: 768px) {
@@ -377,14 +424,14 @@
         font-size: 0.65rem;
     }
 
-    .iconWrapper lord-icon {
+    .lordIcon {
         width: 85px;
         height: 85px;
     }
 }
 
 @media (max-width: 480px) {
-    .container { padding: 24px 1rem; margin-bottom: 5rem; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); }
+    .container { padding: 24px 16px; margin-bottom: 5rem; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.15); }
     .pageHeader { flex-direction: column; border-bottom: 0; }
     .headerLeft { gap: 12px; }
     .headerIcon { margin-left: 0; width: 42px; height: 42px; border-radius: 12px; }
@@ -395,7 +442,7 @@
     .taskGrid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
     .taskCard { padding: 0.6rem; min-height: 12.9rem; border-radius: 0.8rem; }
 
-    .iconWrapper lord-icon {
+    .lordIcon {
         width: 70px;
         height: 70px;
     }
@@ -412,9 +459,11 @@
         font-size: 0.65rem;
         gap: 0.2rem;
     }
-    .pagination { gap: 0.75rem; }
-    .pageBtn { padding: 0.4rem 0.5rem; min-width: 90px; font-size: 0.8rem; }
-    .pageInfo { font-size: 0.75rem; }
+    .pagination { gap: 0.5rem; }
+    .pageBtn { padding: 0.4rem; min-width: auto; }
+    .pageText { display: none; }
+    .pageNumbers { gap: 0.25rem; }
+    .numberBtn { min-width: 1.8rem; height: 1.8rem; font-size: 0.8rem; padding: 0 0.2rem; }
 }
 
 .emptyState {
@@ -424,4 +473,5 @@
     text-align: center;
     color: #cbd5e1;
     font-size: 1rem;
+    font-weight: 600;
 }
